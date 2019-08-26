@@ -1,0 +1,15 @@
+# Allow Thymeleaf to hot reload
+spring:
+  thymeleaf:
+    cache: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+server:
+  tomcat:
+    accesslog:
+      enabled: true
+    basedir:
+      target/tomcat
+      
+  port: 8081
