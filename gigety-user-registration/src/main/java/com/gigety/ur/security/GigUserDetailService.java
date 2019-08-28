@@ -1,4 +1,4 @@
-package com.gigety.ur.secret;
+package com.gigety.ur.security;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,7 +38,7 @@ public class GigUserDetailService implements UserDetailsService {
 		if(user == null) {
 			throw new UsernameNotFoundException("No user found with email/username " + username); 
 		}
-		final User springSecurityUser = new User(user.getEmail(), user.getPassword(), true, true, true, true, getAuthorities(ROLE_USER));
+		final User springSecurityUser = new User(user.getEmail(), user.getPassword(), user.getEnabled(), true, true, true, getAuthorities(ROLE_USER));
 		log.debug("Spring Security User (converted) : {}", springSecurityUser);
 		return springSecurityUser;
 		

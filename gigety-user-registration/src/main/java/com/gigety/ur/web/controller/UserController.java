@@ -45,7 +45,7 @@ public class UserController {
 		return new ModelAndView("tl/view", "user", user);
 	}
 	
-	 @RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView create(@Valid final GigUser user, final BindingResult result, final RedirectAttributes redirect) {
 		if(result.hasErrors()) {
 			return new ModelAndView("tl/form", "formErrors", result.getAllErrors());

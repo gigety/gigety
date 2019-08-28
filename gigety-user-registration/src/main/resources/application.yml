@@ -5,6 +5,21 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    port: 587
+    protocol: smtp
+    username: ${SAMUELMOSESSEGAL@GMAIL_NAME} 
+    password: ${SAMUELMOSESSEGAL@GMAIL_PW}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+    test-connection: false
 server:
   tomcat:
     accesslog:
@@ -12,4 +27,9 @@ server:
     basedir:
       target/tomcat
       
-  port: 8081
+  port: 8083
+
+logging:
+  level:
+    com.gigety.ur: debug
+    
