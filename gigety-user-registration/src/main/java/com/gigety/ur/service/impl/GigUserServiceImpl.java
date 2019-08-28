@@ -11,8 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.gigety.ur.db.model.GigUser;
+import com.gigety.ur.db.model.PWResetToken;
 import com.gigety.ur.db.model.VerificationToken;
 import com.gigety.ur.db.repo.GigUserRepository;
+import com.gigety.ur.db.repo.PWResetTokenRepository;
 import com.gigety.ur.db.repo.VerificationTokenRepository;
 import com.gigety.ur.service.GigUserService;
 import com.gigety.ur.util.validation.EmailExistsException;
@@ -30,19 +32,21 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GigUserServiceImpl implements GigUserService {
 
-	private final GigUserRepository repo;
+	private final GigUserRepository userEmail;
 	private final BCryptPasswordEncoder pwEncoder;
-	private final VerificationTokenRepository tokenRepo;
+	private final VerificationTokenRepository verificationTokenRepo;
+	private final PWResetTokenRepository pwResetTokenRepo;
 
 	@Autowired
-
-	public GigUserServiceImpl(GigUserRepository repo, BCryptPasswordEncoder pwEncoder,
-			VerificationTokenRepository tokenRepo) {
+	public GigUserServiceImpl(GigUserRepository userEmail, BCryptPasswordEncoder pwEncoder,
+			VerificationTokenRepository verificationTokenRepo, PWResetTokenRepository pwResetTokenRepo) {
 		super();
-		this.repo = repo;
+		this.userEmail = userEmail;
 		this.pwEncoder = pwEncoder;
-		this.tokenRepo = tokenRepo;
+		this.verificationTokenRepo = verificationTokenRepo;
+		this.pwResetTokenRepo = pwResetTokenRepo;
 	}
+
 
 	@Override
 	public GigUser registerNewUser(GigUser gigUser) throws EmailExistsException {
@@ -53,33 +57,23 @@ public class GigUserServiceImpl implements GigUserService {
 		gigUser.setEnabled(false);
 		gigUser.setPassword(encoded);
 		gigUser.setPasswordConfirmation(encoded);
-		return repo.save(gigUser);
+		return userEmail.save(gigUser);
 	}
+
 
 	@Override
 	public GigUser updateExistingUser(GigUser gigUser) throws EmailExistsException {
-		final GigUser emailOwner = repo.findByEmail(gigUser.getEmail());
+		final GigUser emailOwner = userEmail.findByEmail(gigUser.getEmail());
 		if (emailOwner != null && !emailOwner.getId().equals(gigUser.getId())) {
 			throw new EmailExistsException("Operation not available for " + gigUser.getEmail());
 		}
-		return repo.save(gigUser);
+		return userEmail.save(gigUser);
 	}
 
-	@Override
-	public void setVerificationToken(GigUser gigUser, String token) {
-		VerificationToken vToken = new VerificationToken(token, gigUser);
-		// TODO: Research Date best practices for java
-		Instant now = Instant.now(); //current date
-		Instant after= now.plus(Duration.ofDays(1));
-		Date dateAfter = Date.from(after);
-		vToken.setExpiryDate(dateAfter);
-		log.debug("Set token : {} for user : {}", token, gigUser);
-		tokenRepo.save(vToken);
-	}
 
 	@Override
 	public VerificationToken getVerificationToken(String token) {
-		VerificationToken vToke = tokenRepo.findByToken(token);
+		VerificationToken vToke = verificationTokenRepo.findByToken(token);
 		//TODO Revisit password and password confirmation validations, this set up is causing issues i do not like
 		vToke.getGigUser().setPasswordConfirmation(vToke.getGigUser().getPassword());
 		log.debug("Found token :: {}", vToke);
@@ -89,13 +83,44 @@ public class GigUserServiceImpl implements GigUserService {
 	@Override
 	public GigUser saveRegisteredUser(GigUser gigUser) {
 		log.debug("Saving registered user {}", gigUser);
-		tokenRepo.deleteByGigUser(gigUser);
-		return repo.save(gigUser);
+		verificationTokenRepo.deleteByGigUser(gigUser);
+		return userEmail.save(gigUser);
 	}
 
 	private boolean emailExists(String email) {
-		final GigUser user = repo.findByEmail(email);
+		final GigUser user = userEmail.findByEmail(email);
 		return user != null;
+	}
+
+	@Override
+	public GigUser findByEmail(String email) {
+		return userEmail.findByEmail(email);
+	}
+
+	@Override
+	public void assignVerificationToken(GigUser gigUser, String token) {
+		VerificationToken vToken = new VerificationToken(token, gigUser);
+		// TODO: Research Date best practices for java
+		Instant now = Instant.now(); //current date
+		Instant after= now.plus(Duration.ofDays(1));
+		Date dateAfter = Date.from(after);
+		vToken.setExpiryDate(dateAfter);
+		log.debug("Set verification token : {} for user : {}", token, gigUser);
+		verificationTokenRepo.save(vToken);
+		
+	}
+
+	@Override
+	public void assignResetPWToken(GigUser gigUser, String token) {
+		PWResetToken pwResetOken = new PWResetToken(token, gigUser);
+		// TODO: Research Date best practices for java
+		Instant now = Instant.now(); //current date
+		Instant after= now.plus(Duration.ofDays(1));
+		Date dateAfter = Date.from(after);
+		pwResetOken.setExpiryDate(dateAfter);
+		log.debug("Set pwReset token : {} for user : {}", token, gigUser);
+		pwResetTokenRepo.save(pwResetOken);
+		
 	}
 
 }

@@ -36,6 +36,7 @@ public class GigUserDetailService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		final GigUser user = userRepo.findByEmail(username);
 		if(user == null) {
+			log.debug("No user found with email/username " + username);
 			throw new UsernameNotFoundException("No user found with email/username " + username); 
 		}
 		final User springSecurityUser = new User(user.getEmail(), user.getPassword(), user.getEnabled(), true, true, true, getAuthorities(ROLE_USER));

@@ -8,7 +8,9 @@ public interface GigUserService {
 
 	GigUser registerNewUser(GigUser gigUser) throws EmailExistsException;
 	GigUser updateExistingUser(GigUser gigUser) throws EmailExistsException;
-	void setVerificationToken(GigUser gigUser, String token);
+	void assignVerificationToken(GigUser gigUser, String token);
+	void assignResetPWToken(GigUser gigUser, String token);
 	VerificationToken getVerificationToken(String token);
 	GigUser saveRegisteredUser(GigUser gigUser);
+	GigUser findByEmail(String email);
 }

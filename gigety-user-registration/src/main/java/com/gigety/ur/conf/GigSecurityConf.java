@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -45,8 +44,15 @@ public class GigSecurityConf extends WebSecurityConfigurerAdapter{
 		.headers().frameOptions().sameOrigin() // for h2 in mem db during dev 
 		.and()
 		.authorizeRequests()
-			.antMatchers("/signup","/user/register", "/gigety/register", 
-					"registrationConfirm*", "/h2-console/**", "/gigety/confirm-reg/**")
+			.antMatchers(
+					"/signup",
+					"/user/register", 
+					"/reg/register", 
+					"/forgotpw", 
+					"/reg/resetpw",
+					"/registrationConfirm*", 		
+					"/reg/confirm-reg/**",
+					"/h2-console/**" ) //h2-console for early dev stage only
 			.permitAll()
 			.anyRequest().authenticated()
 			
