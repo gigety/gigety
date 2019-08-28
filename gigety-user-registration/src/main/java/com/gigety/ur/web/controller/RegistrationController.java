@@ -83,7 +83,7 @@ public class RegistrationController {
 			final GigUser user = vToken.getGigUser();
 			user.setEnabled(true);
 			userService.saveRegisteredUser(user);
-			redirectAttributes.addAttribute("message",
+			redirectAttributes.addFlashAttribute("message",
 					String.format("Thank you {}, your account has been verified", user.getEmail()));
 
 		}

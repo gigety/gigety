@@ -89,6 +89,7 @@ public class GigUserServiceImpl implements GigUserService {
 	@Override
 	public GigUser saveRegisteredUser(GigUser gigUser) {
 		log.debug("Saving registered user {}", gigUser);
+		tokenRepo.deleteByGigUser(gigUser);
 		return repo.save(gigUser);
 	}
 
