@@ -5,23 +5,23 @@
 <head>
 <link type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css"
     rel="stylesheet" />
-<title>Reset Password</title>
+<title th:text="#{reset.password}">Reset Password</title>
 </head>
 <body>
     <div class="container">
-        <h1>Reset Password</h1>
+        <h1 th:text="#{reset.password}">Resets Password</h1>
         <br />
 
-        <form th:action="@{/user/savePassword}" action="#" method="post" class="form-horizontal">
+        <form th:action="@{/reg/savepw}" action="#" method="post" class="form-horizontal">
             <div th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger">Message</div>
             <div class="form-group">
-                <label class="control-label col-xs-2" for="password">Password</label>
+                <label class="control-label col-xs-2" for="password" th:text="#{password}">Password</label>
                 <div class="col-xs-10">
                     <input id="password" type="password" name="password" />
                 </div>
             </div>
             <div class="form-group">
-                <label class="control-label col-xs-2" for="passwordConfirmation">Password Confirmation</label>
+                <label class="control-label col-xs-2" for="passwordConfirmation" th:text="#{password.confirmation}">Password Confirmation</label>
                 <div class="col-xs-10">
                     <input id="passwordConfirmation" type="password" name="passwordConfirmation" />
                 </div>
@@ -32,8 +32,8 @@
             </div>
         </form>
 
-        <br /> <a class="btn btn-primary" th:href="@{/login}">Sign In</a> <a class="btn btn-default"
-            th:href="@{/signup}">Sign Up</a>
+        <br /> <a class="btn btn-primary" th:href="@{/login}" th:text="#{sigin}">Sign In</a> <a class="btn btn-default"
+            th:href="@{/signup}" th:text="#{signup}">Sign Up</a>
     </div>
 </body>
 </html>

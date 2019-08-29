@@ -11,10 +11,21 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+/**
+ * Password Rest token. THese tokens are assigned to users who need to reset
+ * password via email.
+ * 
+ * @author samuelsegal
+ *
+ */
 @Entity
 @Data
+@RequiredArgsConstructor
+@NoArgsConstructor
 public class PWResetToken {
 
 	@Id
@@ -23,7 +34,7 @@ public class PWResetToken {
 	@NonNull
 	private String token;
 	private Date expiryDate;
-	
+
 	@OneToOne(targetEntity = GigUser.class, fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "user_id")
 	@NonNull

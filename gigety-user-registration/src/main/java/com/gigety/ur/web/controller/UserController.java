@@ -23,59 +23,62 @@ import com.gigety.ur.util.validation.EmailExistsException;
 @RequestMapping("/user")
 public class UserController {
 
-	
 	private final GigUserRepository userRepo;
 	private final GigUserService userService;
-	
+
 	@Autowired
 	public UserController(GigUserRepository userRepo, GigUserService userService) {
 		super();
 		this.userRepo = userRepo;
 		this.userService = userService;
 	}
-	
+
 	@RequestMapping
 	public ModelAndView list() {
 		Iterable<GigUser> users = this.userRepo.findAll();
 		return new ModelAndView("tl/list", "users", users);
 	}
-	
+
 	@RequestMapping("{id}")
 	public ModelAndView view(@PathVariable("id") GigUser user) {
 		return new ModelAndView("tl/view", "user", user);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView create(@Valid final GigUser user, final BindingResult result, final RedirectAttributes redirect) {
-		if(result.hasErrors()) {
+	public ModelAndView create(
+			@Valid final GigUser user,
+			final BindingResult result,
+			final RedirectAttributes redirect) {
+		
+		if (result.hasErrors()) {
 			return new ModelAndView("tl/form", "formErrors", result.getAllErrors());
 		}
 		try {
-			if(user.getId() == null) {
+			if (user.getId() == null) {
 				userService.registerNewUser(user);
 				redirect.addFlashAttribute("globalMessage", "New user has been created");
-			}else {
+			} else {
 				userService.updateExistingUser(user);
 				redirect.addFlashAttribute("globalMessage", "User " + user.getEmail() + " has been updated");
 			}
-		}catch(EmailExistsException e) {
+		} catch (EmailExistsException e) {
 			result.addError(new FieldError("user", "email", e.getMessage()));
 			return new ModelAndView("tl/form", "user", user);
 		}
-		return new ModelAndView("redirect:/user/{user.id}", "user.id", user.getId()); 
+		return new ModelAndView("redirect:/user/{user.id}", "user.id", user.getId());
 	}
-	
+
 	@GetMapping("delete/{id}")
 	public ModelAndView delete(@PathVariable("id") final Long id) {
-		userRepo.findById(id).ifPresent(user->userRepo.delete(user));
+		userRepo.findById(id).ifPresent(user -> userRepo.delete(user));
 		return new ModelAndView("redirect:/");
 	}
-	
+
 	@GetMapping("modify/{id}")
 	public ModelAndView modifyForm(@PathVariable("id") final GigUser user) {
 		return new ModelAndView("tl/form", "user", user);
 	}
-	
+
 	@GetMapping(params = "form")
 	public String createForm(@ModelAttribute final GigUser user) {
 		return "tl/form";
