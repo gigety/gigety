@@ -1,7 +1,9 @@
 package com.gigety.ur.web.controller;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -22,10 +24,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gigety.ur.db.model.GigUser;
 import com.gigety.ur.db.model.PWResetToken;
+import com.gigety.ur.db.model.SecurityQuestion;
+import com.gigety.ur.db.model.UserSecurityQuestion;
 import com.gigety.ur.db.model.VerificationToken;
 import com.gigety.ur.security.registration.OnRegistrationCompleteEvent;
 import com.gigety.ur.service.AsyncEmailService;
 import com.gigety.ur.service.GigUserService;
+import com.gigety.ur.service.SecurityQuestionService;
 import com.gigety.ur.util.GigUrls;
 import com.gigety.ur.util.validation.EmailExistsException;
 import com.google.common.collect.ImmutableMap;
@@ -33,8 +38,8 @@ import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author samuelsegal
  * 
+ *
  * Registration Web Controller
  */
 @Controller
@@ -45,23 +50,30 @@ public class RegistrationController {
 	private final ApplicationEventPublisher appEventPublisher;
 	private final MessageSource messageSource;
 	private final AsyncEmailService emailService;
+	private final SecurityQuestionService securityQuestionService;
 
 	public RegistrationController(GigUserService userService, ApplicationEventPublisher appEventPublisher,
-			MessageSource messageSource, AsyncEmailService emailService) {
+			MessageSource messageSource, AsyncEmailService emailService,
+			SecurityQuestionService securityQuestionService) {
 		super();
 		this.userService = userService;
 		this.appEventPublisher = appEventPublisher;
 		this.messageSource = messageSource;
 		this.emailService = emailService;
+		this.securityQuestionService = securityQuestionService;
 	}
 
 	/**
 	 * Sign up - redirects to registration sign up page
+	 * 
 	 * @return
 	 */
 	@GetMapping("signup")
 	public ModelAndView registrationForm() {
-		return new ModelAndView("registrationPage", "user", new GigUser());
+		Map<String, Object> model = new HashMap<>();
+		model.put("user", new GigUser());
+		model.put("questions", securityQuestionService.findAll());
+		return new ModelAndView("registrationPage", model);
 	}
 
 	/**
@@ -76,8 +88,9 @@ public class RegistrationController {
 	 * @return
 	 */
 	@RequestMapping("/reg/register")
-	public ModelAndView registerUser(
-			@Valid final GigUser user,
+	public ModelAndView registerUser(@Valid final GigUser user,
+			@RequestParam final Long questionId,
+			@RequestParam final String answer,
 			final BindingResult result,
 			final HttpServletRequest request,
 			RedirectAttributes redirectAttributes,
@@ -87,7 +100,9 @@ public class RegistrationController {
 			return new ModelAndView("registrationPage", "user", new GigUser());
 		}
 		try {
-			final GigUser registered = userService.registerNewUser(user);
+			SecurityQuestion sq = securityQuestionService.findQuestionById(questionId);
+
+			final GigUser registered = userService.registerNewUser(user, new UserSecurityQuestion(sq, user, answer));
 			registered.setEnabled(false);
 			final String appUrl = getAppUrl(request);
 			log.debug("Create User {} ", registered);
@@ -117,8 +132,7 @@ public class RegistrationController {
 	 * @return
 	 */
 	@GetMapping("/reg/confirm-reg")
-	public ModelAndView confirmRegistration(
-			final Model model,
+	public ModelAndView confirmRegistration(final Model model,
 			@RequestParam("token") final String token,
 			final RedirectAttributes redirectAttributes,
 			Locale locale) {
@@ -157,8 +171,7 @@ public class RegistrationController {
 	 */
 	@RequestMapping("/reg/resetpw")
 	@ResponseBody
-	public ModelAndView resetPassword(
-			HttpServletRequest request,
+	public ModelAndView resetPassword(HttpServletRequest request,
 			@RequestParam("email") final String userEmail,
 			final RedirectAttributes redirectAttributes,
 			final Locale locale) {
@@ -186,14 +199,24 @@ public class RegistrationController {
 	 * @return
 	 */
 	@RequestMapping("/reg/updatepw")
-	public ModelAndView updatePwPage(
-			@RequestParam("id") final long id,
+	public ModelAndView updatePwPage(@RequestParam("id") final long id,
 			@RequestParam("token") final String token,
 			final RedirectAttributes redirectAttributes,
 			final Locale locale) {
 
-		final PWResetToken pwRestToken = userService.getPWRestToken(token);
-		final GigUser user = pwRestToken.getGigUser();
+		final PWResetToken pwResetToken = userService.getPWRestToken(token);
+
+		if (pwResetToken == null) {
+			// TODO: If no token found, currently we redirect saying token does not exist.
+			// Maybe revisit this with some kind of flow to further investigate why the url
+			// is invalid.
+			// Maybe update link to include email, and check if user exists;
+			String message = messageSource.getMessage("pw.token.not.found", new Object[] { token }, locale);
+			log.warn(message);
+			redirectAttributes.addFlashAttribute("errorMessage", message);
+			return new ModelAndView(GigUrls.REDIRECT_LOGIN);
+		}
+		final GigUser user = pwResetToken.getGigUser();
 
 		// check if token belongs to user
 		if (!user.getId().equals(id)) {
@@ -203,19 +226,23 @@ public class RegistrationController {
 
 		// check if expiration has expired
 		final Calendar cal = Calendar.getInstance();
-		if ((pwRestToken.getExpiryDate().getTime() - cal.getTime().getTime() <= 0)) {
+		if ((pwResetToken.getExpiryDate().getTime() - cal.getTime().getTime() <= 0)) {
 			redirectAttributes.addFlashAttribute("errorMessage",
 					messageSource.getMessage("pw.token.expired", null, locale));
 			return new ModelAndView(GigUrls.REDIRECT_LOGIN);
 		}
 		// pass along required token
 		final ModelAndView view = new ModelAndView("resetpw");
+		UserSecurityQuestion userQuestion = securityQuestionService.findByUser(user);
+
 		view.addObject("token", token);
+		view.addObject("userQuestion", userQuestion);
+
 		return view;
 	}
 
 	/**
-	 * Update users password. Used for .ost passwords. A token assigned to given
+	 * Update users password. Used for lost password case. A token assigned to given
 	 * user is required.
 	 * 
 	 * @param password
@@ -227,17 +254,13 @@ public class RegistrationController {
 	 */
 	@PostMapping("/reg/savepw")
 	@ResponseBody
-	public ModelAndView savePassword(
-			@RequestParam("password") final String password,
+	public ModelAndView savePassword(@RequestParam("password") final String password,
 			@RequestParam("passwordConfirmation") final String passwordConfirmation,
 			@RequestParam("token") String token,
-			RedirectAttributes redirectAttributes,
-			Locale locale) {
+			@RequestParam final String answer,
+			final RedirectAttributes redirectAttributes,
+			final Locale locale) {
 
-		if (!password.equals(passwordConfirmation)) {
-			return new ModelAndView("resetpw",
-					ImmutableMap.of("errorMessage", messageSource.getMessage("password.no.match", null, locale)));
-		}
 
 		final PWResetToken pToke = userService.getPWRestToken(token);
 
@@ -246,16 +269,27 @@ public class RegistrationController {
 			redirectAttributes.addFlashAttribute("message", messageSource.getMessage("invalid.pw.token", null, locale));
 		} else {
 			final GigUser user = pToke.getGigUser();
+			if (!password.equals(passwordConfirmation)) {
+				return  reloadRestPw(user, token,messageSource.getMessage("password.no.match", null, locale));
+			}
+
 			if (user == null) {
 				log.warn("Unknown User for token {}", pToke);
 				redirectAttributes.addFlashAttribute("message", messageSource.getMessage("unknown.user", null, locale));
 			} else {
 				try {
-					userService.changePassword(user, password);
-					redirectAttributes.addFlashAttribute("message",
-							messageSource.getMessage("pw.reset.success", null, locale));
-				} catch (Exception e) {
+					String savedAnswer = securityQuestionService.findByUser(user).getAnswer();
+					if (answer.equals(savedAnswer)) {
+						userService.changePassword(user, password);
+						redirectAttributes.addFlashAttribute("message",
+								messageSource.getMessage("pw.reset.success", null, locale));
+					} else {
 
+						return reloadRestPw(user, token, messageSource.getMessage("answer.incorrect",null,locale));
+					}
+				} catch (Exception e) {
+					log.error("Error saving user password: {}", e.getMessage(), e);
+					return reloadRestPw(user, token, e.getMessage());
 				}
 			}
 		}
@@ -263,6 +297,14 @@ public class RegistrationController {
 		return new ModelAndView(GigUrls.REDIRECT_LOGIN);
 	}
 
+	private ModelAndView reloadRestPw(GigUser user, String token, String errorMessage) {
+		UserSecurityQuestion userQuestion = securityQuestionService.findByUser(user);
+		ModelAndView view = new ModelAndView("resetpw");
+		view.addObject("token", token);
+		view.addObject("userQuestion", userQuestion);
+		view.addObject("errorMessage",errorMessage);	
+		return view;
+	}
 	private boolean tokenExpired(VerificationToken vToken) {
 		return (vToken.getExpiryDate().getTime() - Calendar.getInstance().getTime().getTime() <= 0);
 	}

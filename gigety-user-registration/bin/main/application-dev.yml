@@ -1,0 +1,36 @@
+# Allow Thymeleaf to hot reload
+spring:
+  thymeleaf:
+    cache: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    port: 587
+    protocol: smtp
+    username: ${SMS_GMAIL_NAME} 
+    password: ${SMS_GMAIL_PW}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+    test-connection: false
+    
+server:
+  tomcat:
+    accesslog:
+      enabled: true
+    basedir:
+      target/tomcat
+      
+  port: 8083
+
+logging:
+  level:
+    com.gigety.ur: debug
+    

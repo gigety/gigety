@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 
 import com.gigety.ur.db.model.GigUser;
 import com.gigety.ur.db.model.PWResetToken;
+import com.gigety.ur.db.model.UserSecurityQuestion;
 import com.gigety.ur.db.model.VerificationToken;
 import com.gigety.ur.db.repo.GigUserRepository;
 import com.gigety.ur.db.repo.PWResetTokenRepository;
+import com.gigety.ur.db.repo.UserSecurityQuestionRepository;
 import com.gigety.ur.db.repo.VerificationTokenRepository;
 import com.gigety.ur.service.GigUserService;
 import com.gigety.ur.util.validation.EmailExistsException;
@@ -35,19 +37,22 @@ public class GigUserServiceImpl implements GigUserService {
 	private final BCryptPasswordEncoder pwEncoder;
 	private final VerificationTokenRepository verificationTokenRepo;
 	private final PWResetTokenRepository pwResetTokenRepo;
+	private final UserSecurityQuestionRepository userSecurityRepo;
 
-	@Autowired
+
 	public GigUserServiceImpl(GigUserRepository userRepo, BCryptPasswordEncoder pwEncoder,
-			VerificationTokenRepository verificationTokenRepo, PWResetTokenRepository pwResetTokenRepo) {
+			VerificationTokenRepository verificationTokenRepo, PWResetTokenRepository pwResetTokenRepo,
+			UserSecurityQuestionRepository userSecurityRepo) {
 		super();
 		this.userRepo = userRepo;
 		this.pwEncoder = pwEncoder;
 		this.verificationTokenRepo = verificationTokenRepo;
 		this.pwResetTokenRepo = pwResetTokenRepo;
+		this.userSecurityRepo = userSecurityRepo;
 	}
 
 	@Override
-	public GigUser registerNewUser(GigUser gigUser) throws EmailExistsException {
+	public GigUser registerNewUser(GigUser gigUser, UserSecurityQuestion userSecurityQuestion) throws EmailExistsException {
 		if (emailExists(gigUser.getEmail())) {
 			throw new EmailExistsException("An account already exists for " + gigUser.getEmail());
 		}
@@ -55,7 +60,10 @@ public class GigUserServiceImpl implements GigUserService {
 		gigUser.setEnabled(false);
 		gigUser.setPassword(encoded);
 		gigUser.setPasswordConfirmation(encoded);
-		return userRepo.save(gigUser);
+
+		gigUser =  userRepo.save(gigUser);
+		userSecurityRepo.save(userSecurityQuestion);
+		return gigUser;
 	}
 
 	@Override

@@ -19,6 +19,9 @@ import com.gigety.ur.db.repo.GigUserRepository;
 import com.gigety.ur.service.GigUserService;
 import com.gigety.ur.util.validation.EmailExistsException;
 
+/**
+ * User Web Controller
+ */
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -44,29 +47,29 @@ public class UserController {
 		return new ModelAndView("tl/view", "user", user);
 	}
 
-	@RequestMapping(method = RequestMethod.POST)
-	public ModelAndView create(
-			@Valid final GigUser user,
-			final BindingResult result,
-			final RedirectAttributes redirect) {
-		
-		if (result.hasErrors()) {
-			return new ModelAndView("tl/form", "formErrors", result.getAllErrors());
-		}
-		try {
-			if (user.getId() == null) {
-				userService.registerNewUser(user);
-				redirect.addFlashAttribute("globalMessage", "New user has been created");
-			} else {
-				userService.updateExistingUser(user);
-				redirect.addFlashAttribute("globalMessage", "User " + user.getEmail() + " has been updated");
-			}
-		} catch (EmailExistsException e) {
-			result.addError(new FieldError("user", "email", e.getMessage()));
-			return new ModelAndView("tl/form", "user", user);
-		}
-		return new ModelAndView("redirect:/user/{user.id}", "user.id", user.getId());
-	}
+//	@RequestMapping(method = RequestMethod.POST)
+//	public ModelAndView create(
+//			@Valid final GigUser user,
+//			final BindingResult result,
+//			final RedirectAttributes redirect) {
+//
+//		if (result.hasErrors()) {
+//			return new ModelAndView("tl/form", "formErrors", result.getAllErrors());
+//		}
+//		try {
+//			if (user.getId() == null) {
+//				userService.registerNewUser(user);
+//				redirect.addFlashAttribute("globalMessage", "New user has been created");
+//			} else {
+//				userService.updateExistingUser(user);
+//				redirect.addFlashAttribute("globalMessage", "User " + user.getEmail() + " has been updated");
+//			}
+//		} catch (EmailExistsException e) {
+//			result.addError(new FieldError("user", "email", e.getMessage()));
+//			return new ModelAndView("tl/form", "user", user);
+//		}
+//		return new ModelAndView("redirect:/user/{user.id}", "user.id", user.getId());
+//	}
 
 	@GetMapping("delete/{id}")
 	public ModelAndView delete(@PathVariable("id") final Long id) {

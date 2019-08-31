@@ -1,39 +1,62 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
-<link type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css"
-    rel="stylesheet" />
+<link type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css"
+	rel="stylesheet" />
 <title th:text="#{reset.password}">Reset Password</title>
 </head>
 <body>
-    <div class="container">
-        <h1 th:text="#{reset.password}">Resets Password</h1>
-        <br />
+	<div class="container">
+		<h1 th:text="#{reset.password}">Resets Password</h1>
+		<br />
+		<form th:action="@{/reg/savepw}" action="#" method="post"
+			class="form-horizontal">
+			<div class="form-group">
+				<label class="control-label col-xs-2" for="question"
+					th:text="#{sec.question}">Security Question:</label>
+				<div class="col-xs-10">
+					<span th:text="${userQuestion.question.question}">User
+						Question</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-xs-2" for="answer"
+					th:text="#{answer}">Answer</label>
+				<div class="col-xs-10">
+					<input id="answer" type="text" name="answer" />
+				</div>
+			</div>
 
-        <form th:action="@{/reg/savepw}" action="#" method="post" class="form-horizontal">
-            <div th:if="${errorMessage}" th:text="${errorMessage}" class="alert alert-danger">Message</div>
-            <div class="form-group">
-                <label class="control-label col-xs-2" for="password" th:text="#{password}">Password</label>
-                <div class="col-xs-10">
-                    <input id="password" type="password" name="password" />
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="control-label col-xs-2" for="passwordConfirmation" th:text="#{password.confirmation}">Password Confirmation</label>
-                <div class="col-xs-10">
-                    <input id="passwordConfirmation" type="password" name="passwordConfirmation" />
-                </div>
-            </div>
-            <input id="token" type="hidden" name="token" th:value="${token}" />
-            <div class="form-actions col-xs-offset-2 col-xs-10">
-                <input type="submit" class="btn btn-primary" value="Reset Password" />
-            </div>
-        </form>
+			<div th:if="${errorMessage}" th:text="${errorMessage}"
+				class="alert alert-danger">Message</div>
+			<div class="form-group">
+				<label class="control-label col-xs-2" for="password"
+					th:text="#{password}">Password</label>
+				<div class="col-xs-10">
+					<input id="password" type="password" name="password" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-xs-2" for="passwordConfirmation"
+					th:text="#{password.confirmation}">Password Confirmation</label>
+				<div class="col-xs-10">
+					<input id="passwordConfirmation" type="password"
+						name="passwordConfirmation" />
+				</div>
+			</div>
+			<input id="token" type="hidden" name="token" th:value="${token}" />
+			<div class="form-actions col-xs-offset-2 col-xs-10">
+				<input type="submit" class="btn btn-primary" value="Reset Password" />
+			</div>
+		</form>
 
-        <br /> <a class="btn btn-primary" th:href="@{/login}" th:text="#{sigin}">Sign In</a> <a class="btn btn-default"
-            th:href="@{/signup}" th:text="#{signup}">Sign Up</a>
-    </div>
+		<br /> <a class="btn btn-primary" th:href="@{/login}"
+			th:text="#{signin}">Sign In</a> <a class="btn btn-default"
+			th:href="@{/signup}" th:text="#{signup}">Sign Up</a>
+	</div>
 </body>
 </html>

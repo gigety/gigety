@@ -9,6 +9,7 @@ import org.springframework.core.Ordered;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
@@ -62,6 +63,10 @@ public class GigWebMVCConf implements WebMvcConfigurer {
 	    registry.addInterceptor(localeChangeInterceptor());
 	}
 
+    /**
+     * Internationalization - messages are defined in messages*.properties
+     * @return
+     */
     @Bean
     public ReloadableResourceBundleMessageSource messageSource(){
         ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
@@ -70,6 +75,18 @@ public class GigWebMVCConf implements WebMvcConfigurer {
         return messageSource;
     }
 
+
+	/**
+	 * set location for web client resources such as javascript and css
+	 */
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		// TODO Auto-generated method stub
+		WebMvcConfigurer.super.addResourceHandlers(registry);
+		registry.addResourceHandler("/**").addResourceLocations(new String[] {"classpath:/static/"});
+	}
+
+    
 //    @Bean
 //    public CookieLocaleResolver localeResolver(){
 //        CookieLocaleResolver localeResolver = new CookieLocaleResolver();
