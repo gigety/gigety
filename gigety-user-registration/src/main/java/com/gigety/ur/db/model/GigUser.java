@@ -13,9 +13,14 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gigety.ur.util.validation.PasswordMatches;
 
 import lombok.Data;
+import lombok.NonNull;
 
 @Entity
 @PasswordMatches

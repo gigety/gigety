@@ -12,7 +12,7 @@ import javax.validation.Payload;
 /**
  * Annotation for {@link PasswordMatchesValidator}
  */
-@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.TYPE_PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PasswordMatchesValidator.class)
 @Documented

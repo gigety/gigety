@@ -2,20 +2,21 @@ package com.gigety.ur.db.model;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 /**
- * @author samuelsegal
  * Security Question for given user.
  */
 @Entity
@@ -28,13 +29,15 @@ public class UserSecurityQuestion {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn()
 	@NonNull
 	private SecurityQuestion question;
 	
-	@OneToOne(cascade = CascadeType.ALL, mappedBy = "userSecurityQuestion", orphanRemoval = true) 
+	@OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL, mappedBy = "userSecurityQuestion", orphanRemoval = true) 
 	@NonNull
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
 	private GigUser gigUser;
 	
 	@NonNull

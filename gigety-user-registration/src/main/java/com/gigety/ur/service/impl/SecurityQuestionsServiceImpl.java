@@ -2,6 +2,8 @@ package com.gigety.ur.service.impl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import com.gigety.ur.db.model.GigUser;
@@ -15,6 +17,7 @@ import com.gigety.ur.service.SecurityQuestionService;
  * Security Question Service
  */
 @Service
+@Transactional
 public class SecurityQuestionsServiceImpl implements SecurityQuestionService {
 
 	final SecurityQuestionRepository questionRepo;

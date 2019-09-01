@@ -52,7 +52,8 @@ public class GigUserServiceImpl implements GigUserService {
 	}
 
 	@Override
-	public GigUser registerNewUser(GigUser gigUser, UserSecurityQuestion userSecurityQuestion) throws EmailExistsException {
+	public GigUser registerNewUser(GigUser gigUser, UserSecurityQuestion userSecurityQuestion) throws EmailExistsException, Exception {
+		try {
 		if (emailExists(gigUser.getEmail())) {
 			throw new EmailExistsException("An account already exists for " + gigUser.getEmail());
 		}
@@ -64,6 +65,10 @@ public class GigUserServiceImpl implements GigUserService {
 		gigUser =  userRepo.save(gigUser);
 		userSecurityRepo.save(userSecurityQuestion);
 		return gigUser;
+		}catch(Exception e) {
+			log.error("Error registering new user in GigUserServiceImpl : {}", e.getMessage());
+			throw new Exception("Error registering new user in GigUserServiceImpl : " + e.getMessage());
+		}
 	}
 
 	@Override

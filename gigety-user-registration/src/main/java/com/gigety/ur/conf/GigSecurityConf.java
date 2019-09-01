@@ -54,6 +54,7 @@ public class GigSecurityConf extends WebSecurityConfigurerAdapter{
 					"/reg/savepw",
 					"/reg/confirm-reg/**",
 					"/registrationConfirm*", 		
+					"/js/**",
 					"/h2-console/**" ) //h2-console for early dev stage only
 			.permitAll()
 			.anyRequest().authenticated()

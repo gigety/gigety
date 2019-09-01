@@ -33,7 +33,6 @@ import com.gigety.ur.service.GigUserService;
 import com.gigety.ur.service.SecurityQuestionService;
 import com.gigety.ur.util.GigUrls;
 import com.gigety.ur.util.validation.EmailExistsException;
-import com.google.common.collect.ImmutableMap;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -71,7 +70,7 @@ public class RegistrationController {
 	@GetMapping("signup")
 	public ModelAndView registrationForm() {
 		Map<String, Object> model = new HashMap<>();
-		model.put("user", new GigUser());
+		model.put("gigUser", new GigUser());
 		model.put("questions", securityQuestionService.findAll());
 		return new ModelAndView("registrationPage", model);
 	}
@@ -89,17 +88,20 @@ public class RegistrationController {
 	 */
 	@RequestMapping("/reg/register")
 	public ModelAndView registerUser(@Valid final GigUser user,
+			final BindingResult result,
 			@RequestParam final Long questionId,
 			@RequestParam final String answer,
-			final BindingResult result,
+			
 			final HttpServletRequest request,
 			RedirectAttributes redirectAttributes,
 			Locale locale) {
 
-		if (result.hasErrors()) {
-			return new ModelAndView("registrationPage", "user", new GigUser());
-		}
 		try {
+			if (result.hasErrors()) {
+				ModelAndView v =  new ModelAndView("registrationPage", "gigUser", user);
+				v.addObject("questions", securityQuestionService.findAll());
+				return v;
+			}
 			SecurityQuestion sq = securityQuestionService.findQuestionById(questionId);
 
 			final GigUser registered = userService.registerNewUser(user, new UserSecurityQuestion(sq, user, answer));
@@ -108,10 +110,13 @@ public class RegistrationController {
 			log.debug("Create User {} ", registered);
 			appEventPublisher.publishEvent(new OnRegistrationCompleteEvent(registered, appUrl, locale));
 
-		} catch (EmailExistsException e) {
-			log.error("Error Registering User {} : {}", user, e.getMessage());
-			result.addError((new FieldError("user", "email", e.getMessage())));
-			return new ModelAndView("registrationPage", "user", user);
+		} catch (EmailExistsException | Exception e) {
+			log.error("Error Registering User {} : {}", user, e.getMessage(), e);
+			result.addError(new FieldError("gigUser", "email", e.getMessage()));
+			ModelAndView v =  new ModelAndView("registrationPage", "gigUser", user);
+			
+			v.addObject("questions", securityQuestionService.findAll());
+			return v;
 		}
 
 		ModelAndView view = new ModelAndView("loginPage");

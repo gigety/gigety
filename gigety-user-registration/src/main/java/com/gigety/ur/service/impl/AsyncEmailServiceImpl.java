@@ -56,7 +56,7 @@ public class AsyncEmailServiceImpl implements AsyncEmailService {
 	@Override
 	@Async
 	public void sendPWResetEmail(GigUser user, String appUrl, Locale locale) {
-
+		//TODO: Check if user exists, if not return message saying no user exists with that email
 		final String token = UUID.randomUUID().toString();
 		String confirmationUrl = String.format("%1$s%2$s%3$s%4$s%5$s", appUrl, "/reg/updatepw?id=", user.getId(),
 				"&token=", token);

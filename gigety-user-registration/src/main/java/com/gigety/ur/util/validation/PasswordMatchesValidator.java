@@ -13,16 +13,18 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
 	@Override
 	public boolean isValid(Object value, ConstraintValidatorContext context) {
 		final GigUser user = (GigUser)value;
-		log.debug("PW1: {}", user.getPassword());
-		log.debug("PW2: {}", user.getPasswordConfirmation());
+		log.debug("PW1: {}", user.getPassword());		log.debug("PW2: {}", user.getPasswordConfirmation());
 		
-		return user.getPassword().equals(user.getPasswordConfirmation());
+		boolean matches =  user.getPassword().equals(user.getPasswordConfirmation());
+		log.debug("Password matches : {}",matches);
+		return matches;
 	}
 
 	@Override
 	public void initialize(PasswordMatches constraintAnnotation) {
 		// TODO Auto-generated method stub
 		//ConstraintValidator.super.initialize(constraintAnnotation);
+		
 	}
 
 	

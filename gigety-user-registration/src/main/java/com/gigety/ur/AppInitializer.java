@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.gigety.ur.db.model.GigUser;
@@ -17,7 +19,7 @@ import com.gigety.ur.service.SecurityQuestionService;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Profile({"dev"})
+@Profile({"dev", "inmemory"})
 @Configuration
 @Slf4j
 public class AppInitializer{
@@ -35,11 +37,10 @@ public class AppInitializer{
 		this.passwordEncoder = passwordEncoder;
 		this.securityQuetionService = securityQuetionService;
 	}
-
-
-
+	
+	@Profile("inmemory")
 	@EventListener(ContextRefreshedEvent.class)
-	public void onApplicationEvent(ContextRefreshedEvent event) {
+	public void loadSecurityQuestions(ContextRefreshedEvent event) {
 		
 		//Initialize security test questions
 		final SecurityQuestion q1 = new SecurityQuestion("Name your first pet?");
@@ -50,6 +51,7 @@ public class AppInitializer{
 		});		
 		securityQuetionService.saveSecurityQuestions(qList);
 		
+
 		//Initialize dev user
 		GigUser user = new GigUser();
 		user.setEmail("samuelmosessegal@gmail.com");
@@ -58,6 +60,8 @@ public class AppInitializer{
 		user.setPassword(pw);
 		user.setPasswordConfirmation(pw);
 		user.setUserSecurityQuestion(new UserSecurityQuestion(q1,user,"first Pet" ));
+		
+		log.debug("Adding dev user : {}", user);
 		userRepo.save(user);
 		
 		//securityQuetionService.saveUserSecurityQuestion(user, q1, "first pet");
