@@ -17,4 +17,5 @@ public interface GigUserService {
 	GigUser saveRegisteredUser(GigUser gigUser);
 	GigUser findByEmail(String email);
 	boolean changePassword(GigUser gigUser, String password);
+	void removeUser(Long id);
 }

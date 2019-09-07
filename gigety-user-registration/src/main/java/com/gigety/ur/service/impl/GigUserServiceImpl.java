@@ -6,13 +6,11 @@ import java.util.Date;
 
 import javax.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.gigety.ur.db.model.GigUser;
 import com.gigety.ur.db.model.PWResetToken;
-import com.gigety.ur.db.model.UserSecurityQuestion;
 import com.gigety.ur.db.model.VerificationToken;
 import com.gigety.ur.db.repo.GigUserRepository;
 import com.gigety.ur.db.repo.PWResetTokenRepository;
@@ -150,11 +148,18 @@ public class GigUserServiceImpl implements GigUserService {
 			gigUser.setPassword(pwEncoder.encode(password));
 			gigUser.setPasswordConfirmation(gigUser.getPassword());
 			userRepo.save(gigUser);
+			//pwResetTokenRepo.deleteByGigUser(gigUser);
 		} catch (Exception e) {
 			log.error("Error updating password");
 			throw new RuntimeException(String.format("Unable to update password with exception %s", e.getMessage()), e);
 		}
 		return true;
+	}
+
+	@Override
+	public void removeUser(Long id) {
+		pwResetTokenRepo.deleteByGigUserId(id);
+		userRepo.deleteById(id);
 	}
 
 }

@@ -73,7 +73,7 @@ public class UserController {
 
 	@GetMapping("delete/{id}")
 	public ModelAndView delete(@PathVariable("id") final Long id) {
-		userRepo.findById(id).ifPresent(user -> userRepo.delete(user));
+		userService.removeUser(id);
 		return new ModelAndView("redirect:/");
 	}
 

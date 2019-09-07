@@ -44,8 +44,8 @@ public class GigUser {
 
 	private Boolean enabled;
 	
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	private PWResetToken pwRestToken;
+//	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//	private PWResetToken pwRestToken;
 	
 	@OneToOne(fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
 	private UserSecurityQuestion userSecurityQuestion;

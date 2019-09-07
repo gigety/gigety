@@ -8,4 +8,5 @@ import com.gigety.ur.db.model.PWResetToken;
 public interface PWResetTokenRepository extends JpaRepository<PWResetToken, Long> {
 	PWResetToken findByToken(String token);
 	void deleteByGigUser(GigUser gigUser);
+	void deleteByGigUserId(Long id);
 }
