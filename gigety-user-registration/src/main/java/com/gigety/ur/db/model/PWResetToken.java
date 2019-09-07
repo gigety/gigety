@@ -5,7 +5,6 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -34,10 +33,8 @@ public class PWResetToken {
 	private String token;
 	private Date expiryDate;
 
-	@OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "pwRestToken")
-	//@JoinColumn(nullable = false, name = "user_id")
+	@OneToOne(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "pwRestToken")	  
 	@NonNull
-    //@ForeignKey(deleteAction = ForeignKeyAction.CASCADE, updateAction = ForeignKeyAction.CASCADE)
 	private GigUser gigUser;
 
 }
