@@ -20,16 +20,22 @@
 		<form th:action="@{/doLogin}" method="post" class="form-horizontal">
 			<div class="form-group">
 				<label class="control-label col-xs-2" for="username" th:text="#{email}"> Email:</label>
-				<div class="col-xs-10">
-					<input id="username" type="text" name="username" />
+				<div class="col-xs-3">
+					<input id="username" type="text" name="username" style="width:100%"/>
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-xs-2" for="password" th:text="|#{password}:|"> Password: </label>
-				<div class="col-xs-10">
-					<input id="password" type="password" name="password" />
+				<div class="col-xs-3">
+					<input id="password" type="password" name="password" style="width:100%"/>
 				</div>
 			</div>
+            <div class="form-group">
+                <label class="control-label col-xs-2" for="remember"> Remember Me? </label>
+                <div class="col-xs-10">
+                    <input id="remember" type="checkbox" name="remember" value="true" />
+                </div>
+            </div>
 			<div class="form-actions col-xs-offset-2 col-xs-10">
 				<input type="submit" class="btn btn-primary" th:value="#{signin}" />
 				<a class="btn btn-default" th:href="@{/signup}" th:text="#{signup}">Sign Up</a>
@@ -37,6 +43,7 @@
 				<br />
 				<a th:href="@{/forgotpw}" th:text="#{reset.password}">Reset Password</a>
 			</div>
+			
 		</form>
 	</div>
 

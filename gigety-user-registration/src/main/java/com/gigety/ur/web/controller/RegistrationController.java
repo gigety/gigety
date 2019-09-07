@@ -88,18 +88,17 @@ public class RegistrationController {
 	 * @return
 	 */
 	@RequestMapping("/reg/register")
-	public ModelAndView registerUser(
-			@Validated(FormValidationGroup.class) final GigUser user,
+	public ModelAndView registerUser(@Validated(FormValidationGroup.class) final GigUser user,
 			final BindingResult result,
 			@RequestParam final Long questionId,
-			@RequestParam final String answer,			
+			@RequestParam final String answer,
 			final HttpServletRequest request,
 			final RedirectAttributes redirectAttributes,
 			final Locale locale) {
 
 		try {
 			if (result.hasErrors()) {
-				ModelAndView v =  new ModelAndView("registrationPage", "gigUser", user);
+				ModelAndView v = new ModelAndView("registrationPage", "gigUser", user);
 				v.addObject("questions", securityQuestionService.findAll());
 				return v;
 			}
@@ -114,8 +113,8 @@ public class RegistrationController {
 		} catch (EmailExistsException | Exception e) {
 			log.error("Error Registering User {} : {}", user, e.getMessage(), e);
 			result.addError(new FieldError("gigUser", "email", e.getMessage()));
-			ModelAndView v =  new ModelAndView("registrationPage", "gigUser", user);
-			
+			ModelAndView v = new ModelAndView("registrationPage", "gigUser", user);
+
 			v.addObject("questions", securityQuestionService.findAll());
 			return v;
 		}
@@ -240,7 +239,7 @@ public class RegistrationController {
 		// pass along required token
 		final ModelAndView view = new ModelAndView("resetpw");
 		UserSecurityQuestion userQuestion = securityQuestionService.findByUser(user);
-		//view.addObject("user", user);
+		view.addObject("gigUser", user);
 		view.addObject("token", token);
 		view.addObject("userQuestion", userQuestion);
 
@@ -260,24 +259,31 @@ public class RegistrationController {
 	 */
 	@PostMapping("/reg/savepw")
 	@ResponseBody
-	public ModelAndView savePassword(@RequestParam("password") final String password,
-			@RequestParam("passwordConfirmation") final String passwordConfirmation,
+	public ModelAndView savePassword(@Validated(FormValidationGroup.class) final GigUser gigUser,
+			final BindingResult result,
 			@RequestParam("token") String token,
 			@RequestParam final String answer,
 			final RedirectAttributes redirectAttributes,
-			final Locale locale) {
-
+			final Locale locale,
+			final Model model) {
 
 		final PWResetToken pToke = userService.getPWRestToken(token);
-
+		if (result.hasErrors()) {
+			final GigUser user = pToke.getGigUser();
+			gigUser.setUserSecurityQuestion(user.getUserSecurityQuestion());
+			gigUser.setId(user.getId());
+			return reloadRestPw(gigUser, token, null);
+			//ModelAndView v = new ModelAndView("resetpw", "gigUser", user);
+			//return v;
+		}
 		if (pToke == null) {
 			log.warn("No pwRestToken found for token {}", token);
 			redirectAttributes.addFlashAttribute("message", messageSource.getMessage("invalid.pw.token", null, locale));
 		} else {
 			final GigUser user = pToke.getGigUser();
-			if (!password.equals(passwordConfirmation)) {
-				return  reloadRestPw(user, token,messageSource.getMessage("password.no.match", null, locale));
-			}
+//			if (!password.equals(passwordConfirmation)) {
+//				return  reloadRestPw(user, token,messageSource.getMessage("password.no.match", null, locale));
+//			}
 
 			if (user == null) {
 				log.warn("Unknown User for token {}", pToke);
@@ -286,12 +292,12 @@ public class RegistrationController {
 				try {
 					String savedAnswer = securityQuestionService.findByUser(user).getAnswer();
 					if (answer.equals(savedAnswer)) {
-						userService.changePassword(user, password);
+						userService.changePassword(user, gigUser.getPassword());
 						redirectAttributes.addFlashAttribute("message",
 								messageSource.getMessage("pw.reset.success", null, locale));
 					} else {
 
-						return reloadRestPw(user, token, messageSource.getMessage("answer.incorrect",null,locale));
+						return reloadRestPw(user, token, messageSource.getMessage("answer.incorrect", null, locale));
 					}
 				} catch (Exception e) {
 					log.error("Error saving user password: {}", e.getMessage(), e);
@@ -303,14 +309,20 @@ public class RegistrationController {
 		return new ModelAndView(GigUrls.REDIRECT_LOGIN);
 	}
 
-	private ModelAndView reloadRestPw(GigUser user, String token, String errorMessage) {
+	private ModelAndView reloadRestPw(GigUser user,
+			String token,
+			String errorMessage) {
 		UserSecurityQuestion userQuestion = securityQuestionService.findByUser(user);
 		ModelAndView view = new ModelAndView("resetpw");
+		view.addObject("gigUser", user);
 		view.addObject("token", token);
 		view.addObject("userQuestion", userQuestion);
-		view.addObject("errorMessage",errorMessage);	
+		if(errorMessage != null) {
+			view.addObject("errorMessage", errorMessage);
+		}
 		return view;
 	}
+
 	private boolean tokenExpired(VerificationToken vToken) {
 		return (vToken.getExpiryDate().getTime() - Calendar.getInstance().getTime().getTime() <= 0);
 	}

@@ -66,7 +66,7 @@ public class GigSecurityConf extends WebSecurityConfigurerAdapter{
 			
 		.and()
 		.logout().permitAll().logoutUrl("/logout")
-		
+		.and().rememberMe().key("gigetyKey")
 		.and()
 		.csrf().disable();
 		// @formatter:on

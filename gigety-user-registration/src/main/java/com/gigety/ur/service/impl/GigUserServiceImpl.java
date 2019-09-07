@@ -158,6 +158,7 @@ public class GigUserServiceImpl implements GigUserService {
 
 	@Override
 	public void removeUser(Long id) {
+		verificationTokenRepo.deleteByGigUserId(id);
 		pwResetTokenRepo.deleteByGigUserId(id);
 		userRepo.deleteById(id);
 	}
