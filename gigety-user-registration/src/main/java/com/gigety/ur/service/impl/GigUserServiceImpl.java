@@ -58,7 +58,7 @@ public class GigUserServiceImpl implements GigUserService {
 		String encoded = pwEncoder.encode(gigUser.getPassword());
 		gigUser.setEnabled(false);
 		gigUser.setPassword(encoded);
-		gigUser.setPasswordConfirmation(encoded);
+		//gigUser.setPasswordConfirmation(encoded);
 		log.debug("Saving user :::: {}",gigUser);
 		gigUser =  userRepo.save(gigUser);
 		userSecurityRepo.save(gigUser.getUserSecurityQuestion());

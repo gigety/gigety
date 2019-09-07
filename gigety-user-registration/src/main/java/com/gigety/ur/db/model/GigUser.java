@@ -20,7 +20,7 @@ import com.gigety.ur.util.validation.ValidPassword;
 import lombok.Data;
 
 @Entity
-@PasswordMatches
+@PasswordMatches(groups = FormValidationGroup.class)
 @Data
 public class GigUser {
 

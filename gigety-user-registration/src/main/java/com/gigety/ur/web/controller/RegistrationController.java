@@ -6,7 +6,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -241,7 +240,7 @@ public class RegistrationController {
 		// pass along required token
 		final ModelAndView view = new ModelAndView("resetpw");
 		UserSecurityQuestion userQuestion = securityQuestionService.findByUser(user);
-
+		//view.addObject("user", user);
 		view.addObject("token", token);
 		view.addObject("userQuestion", userQuestion);
 

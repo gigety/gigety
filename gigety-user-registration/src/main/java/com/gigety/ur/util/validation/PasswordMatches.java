@@ -10,7 +10,11 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 /**
- * Annotation for {@link PasswordMatchesValidator}
+ * PasswordMatches - annotation for {@link PasswordMatchesValidator}
+ * Used with {@link FormValidationGroup} for groups options.
+ * @PasswordMatches(groups = FormValidationGroup.class)
+ * now only valid annotations with this groups set will trigger validation.
+ * i.e. @Validated(FormValidationGroup.class) 
  */
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.TYPE_PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
