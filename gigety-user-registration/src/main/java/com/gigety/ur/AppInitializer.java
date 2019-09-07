@@ -53,16 +53,16 @@ public class AppInitializer{
 		
 
 		//Initialize dev user
-		GigUser user = new GigUser();
-		user.setEmail("samuelmosessegal@gmail.com");
-		user.setEnabled(true);
-		String pw = passwordEncoder.encode("password");
-		user.setPassword(pw);
-		user.setPasswordConfirmation(pw);
-		user.setUserSecurityQuestion(new UserSecurityQuestion(q1,user,"first Pet" ));
-		
-		log.debug("Adding dev user : {}", user);
-		userRepo.save(user);
+//		GigUser user = new GigUser();
+//		user.setEmail("samuelmosessegal@gmail.com");
+//		user.setEnabled(true);
+//		String pw = passwordEncoder.encode("password");
+//		user.setPassword(pw);
+//		user.setPasswordConfirmation(pw);
+//		user.setUserSecurityQuestion(new UserSecurityQuestion(q1,user,"first Pet" ));
+//		
+//		log.debug("Adding dev user : {}", user);
+//		userRepo.save(user);
 		
 		//securityQuetionService.saveUserSecurityQuestion(user, q1, "first pet");
 		

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,6 +34,7 @@ import com.gigety.ur.service.GigUserService;
 import com.gigety.ur.service.SecurityQuestionService;
 import com.gigety.ur.util.GigUrls;
 import com.gigety.ur.util.validation.EmailExistsException;
+import com.gigety.ur.util.validation.FormValidationGroup;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -87,14 +89,14 @@ public class RegistrationController {
 	 * @return
 	 */
 	@RequestMapping("/reg/register")
-	public ModelAndView registerUser(@Valid final GigUser user,
+	public ModelAndView registerUser(
+			@Validated(FormValidationGroup.class) final GigUser user,
 			final BindingResult result,
 			@RequestParam final Long questionId,
-			@RequestParam final String answer,
-			
+			@RequestParam final String answer,			
 			final HttpServletRequest request,
-			RedirectAttributes redirectAttributes,
-			Locale locale) {
+			final RedirectAttributes redirectAttributes,
+			final Locale locale) {
 
 		try {
 			if (result.hasErrors()) {
@@ -103,8 +105,8 @@ public class RegistrationController {
 				return v;
 			}
 			SecurityQuestion sq = securityQuestionService.findQuestionById(questionId);
-
-			final GigUser registered = userService.registerNewUser(user, new UserSecurityQuestion(sq, user, answer));
+			user.setUserSecurityQuestion(new UserSecurityQuestion(sq, user, answer));
+			final GigUser registered = userService.registerNewUser(user);
 			registered.setEnabled(false);
 			final String appUrl = getAppUrl(request);
 			log.debug("Create User {} ", registered);

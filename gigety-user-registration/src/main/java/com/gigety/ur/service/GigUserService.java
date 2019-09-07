@@ -8,7 +8,7 @@ import com.gigety.ur.util.validation.EmailExistsException;
 
 public interface GigUserService {
 
-	GigUser registerNewUser(GigUser gigUser, UserSecurityQuestion userSecurityQuestion) throws EmailExistsException, Exception;
+	GigUser registerNewUser(GigUser gigUser) throws EmailExistsException, Exception;
 	GigUser updateExistingUser(GigUser gigUser) throws EmailExistsException;
 	void assignVerificationToken(GigUser gigUser, String token);
 	void assignResetPWToken(GigUser gigUser, String token);

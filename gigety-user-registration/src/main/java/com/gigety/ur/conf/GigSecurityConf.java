@@ -28,13 +28,13 @@ public class GigSecurityConf extends WebSecurityConfigurerAdapter{
 		log.debug("ROLE :: {}",GigRoles.GIG_USER.toString());
 		auth.userDetailsService(userDetailsService).passwordEncoder(delegatingPasswordEncoder());
 	}
-//	
-//	 @Override
-//	   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//	      auth.userDetailsService(userDetailsService)
-////	              .passwordEncoder(new ShaPasswordEncoder(encodingStrength));
-//	      			.passwordEncoder(delegatingPasswordEncoder());
-//	   }
+	
+	 @Override
+	   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+	      auth.userDetailsService(userDetailsService)
+//	              .passwordEncoder(new ShaPasswordEncoder(encodingStrength));
+	      			.passwordEncoder(delegatingPasswordEncoder());
+	   }
 	
 
 	@Override

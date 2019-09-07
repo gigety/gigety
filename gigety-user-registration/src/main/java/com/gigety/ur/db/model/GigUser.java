@@ -13,14 +13,11 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gigety.ur.util.validation.FormValidationGroup;
 import com.gigety.ur.util.validation.PasswordMatches;
+import com.gigety.ur.util.validation.ValidPassword;
 
 import lombok.Data;
-import lombok.NonNull;
 
 @Entity
 @PasswordMatches
@@ -35,6 +32,7 @@ public class GigUser {
 	@NotEmpty(message = "Email required")
 	private String email;
 
+	@ValidPassword(groups = FormValidationGroup.class)
 	@NotEmpty(message = "Password required")
 	private String password;
 	
