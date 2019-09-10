@@ -15,14 +15,14 @@
             </div>
             <input type="hidden" th:field="*{id}" th:class="${#fields.hasErrors('id')} ? 'field-error'" />
 
-            <label for="email">Email</label>
+            <label for="email" th:text="#{email}">Email</label>
             <input type="email" th:field="*{email}" th:class="${#fields.hasErrors('email')} ? 'field-error'" />
-            <label for="password">Password</label>
+            <label for="password" th:text="#{password}">Password</label>
             <input type="password" th:field="*{password}" th:class="${#fields.hasErrors('password')} ? 'field-error'" />
-            <label for="passwordConfirmation">Password Confirmation</label>
+            <label for="passwordConfirmation" th:text="#{password.confirmation}">Password Confirmation</label>
             <input type="password" th:field="*{passwordConfirmation}" th:class="${#fields.hasErrors('passwordConfirmation')} ? 'field-error'" />
             <div class="form-actions">
-                <input type="submit" value="Save" />
+                <input type="submit" th:value="#{save}" />
             </div>
         </form>
     </div>

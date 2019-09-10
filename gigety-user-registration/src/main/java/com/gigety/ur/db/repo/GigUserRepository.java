@@ -8,5 +8,4 @@ public interface GigUserRepository extends JpaRepository<GigUser, Long> {
 	
 	GigUser findByEmail(String email);
 	void deleteById(String id);
-	
 }

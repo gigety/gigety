@@ -31,7 +31,7 @@
 			<div class="form-group">
 				<label class="control-label col-xs-2" for="answer"
 					th:text="#{answer}">Answer</label>
-				<div class="col-xs-10">
+				<div class="col-xs-2">
 					<input id="answer" type="text" name="answer" />
 				</div>
 			</div>
@@ -41,9 +41,9 @@
 			<div class="form-group">
 				<label class="control-label col-xs-2" for="password"
 					th:text="#{password}">Password</label>
-				<div class="col-xs-10">
+				<div class="col-xs-2">
 					<input id="password" type="password" title="password"
-						th:field="*{password}" /> <span
+						th:field="*{password}" style="width:100%"/> <span
 						th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
 						class="help-block">Password Error</span>
 				</div>
@@ -51,9 +51,10 @@
 			<div class="form-group">
 				<label class="control-label col-xs-2" for="passwordConfirmation"
 					th:text="#{password.confirmation}">Password Confirmation</label>
-				<div class="col-xs-10">
+				<div class="col-xs-2">
 					<input id="passwordConfirmation" type="password"
-						title="passwordConfirmation" th:field="*{passwordConfirmation}" />
+						title="passwordConfirmation" th:field="*{passwordConfirmation}" 
+						style="width:100%"/>
 					<span th:if="${#fields.hasErrors('passwordConfirmation')}"
 						th:errors="*{passwordConfirmation}" class="help-block">Password
 						Confirmation Error</span>

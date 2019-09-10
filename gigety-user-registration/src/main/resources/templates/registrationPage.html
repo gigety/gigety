@@ -22,6 +22,7 @@
 				password confirmation</div>
 			<input type="hidden" th:field="*{id}" />
 
+			<!-- FIELD: email -->
 			<div class="form-group"
 				th:classappend="${#fields.hasErrors('email')} ? 'has-error'">
 				<label class="control-label col-xs-2" for="email" th:text="#{email}">Email</label>
@@ -31,6 +32,8 @@
 						class="help-block">Email Error</span>
 				</div>
 			</div>
+			
+			<!-- FIELD: password-->
 			<div class="form-group"
 				th:classappend="${#fields.hasErrors('password')} ? 'has-error'">
 				<label class="control-label col-xs-2" for="password">Password</label>
@@ -41,6 +44,8 @@
 						class="help-block">Password Error</span>
 				</div>
 			</div>
+			
+			<!-- FIELD: passwordConfirmation -->
 			<div class="form-group"
 				th:classappend="${#fields.hasErrors('passwordConfirmation')} ? 'has-error'">
 				<label class="control-label col-xs-2" for="passwordConfirmation"
@@ -54,6 +59,7 @@
 				</div>
 			</div>
 
+			<!-- FIELD: securityQuestion -->
 			<div class="form-group">
 				<label class="control-label col-xs-2" for="question"
 					th:text="#{sec.question}">Security Question:</label>
@@ -64,6 +70,8 @@
 					</select>
 				</div>
 			</div>
+			
+			<!-- FIELD: security answer -->
 			<div class="form-group">
 				<label class="control-label col-xs-2" for="answer"
 					th:text="#{answer}">Answer</label>

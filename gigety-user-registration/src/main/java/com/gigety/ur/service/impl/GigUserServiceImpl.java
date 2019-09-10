@@ -3,12 +3,12 @@ package com.gigety.ur.service.impl;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import com.gigety.ur.db.model.GigUser;
 import com.gigety.ur.db.model.PWResetToken;
@@ -72,12 +72,14 @@ public class GigUserServiceImpl implements GigUserService {
 	}
 
 	@Override
-	public GigUser updateExistingUser(GigUser gigUser) throws EmailExistsException {
-		final GigUser emailOwner = userRepo.findByEmail(gigUser.getEmail());
-		if (emailOwner != null && !emailOwner.getId().equals(gigUser.getId())) {
-			throw new EmailExistsException("Operation not available for " + gigUser.getEmail());
-		}
-		return userRepo.save(gigUser);
+	public GigUser updateExistingUser(GigUser gigUser) {
+		Optional<GigUser> optional = userRepo.findById(gigUser.getId());
+		GigUser user = optional.get();
+		String encoded = pwEncoder.encode(gigUser.getPassword());
+		
+		user.setPassword(encoded);
+		user.setPasswordConfirmation(encoded);
+		return userRepo.save(user);
 	}
 
 	@Override

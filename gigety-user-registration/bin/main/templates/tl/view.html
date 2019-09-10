@@ -21,7 +21,7 @@
             <dd th:text="${#authentication.principal.authorities}"></dd>
         </dl>
         <div class="pull-left">
-            <a href="users" th:href="@{'/user/delete/' + ${user.id}}"> delete </a> | <a href="form.html" th:href="@{'/user/modify/' + ${user.id}}"> modify </a>
+            <a href="users" th:href="@{'/user/delete/' + ${user.id}}"> delete </a> | <a href="updateForm.html" th:href="@{'/user/modify/' + ${user.id}}"> modify </a>
         </div>
     </div>
 </body>

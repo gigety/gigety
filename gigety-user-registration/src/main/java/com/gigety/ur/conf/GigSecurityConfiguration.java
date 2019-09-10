@@ -5,6 +5,9 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.intercept.RunAsImplAuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,30 +18,35 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
+import com.gigety.ur.util.GigConstants;
 import com.gigety.ur.util.GigRoles;
 
 import lombok.extern.slf4j.Slf4j;
 
 @EnableWebSecurity
-//Ø@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
 @Slf4j
-public class GigSecurityConf extends WebSecurityConfigurerAdapter{
+public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 
 	@Autowired
 	private UserDetailsService userDetailsService;
+	@Autowired
+	private DataSource dataSource;	
 	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		log.debug("ROLE :: {}",GigRoles.GIG_USER.toString());
-		auth.userDetailsService(userDetailsService).passwordEncoder(delegatingPasswordEncoder());
+		
+		auth.authenticationProvider(daoAuthenticationProvider());
+		auth.authenticationProvider(runAsAuthenticationProvider());
+		log.debug("Configuring GLOBAL auth :: {}", auth);
 	}
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService)
-//	              .passwordEncoder(new ShaPasswordEncoder(encodingStrength));
-				.passwordEncoder(delegatingPasswordEncoder());
+		auth.authenticationProvider(daoAuthenticationProvider());
+		auth.authenticationProvider(runAsAuthenticationProvider());
+		log.debug("Configuring auth :: {}", auth);
 	}
 	
 	@Override
@@ -88,13 +96,24 @@ public class GigSecurityConf extends WebSecurityConfigurerAdapter{
 		return new BCryptPasswordEncoder();
 	}
 	
-	@Autowired
-	private DataSource dataSource;
-	
 	@Bean PersistentTokenRepository persistentTokenRepository() {
 		JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
 		repo.setDataSource(dataSource);
-		return repo;
-		
+		return repo;	
+	}
+	
+	@Bean
+	public AuthenticationProvider runAsAuthenticationProvider() {
+		RunAsImplAuthenticationProvider authProvider = new RunAsImplAuthenticationProvider();
+		authProvider.setKey(GigConstants.RUN_AS_KEY);
+		return authProvider;
+	}
+	
+	@Bean
+	public AuthenticationProvider daoAuthenticationProvider() {
+		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+		authProvider.setUserDetailsService(userDetailsService);
+		authProvider.setPasswordEncoder(delegatingPasswordEncoder());
+		return authProvider;
 	}
 }

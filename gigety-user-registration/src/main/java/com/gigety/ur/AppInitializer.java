@@ -25,7 +25,7 @@ public class AppInitializer{
 	private final GigUserRepository userRepo;
 	private final PasswordEncoder passwordEncoder;
 	private final SecurityQuestionService securityQuetionService; 
-
+	
 
 
 	public AppInitializer(GigUserRepository userRepo, PasswordEncoder passwordEncoder,

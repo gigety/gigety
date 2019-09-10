@@ -17,7 +17,7 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 @EnableWebMvc
 @Configuration
-public class GigWebMVCConf implements WebMvcConfigurer {
+public class GigWebMVCConfiguration implements WebMvcConfigurer {
 
 	/**
 	 * Alternative way to map a request compared to @Controller
