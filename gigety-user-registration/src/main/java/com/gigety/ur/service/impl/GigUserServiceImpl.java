@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import com.gigety.ur.db.model.GigUser;
 import com.gigety.ur.db.model.PWResetToken;
@@ -24,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * @author samuelsegal
  * 
- * GigUserService - service for registering gigety users.
+ *         GigUserService - service for registering gigety users.
  */
 @Service
 @Transactional
@@ -36,7 +37,6 @@ public class GigUserServiceImpl implements GigUserService {
 	private final VerificationTokenRepository verificationTokenRepo;
 	private final PWResetTokenRepository pwResetTokenRepo;
 	private final UserSecurityQuestionRepository userSecurityRepo;
-
 
 	public GigUserServiceImpl(GigUserRepository userRepo, BCryptPasswordEncoder pwEncoder,
 			VerificationTokenRepository verificationTokenRepo, PWResetTokenRepository pwResetTokenRepo,
@@ -52,18 +52,20 @@ public class GigUserServiceImpl implements GigUserService {
 	@Override
 	public GigUser registerNewUser(GigUser gigUser) throws EmailExistsException, Exception {
 		try {
-		if (emailExists(gigUser.getEmail())) {
-			throw new EmailExistsException("An account already exists for " + gigUser.getEmail());
-		}
-		String encoded = pwEncoder.encode(gigUser.getPassword());
-		gigUser.setEnabled(false);
-		gigUser.setPassword(encoded);
-		//gigUser.setPasswordConfirmation(encoded);
-		log.debug("Saving user :::: {}",gigUser);
-		gigUser =  userRepo.save(gigUser);
-		userSecurityRepo.save(gigUser.getUserSecurityQuestion());
-		return gigUser;
-		}catch(Exception e) {
+			if (emailExists(gigUser.getEmail())) {
+				throw new EmailExistsException("An account already exists for " + gigUser.getEmail());
+			}
+			String encoded = pwEncoder.encode(gigUser.getPassword());
+			gigUser.setEnabled(false);
+			gigUser.setPassword(encoded);
+			gigUser.setPasswordConfirmation(encoded);
+			log.debug("Saving user :::: {}", gigUser);
+			gigUser = userRepo.save(gigUser);
+			if(gigUser.getUserSecurityQuestion() != null) {
+				userSecurityRepo.save(gigUser.getUserSecurityQuestion());
+			}
+			return gigUser;
+		} catch (Exception e) {
 			log.error("Error registering new user in GigUserServiceImpl : {}", e.getMessage());
 			throw new Exception("Error registering new user in GigUserServiceImpl : " + e.getMessage());
 		}
@@ -114,7 +116,8 @@ public class GigUserServiceImpl implements GigUserService {
 	}
 
 	@Override
-	public void assignVerificationToken(GigUser gigUser, String token) {
+	public void assignVerificationToken(GigUser gigUser,
+			String token) {
 		VerificationToken vToken = new VerificationToken(token, gigUser);
 		// TODO: Research Date best practices for java
 		Instant now = Instant.now(); // current date
@@ -123,11 +126,12 @@ public class GigUserServiceImpl implements GigUserService {
 		vToken.setExpiryDate(dateAfter);
 		log.debug("Set verification token : {} for user : {}", token, gigUser);
 		verificationTokenRepo.save(vToken);
-
+		
 	}
 
 	@Override
-	public void assignResetPWToken(GigUser gigUser, String token) {
+	public void assignResetPWToken(GigUser gigUser,
+			String token) {
 		PWResetToken pwResetOken = new PWResetToken(token, gigUser);
 		// TODO: Research Date best practices for java
 		Instant now = Instant.now(); // current date
@@ -143,12 +147,14 @@ public class GigUserServiceImpl implements GigUserService {
 	 * Update user password
 	 */
 	@Override
-	public boolean changePassword(GigUser gigUser, String password) {
+	public boolean changePassword(GigUser gigUser,
+			String password) {
 		try {
-			gigUser.setPassword(pwEncoder.encode(password));
+			String encoded = pwEncoder.encode(password);
+			gigUser.setPassword(encoded);
 			gigUser.setPasswordConfirmation(gigUser.getPassword());
 			userRepo.save(gigUser);
-			//pwResetTokenRepo.deleteByGigUser(gigUser);
+			// pwResetTokenRepo.deleteByGigUser(gigUser);
 		} catch (Exception e) {
 			log.error("Error updating password");
 			throw new RuntimeException(String.format("Unable to update password with exception %s", e.getMessage()), e);
@@ -161,6 +167,11 @@ public class GigUserServiceImpl implements GigUserService {
 		verificationTokenRepo.deleteByGigUserId(id);
 		pwResetTokenRepo.deleteByGigUserId(id);
 		userRepo.deleteById(id);
+	}
+
+	@Override
+	public Iterable<GigUser> findAll() {
+		return userRepo.findAll();
 	}
 
 }

@@ -2,7 +2,6 @@ package com.gigety.ur.service;
 
 import com.gigety.ur.db.model.GigUser;
 import com.gigety.ur.db.model.PWResetToken;
-import com.gigety.ur.db.model.UserSecurityQuestion;
 import com.gigety.ur.db.model.VerificationToken;
 import com.gigety.ur.util.validation.EmailExistsException;
 
@@ -18,4 +17,5 @@ public interface GigUserService {
 	GigUser findByEmail(String email);
 	boolean changePassword(GigUser gigUser, String password);
 	void removeUser(Long id);
+	Iterable<GigUser> findAll();
 }

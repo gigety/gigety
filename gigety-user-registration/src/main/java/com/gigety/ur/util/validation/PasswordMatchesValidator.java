@@ -23,10 +23,7 @@ public class PasswordMatchesValidator implements ConstraintValidator<PasswordMat
 
 	@Override
 	public void initialize(PasswordMatches constraintAnnotation) {
-		// TODO Auto-generated method stub
 		//ConstraintValidator.super.initialize(constraintAnnotation);
-		
 	}
 
-	
 }

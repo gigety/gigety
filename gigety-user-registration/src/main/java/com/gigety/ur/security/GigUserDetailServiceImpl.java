@@ -21,12 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Transactional
 @Slf4j
-public class GigUserDetailService implements UserDetailsService {
+public class GigUserDetailServiceImpl implements UserDetailsService {
 
 	private final GigUserRepository userRepo;
 	private static final String ROLE_USER = "ROLE_USER";
 	
-	public GigUserDetailService(GigUserRepository userRepo) {
+	public GigUserDetailServiceImpl(GigUserRepository userRepo) {
 		super();
 		this.userRepo = userRepo;
 	}

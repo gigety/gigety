@@ -1,5 +1,7 @@
 package com.gigety.ur.conf;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,12 +12,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import com.gigety.ur.util.GigRoles;
 
 import lombok.extern.slf4j.Slf4j;
 
 @EnableWebSecurity
+//Ø@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
 @Slf4j
 public class GigSecurityConf extends WebSecurityConfigurerAdapter{
@@ -28,15 +33,14 @@ public class GigSecurityConf extends WebSecurityConfigurerAdapter{
 		log.debug("ROLE :: {}",GigRoles.GIG_USER.toString());
 		auth.userDetailsService(userDetailsService).passwordEncoder(delegatingPasswordEncoder());
 	}
-	
-	 @Override
-	   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-	      auth.userDetailsService(userDetailsService)
-//	              .passwordEncoder(new ShaPasswordEncoder(encodingStrength));
-	      			.passwordEncoder(delegatingPasswordEncoder());
-	   }
-	
 
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService)
+//	              .passwordEncoder(new ShaPasswordEncoder(encodingStrength));
+				.passwordEncoder(delegatingPasswordEncoder());
+	}
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// @formatter:off
@@ -65,8 +69,15 @@ public class GigSecurityConf extends WebSecurityConfigurerAdapter{
 			.loginProcessingUrl("/doLogin")
 			
 		.and()
+		.rememberMe().tokenRepository(persistentTokenRepository())
+			//.key("gigetyKey")
+			//.tokenValiditySeconds(604800)
+			//.rememberMeCookieName("sticky-cookie")
+			//.rememberMeParameter("gig-rem-user")
+			//TODO: useSe ureTrue once https is configuredz
+			//.useSecureCookie(true)
+		.and()
 		.logout().permitAll().logoutUrl("/logout")
-		.and().rememberMe().key("gigetyKey")
 		.and()
 		.csrf().disable();
 		// @formatter:on
@@ -75,5 +86,15 @@ public class GigSecurityConf extends WebSecurityConfigurerAdapter{
 	@Bean
 	public PasswordEncoder delegatingPasswordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+	
+	@Autowired
+	private DataSource dataSource;
+	
+	@Bean PersistentTokenRepository persistentTokenRepository() {
+		JdbcTokenRepositoryImpl repo = new JdbcTokenRepositoryImpl();
+		repo.setDataSource(dataSource);
+		return repo;
+		
 	}
 }

@@ -36,6 +36,9 @@ public class GigUser {
 	@NotEmpty(message = "Password required")
 	private String password;
 	
+	//TODO: pw confirmation should be transient in my opinion
+	//however when disabled AppInitializer will not updateExisingUser
+	//Super confusing must revisit.
 	@Transient
 	@NotEmpty(message = "Password confirmation required")
 	private String passwordConfirmation;

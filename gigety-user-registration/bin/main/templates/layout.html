@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <title>Layout</title>
 
@@ -15,6 +16,7 @@
                     <li><a th:href="@{/user/}" href="users.html"> Users </a></li>
                 </ul>
                 <ul class="nav pull-right">
+                	<li><span sec:authentication="principal.username" class="menu-left"></span></li>
                     <li><a th:href="@{/logout}" class="menu-right" > Logout </a></li>
                 </ul>
             </div>

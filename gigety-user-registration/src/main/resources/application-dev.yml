@@ -34,3 +34,5 @@ logging:
   level:
     com.gigety.ur: debug
     
+gigety: 
+  root-url: http://localhost:8083

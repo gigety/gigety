@@ -3,6 +3,7 @@ package com.gigety.ur.web.controller;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -15,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gigety.ur.db.model.GigUser;
-import com.gigety.ur.db.repo.GigUserRepository;
 import com.gigety.ur.service.GigUserService;
 import com.gigety.ur.util.validation.EmailExistsException;
 
@@ -26,19 +26,17 @@ import com.gigety.ur.util.validation.EmailExistsException;
 @RequestMapping("/user")
 public class UserController {
 
-	private final GigUserRepository userRepo;
 	private final GigUserService userService;
 
 	@Autowired
-	public UserController(GigUserRepository userRepo, GigUserService userService) {
+	public UserController(GigUserService userService) {
 		super();
-		this.userRepo = userRepo;
 		this.userService = userService;
 	}
 
 	@RequestMapping
 	public ModelAndView list() {
-		Iterable<GigUser> users = this.userRepo.findAll();
+		Iterable<GigUser> users =  userService.findAll();
 		return new ModelAndView("tl/list", "users", users);
 	}
 
@@ -47,29 +45,33 @@ public class UserController {
 		return new ModelAndView("tl/view", "user", user);
 	}
 
-//	@RequestMapping(method = RequestMethod.POST)
-//	public ModelAndView create(
-//			@Valid final GigUser user,
-//			final BindingResult result,
-//			final RedirectAttributes redirect) {
-//
-//		if (result.hasErrors()) {
-//			return new ModelAndView("tl/form", "formErrors", result.getAllErrors());
-//		}
-//		try {
-//			if (user.getId() == null) {
-//				userService.registerNewUser(user);
-//				redirect.addFlashAttribute("globalMessage", "New user has been created");
-//			} else {
-//				userService.updateExistingUser(user);
-//				redirect.addFlashAttribute("globalMessage", "User " + user.getEmail() + " has been updated");
-//			}
-//		} catch (EmailExistsException e) {
-//			result.addError(new FieldError("user", "email", e.getMessage()));
-//			return new ModelAndView("tl/form", "user", user);
-//		}
-//		return new ModelAndView("redirect:/user/{user.id}", "user.id", user.getId());
-//	}
+
+	@RequestMapping(method = RequestMethod.POST)
+	@PreAuthorize("isGigAdmin() and hasRole('USER') and principal.username == 'samuelmosessegal@gmail.com'")
+	public ModelAndView create(
+			@Valid final GigUser user,
+			final BindingResult result,
+			final RedirectAttributes redirect) {
+
+		if (result.hasErrors()) {
+			return new ModelAndView("tl/form", "formErrors", result.getAllErrors());
+		}
+		try {
+			if (user.getId() == null) {
+				userService.registerNewUser(user);
+				user.setEnabled(true);
+				userService.updateExistingUser(user);
+				redirect.addFlashAttribute("globalMessage", "New user has been created");
+			} else {
+				userService.updateExistingUser(user);
+				redirect.addFlashAttribute("globalMessage", "User " + user.getEmail() + " has been updated");
+			}
+		} catch (EmailExistsException | Exception e) {
+			result.addError(new FieldError("user", "email", e.getMessage()));
+			return new ModelAndView("tl/form", "user", user);
+		}
+		return new ModelAndView("redirect:/user/{user.id}", "user.id", user.getId());
+	}
 
 	@GetMapping("delete/{id}")
 	public ModelAndView delete(@PathVariable("id") final Long id) {
@@ -83,6 +85,7 @@ public class UserController {
 	}
 
 	@GetMapping(params = "form")
+	@PreAuthorize("isGigAdmin()  and hasRole('USER') and principal.username == 'samuelmosessegal@gmail.com'")
 	public String createForm(@ModelAttribute final GigUser user) {
 		return "tl/form";
 	}
