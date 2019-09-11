@@ -1,7 +1,5 @@
 package com.gigety.ur.web.controller;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -20,6 +18,7 @@ import com.gigety.ur.db.model.GigUser;
 import com.gigety.ur.service.GigUserService;
 import com.gigety.ur.util.validation.EmailExistsException;
 import com.gigety.ur.util.validation.FormValidationGroup;
+import com.gigety.ur.util.validation.securityQuestion.SecurityQuestionValidationGroup;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -52,7 +51,8 @@ public class UserController {
 
 	@PostMapping()
 	@PreAuthorize("isGigAdmin() and hasRole('USER') and principal.username == 'samuelmosessegal@gmail.com'")
-	public ModelAndView create(@Validated(FormValidationGroup.class) final GigUser user,
+	public ModelAndView create(
+			@Validated(FormValidationGroup.class) final GigUser user,
 			final BindingResult result,
 			final RedirectAttributes redirect) {
 
@@ -99,13 +99,14 @@ public class UserController {
 			final RedirectAttributes redirect) {
 		log.debug("Updating User : {}", gigUser);
 		if (result.hasErrors()) {
-			return new ModelAndView("tl/form");
+			return new ModelAndView("tl/updateForm");
 		}
 		try {
+			userService.changePassword(gigUser, gigUser.getPassword());
 			userService.updateExistingUser(gigUser);
 		} catch (EmailExistsException | Exception e) {
 			log.error("Error updating User {} :: {}", gigUser, e.getMessage(), e);
-			return new ModelAndView("tl/form");
+			return new ModelAndView("tl/updateForm");
 		}
 		return new ModelAndView("redirect:/user/{user.id}", "user.id", gigUser.getId());
 	}

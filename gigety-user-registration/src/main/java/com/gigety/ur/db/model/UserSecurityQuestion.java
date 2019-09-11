@@ -1,6 +1,5 @@
 package com.gigety.ur.db.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -30,11 +29,10 @@ public class UserSecurityQuestion {
 	private Long id;
 	
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn()
 	@NonNull
 	private SecurityQuestion question;
 	
-	@OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL, mappedBy = "userSecurityQuestion", orphanRemoval = true) 
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "userSecurityQuestion" ) 
 	@NonNull
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude

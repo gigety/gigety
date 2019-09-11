@@ -17,6 +17,7 @@
 		<br />
 		<form th:action="@{/reg/savepw}" action="#" method="post"
 			class="form-horizontal" th:object="${gigUser}">
+			<input type="hidden" th:field="*{id}"/>
 			<div th:if="${#fields.hasErrors('global')}" th:errors="*{global}"
 				class="alert alert-danger" th:text="#{incorrect.pw.conf}">Incorrect
 				password confirmation</div>
@@ -32,7 +33,10 @@
 				<label class="control-label col-xs-2" for="answer"
 					th:text="#{answer}">Answer</label>
 				<div class="col-xs-2">
-					<input id="answer" type="text" name="answer" />
+					<input type="text" th:field="*{givenAnswer}"/>
+					<span
+						th:if="${#fields.hasErrors('givenAnswer')}" th:errors="*{givenAnswer}"
+						class="text-danger">Answer wrong Error</span>
 				</div>
 			</div>
 
@@ -45,7 +49,7 @@
 					<input id="password" type="password" title="password"
 						th:field="*{password}" style="width:100%"/> <span
 						th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
-						class="help-block">Password Error</span>
+						class="text-danger">Password Error</span>
 				</div>
 			</div>
 			<div class="form-group">
@@ -56,7 +60,7 @@
 						title="passwordConfirmation" th:field="*{passwordConfirmation}" 
 						style="width:100%"/>
 					<span th:if="${#fields.hasErrors('passwordConfirmation')}"
-						th:errors="*{passwordConfirmation}" class="help-block">Password
+						th:errors="*{passwordConfirmation}" class="text-danger">Password
 						Confirmation Error</span>
 				</div>
 			</div>

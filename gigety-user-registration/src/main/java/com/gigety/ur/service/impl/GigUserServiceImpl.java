@@ -75,10 +75,8 @@ public class GigUserServiceImpl implements GigUserService {
 	public GigUser updateExistingUser(GigUser gigUser) {
 		Optional<GigUser> optional = userRepo.findById(gigUser.getId());
 		GigUser user = optional.get();
-		String encoded = pwEncoder.encode(gigUser.getPassword());
-		
-		user.setPassword(encoded);
-		user.setPasswordConfirmation(encoded);
+		//TODO: Currently this updates ZERO fields. First lets determine best approach 
+		//for merging updated fields. As for passwords just use changePassword
 		return userRepo.save(user);
 	}
 
@@ -152,10 +150,13 @@ public class GigUserServiceImpl implements GigUserService {
 	public boolean changePassword(GigUser gigUser,
 			String password) {
 		try {
+			Optional<GigUser> optional = userRepo.findById(gigUser.getId());
+			GigUser user = optional.get();
 			String encoded = pwEncoder.encode(password);
-			gigUser.setPassword(encoded);
-			gigUser.setPasswordConfirmation(gigUser.getPassword());
-			userRepo.save(gigUser);
+			user.setPassword(encoded);
+			user.setPasswordConfirmation(gigUser.getPassword());
+			
+			userRepo.save(user);
 			// pwResetTokenRepo.deleteByGigUser(gigUser);
 		} catch (Exception e) {
 			log.error("Error updating password");

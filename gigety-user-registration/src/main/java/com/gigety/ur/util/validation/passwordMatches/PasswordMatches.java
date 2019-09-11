@@ -1,4 +1,4 @@
-package com.gigety.ur.util.validation;
+package com.gigety.ur.util.validation.passwordMatches;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -8,6 +8,8 @@ import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
+
+import com.gigety.ur.util.validation.FormValidationGroup;
 
 /**
  * PasswordMatches - annotation for {@link PasswordMatchesValidator}

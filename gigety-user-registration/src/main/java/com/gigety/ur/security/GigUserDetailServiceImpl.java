@@ -35,6 +35,7 @@ public class GigUserDetailServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		final GigUser user = userRepo.findByEmail(username);
+		log.debug("GigUser Login :: {}", user);
 		if(user == null) {
 			log.debug("No user found with email/username " + username);
 			throw new UsernameNotFoundException("No user found with email/username " + username); 

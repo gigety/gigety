@@ -32,9 +32,7 @@ public class PWResetToken {
 	private String token;
 	private Date expiryDate;
 
-	//@OneToOne(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "pwRestToken")
-	@OneToOne(targetEntity = GigUser.class, fetch = FetchType.EAGER)
-	@JoinColumn(nullable = false, name = "user_id")
+	@OneToOne
 	@NonNull
 	private GigUser gigUser;
 

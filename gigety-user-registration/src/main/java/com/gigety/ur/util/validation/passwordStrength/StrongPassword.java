@@ -1,4 +1,4 @@
-package com.gigety.ur.util.validation;
+package com.gigety.ur.util.validation.passwordStrength;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -10,23 +10,24 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 import com.gigety.ur.db.model.GigUser;
+import com.gigety.ur.util.validation.FormValidationGroup;
 import com.gigety.ur.web.controller.RegistrationController;
 
 
 /**
- * ValidPassword - annotation validated via {@link PasswordConstraintValidator}
+ * StrongPassword - annotation validated via {@link PasswordStrengthValidator}
  * Due to password encoding, this should only be used on non-encoded passwords.
  * THis requires a groups setting on the annotation to be set, so the 
  * validation is not performed while saving to database when passwords are 
  * encoded. {@link FormValidationGroup} was created for this purpose.
- * @see {@link GigUser} - @ValidPassword(groups = FormValidationGroup.class) 
+ * @see {@link GigUser} - @StrongPassword(groups = FormValidationGroup.class) 
  * @see {@link RegistrationController} - @Validated(FormValidationGroup.class) 
  */
 @Documented
-@Constraint(validatedBy = PasswordConstraintValidator.class)
+@Constraint(validatedBy = PasswordStrengthValidator.class)
 @Target({ElementType.TYPE, ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidPassword {
+public @interface StrongPassword {
 
 	String message() default "Invalid Password";
 	Class<?>[] groups() default{};

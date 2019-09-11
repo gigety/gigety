@@ -34,6 +34,7 @@ import com.gigety.ur.service.SecurityQuestionService;
 import com.gigety.ur.util.GigUrls;
 import com.gigety.ur.util.validation.EmailExistsException;
 import com.gigety.ur.util.validation.FormValidationGroup;
+import com.gigety.ur.util.validation.securityQuestion.SecurityQuestionValidationGroup;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -259,10 +260,10 @@ public class RegistrationController {
 	 */
 	@PostMapping("/reg/savepw")
 	@ResponseBody
-	public ModelAndView savePassword(@Validated(FormValidationGroup.class) final GigUser gigUser,
+	public ModelAndView savePassword(
+			@Validated({ FormValidationGroup.class, SecurityQuestionValidationGroup.class }) final GigUser gigUser,
 			final BindingResult result,
 			@RequestParam("token") String token,
-			@RequestParam final String answer,
 			final RedirectAttributes redirectAttributes,
 			final Locale locale,
 			final Model model) {
@@ -270,35 +271,33 @@ public class RegistrationController {
 		final PWResetToken pToke = userService.getPWRestToken(token);
 		if (result.hasErrors()) {
 			final GigUser user = pToke.getGigUser();
+			// TODO: currently setting locale here to enable internationalized
+			// messages in validator class where locale is not available.
+			// Question should we save users locale, currently locale is
+			// transient for GigUser
+			user.setLocale(locale);
 			gigUser.setUserSecurityQuestion(user.getUserSecurityQuestion());
 			gigUser.setId(user.getId());
 			return reloadRestPw(gigUser, token, null);
-			//ModelAndView v = new ModelAndView("resetpw", "gigUser", user);
-			//return v;
+			// ModelAndView v = new ModelAndView("resetpw", "gigUser", user);
+			// return v;
 		}
 		if (pToke == null) {
 			log.warn("No pwRestToken found for token {}", token);
 			redirectAttributes.addFlashAttribute("message", messageSource.getMessage("invalid.pw.token", null, locale));
 		} else {
 			final GigUser user = pToke.getGigUser();
-//			if (!password.equals(passwordConfirmation)) {
-//				return  reloadRestPw(user, token,messageSource.getMessage("password.no.match", null, locale));
-//			}
 
 			if (user == null) {
 				log.warn("Unknown User for token {}", pToke);
 				redirectAttributes.addFlashAttribute("message", messageSource.getMessage("unknown.user", null, locale));
 			} else {
 				try {
-					String savedAnswer = securityQuestionService.findByUser(user).getAnswer();
-					if (answer.equals(savedAnswer)) {
-						userService.changePassword(user, gigUser.getPassword());
-						redirectAttributes.addFlashAttribute("message",
-								messageSource.getMessage("pw.reset.success", null, locale));
-					} else {
 
-						return reloadRestPw(user, token, messageSource.getMessage("answer.incorrect", null, locale));
-					}
+					userService.changePassword(user, gigUser.getPassword());
+					redirectAttributes.addFlashAttribute("message",
+							messageSource.getMessage("pw.reset.success", null, locale));
+
 				} catch (Exception e) {
 					log.error("Error saving user password: {}", e.getMessage(), e);
 					return reloadRestPw(user, token, e.getMessage());
@@ -317,7 +316,7 @@ public class RegistrationController {
 		view.addObject("gigUser", user);
 		view.addObject("token", token);
 		view.addObject("userQuestion", userQuestion);
-		if(errorMessage != null) {
+		if (errorMessage != null) {
 			view.addObject("errorMessage", errorMessage);
 		}
 		return view;

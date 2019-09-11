@@ -1,6 +1,7 @@
 package com.gigety.ur.db.model;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -14,13 +15,16 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
 import com.gigety.ur.util.validation.FormValidationGroup;
-import com.gigety.ur.util.validation.PasswordMatches;
-import com.gigety.ur.util.validation.ValidPassword;
+import com.gigety.ur.util.validation.passwordMatches.PasswordMatches;
+import com.gigety.ur.util.validation.passwordStrength.StrongPassword;
+import com.gigety.ur.util.validation.securityQuestion.SecurityQuestionAnsweredCorrect;
+import com.gigety.ur.util.validation.securityQuestion.SecurityQuestionValidationGroup;
 
 import lombok.Data;
 
 @Entity
 @PasswordMatches(groups = FormValidationGroup.class)
+@SecurityQuestionAnsweredCorrect(groups = SecurityQuestionValidationGroup.class)
 @Data
 public class GigUser {
 
@@ -32,24 +36,25 @@ public class GigUser {
 	@NotEmpty(message = "Email required")
 	private String email;
 
-	@ValidPassword(groups = FormValidationGroup.class)
+	@StrongPassword(groups = FormValidationGroup.class)
 	@NotEmpty(message = "Password required")
 	private String password;
-	
-	//TODO: pw confirmation should be transient in my opinion
-	//however when disabled AppInitializer will not updateExisingUser
-	//Super confusing must revisit.
-	@Transient
-	@NotEmpty(message = "Password confirmation required")
-	private String passwordConfirmation;
+
 	
 	private Calendar created = Calendar.getInstance();
 
 	private Boolean enabled;
 	
-//	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//	private PWResetToken pwRestToken;
-	
 	@OneToOne(fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
 	private UserSecurityQuestion userSecurityQuestion;
+
+	@Transient
+	@NotEmpty(message = "Password confirmation required")
+	private String passwordConfirmation;
+	
+	@Transient
+	private String givenAnswer;
+	
+	@Transient
+	private Locale locale;
 }

@@ -1,4 +1,4 @@
-package com.gigety.ur.util.validation;
+package com.gigety.ur.util.validation.passwordStrength;
 
 import java.util.Arrays;
 
@@ -16,10 +16,10 @@ import org.passay.WhitespaceRule;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
+public class PasswordStrengthValidator implements ConstraintValidator<StrongPassword, String> {
 
 	@Override
-	public void initialize(ValidPassword constraintAnnotation) {
+	public void initialize(StrongPassword constraintAnnotation) {
 	}
 
 	@Override
@@ -40,8 +40,15 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
 		if (result.isValid()) {
 			return true;
 		}
+		StringBuilder errorMessage = new StringBuilder();
+		result.getDetails().forEach(detail -> {
+			log.debug("Rule Detail :: {}", detail);
+			errorMessage.append(detail).append(" -- ");
+		});
+		//rebuild the error message to specific issues.
+		//TODO:Finish this currently it just ads all lerrors
 		context.disableDefaultConstraintViolation();
-		context.buildConstraintViolationWithTemplate(validator.getMessages(result).toString()).addConstraintViolation();
+		context.buildConstraintViolationWithTemplate(errorMessage.toString()).addConstraintViolation();
 		// @formatter:on
 		return false;
 	}
