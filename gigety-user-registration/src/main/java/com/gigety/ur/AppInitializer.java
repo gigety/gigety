@@ -57,21 +57,23 @@ public class AppInitializer{
 		String pw = passwordEncoder.encode("password");
 		user.setPassword(pw);
 		user.setPasswordConfirmation(pw);
-		user.setUserSecurityQuestion(new UserSecurityQuestion(q1,user,"dunno" ));
-		
+		//user.setUserSecurityQuestion(new UserSecurityQuestion(q1,user,"dunno" ));
 		log.debug("Adding dev user : {}", user);
 		userRepo.save(user);
+		securityQuetionService.saveUserSecurityQuestion(user, q1, "dunno");
+		
+		
 		GigUser u2 = new GigUser();
 		u2.setEmail("q@q.com");
 		u2.setEnabled(true);
 		pw = passwordEncoder.encode("q");
 		u2.setPassword(pw);
 		u2.setPasswordConfirmation(pw);
-		u2.setUserSecurityQuestion(new UserSecurityQuestion(q1,u2,"dunno" ));
+		//u2.setUserSecurityQuestion(new UserSecurityQuestion(q1,u2,"dunno" ));
 		
 		log.debug("Adding dev user : {}", u2);
 		userRepo.save(u2);
-		//securityQuetionService.saveUserSecurityQuestion(user, q1, "first pet");
+		securityQuetionService.saveUserSecurityQuestion(u2, q1, "dunno");
 		
 	}
 

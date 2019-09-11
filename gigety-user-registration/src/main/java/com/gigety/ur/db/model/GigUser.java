@@ -44,9 +44,7 @@ public class GigUser {
 	private Calendar created = Calendar.getInstance();
 
 	private Boolean enabled;
-	
-	@OneToOne(fetch = FetchType.LAZY,  cascade = CascadeType.ALL)
-	private UserSecurityQuestion userSecurityQuestion;
+
 
 	@Transient
 	@NotEmpty(message = "Password confirmation required")

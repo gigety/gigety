@@ -61,7 +61,7 @@ public class UserController {
 		}
 		try {
 			if (user.getId() == null) {
-				userService.registerNewUser(user);
+				userService.registerNewUser(user, null);
 				user.setEnabled(true);
 				userService.updateExistingUser(user);
 				redirect.addFlashAttribute("globalMessage", "New user has been created");

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.gigety.ur.db.model.GigUser;
 import com.gigety.ur.db.model.PWResetToken;
+import com.gigety.ur.db.model.UserSecurityQuestion;
 import com.gigety.ur.db.model.VerificationToken;
 import com.gigety.ur.db.repo.GigUserRepository;
 import com.gigety.ur.db.repo.PWResetTokenRepository;
@@ -50,7 +51,7 @@ public class GigUserServiceImpl implements GigUserService {
 	}
 
 	@Override
-	public GigUser registerNewUser(GigUser gigUser) throws EmailExistsException, Exception {
+	public GigUser registerNewUser(GigUser gigUser, UserSecurityQuestion userSecurityQuestion) throws EmailExistsException, Exception {
 		try {
 			if (emailExists(gigUser.getEmail())) {
 				throw new EmailExistsException("An account already exists for " + gigUser.getEmail());
@@ -61,8 +62,9 @@ public class GigUserServiceImpl implements GigUserService {
 			gigUser.setPasswordConfirmation(encoded);
 			log.debug("Saving user :::: {}", gigUser);
 			gigUser = userRepo.save(gigUser);
-			if(gigUser.getUserSecurityQuestion() != null) {
-				userSecurityRepo.save(gigUser.getUserSecurityQuestion());
+			
+			if(userSecurityQuestion != null) {
+				userSecurityRepo.save(userSecurityQuestion);
 			}
 			return gigUser;
 		} catch (Exception e) {
@@ -166,10 +168,11 @@ public class GigUserServiceImpl implements GigUserService {
 	}
 
 	@Override
-	public void removeUser(Long id) {
-		verificationTokenRepo.deleteByGigUserId(id);
-		pwResetTokenRepo.deleteByGigUserId(id);
-		userRepo.deleteById(id);
+	public void removeUser(Long userId) {
+		verificationTokenRepo.deleteByGigUserId(userId);
+		pwResetTokenRepo.deleteByGigUserId(userId);
+		userSecurityRepo.deleteByGigUserId(userId);
+		userRepo.deleteById(userId);
 	}
 
 	@Override

@@ -32,7 +32,8 @@ public class UserSecurityQuestion {
 	@NonNull
 	private SecurityQuestion question;
 	
-	@OneToOne(fetch = FetchType.EAGER, mappedBy = "userSecurityQuestion" ) 
+	//@OneToOne(fetch = FetchType.EAGER, mappedBy = "userSecurityQuestion" ) 
+	@OneToOne
 	@NonNull
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude

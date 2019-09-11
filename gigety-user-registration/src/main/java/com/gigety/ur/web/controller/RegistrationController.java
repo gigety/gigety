@@ -104,8 +104,8 @@ public class RegistrationController {
 				return v;
 			}
 			SecurityQuestion sq = securityQuestionService.findQuestionById(questionId);
-			user.setUserSecurityQuestion(new UserSecurityQuestion(sq, user, answer));
-			final GigUser registered = userService.registerNewUser(user);
+			//user.setUserSecurityQuestion(new UserSecurityQuestion(sq, user, answer));
+			final GigUser registered = userService.registerNewUser(user, new UserSecurityQuestion(sq, user, answer));
 			registered.setEnabled(false);
 			final String appUrl = getAppUrl(request);
 			log.debug("Create User {} ", registered);
@@ -276,7 +276,7 @@ public class RegistrationController {
 			// Question should we save users locale, currently locale is
 			// transient for GigUser
 			user.setLocale(locale);
-			gigUser.setUserSecurityQuestion(user.getUserSecurityQuestion());
+			//gigUser.setUserSecurityQuestion(user.getUserSecurityQuestion());
 			gigUser.setId(user.getId());
 			return reloadRestPw(gigUser, token, null);
 			// ModelAndView v = new ModelAndView("resetpw", "gigUser", user);
