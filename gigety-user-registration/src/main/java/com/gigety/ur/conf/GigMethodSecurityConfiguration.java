@@ -12,9 +12,14 @@ import com.gigety.ur.security.GigSecurityExpressionRoot;
 import com.gigety.ur.util.GigConstants;
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class GigMethodSecurityConfiguration extends GlobalMethodSecurityConfiguration {
 
+	/**
+	 * overriding runAsManager() to provide a RunAsManagerImpl. THis allows
+	 * users to be provided permissions required access to otherwise protected
+	 * resources?
+	 */
 	@Override
 	protected RunAsManager runAsManager() {
 		final RunAsManagerImpl runAsManager = new RunAsManagerImpl();

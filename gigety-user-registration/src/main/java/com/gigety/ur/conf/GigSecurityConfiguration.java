@@ -5,6 +5,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.access.intercept.RunAsImplAuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -28,11 +29,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 
-	@Autowired
-	private UserDetailsService userDetailsService;
-	@Autowired
-	private DataSource dataSource;	
+	private final UserDetailsService userDetailsService;
+	private final DataSource dataSource;	
 	
+	public GigSecurityConfiguration(UserDetailsService userDetailsService, DataSource dataSource) {
+		super();
+		this.userDetailsService = userDetailsService;
+		this.dataSource = dataSource;
+	}
+
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		log.debug("ROLE :: {}",GigRoles.GIG_USER.toString());
@@ -116,4 +121,5 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		authProvider.setPasswordEncoder(delegatingPasswordEncoder());
 		return authProvider;
 	}
+	
 }

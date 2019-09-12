@@ -39,12 +39,9 @@ public class GigUser {
 	@StrongPassword(groups = FormValidationGroup.class)
 	@NotEmpty(message = "Password required")
 	private String password;
-
 	
 	private Calendar created = Calendar.getInstance();
-
 	private Boolean enabled;
-
 
 	@Transient
 	@NotEmpty(message = "Password confirmation required")

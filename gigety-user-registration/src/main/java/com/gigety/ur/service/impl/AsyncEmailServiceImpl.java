@@ -3,11 +3,13 @@ package com.gigety.ur.service.impl;
 import java.util.Locale;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
 import com.gigety.ur.db.model.GigUser;
 import com.gigety.ur.service.AsyncEmailService;
@@ -17,17 +19,21 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Asynchronous Email Services
+ * 
  * @author samuelsegal
  *
  */
-@Service
+@Component
 @Slf4j
 public class AsyncEmailServiceImpl implements AsyncEmailService {
 
 	private final JavaMailSender mailSender;
 	private final GigUserService userService;
 	private final MessageSource messageSource;
-
+	
+	@Value("${gigety.email.support}")
+	private String supportEmail;
+	
 	public AsyncEmailServiceImpl(JavaMailSender mailSender, GigUserService userService, MessageSource messageSource) {
 		super();
 		this.mailSender = mailSender;
@@ -40,8 +46,10 @@ public class AsyncEmailServiceImpl implements AsyncEmailService {
 	 * user, literally setEnabled(true)
 	 */
 	@Override
-	@Async
-	public void sendRegistrationConfirmationEmail(GigUser user, String appUrl, Locale locale) {
+	@Async("gigaThread")
+	public void sendRegistrationConfirmationEmail(GigUser user,
+			String appUrl,
+			Locale locale) {
 
 		final String token = UUID.randomUUID().toString();
 		userService.assignVerificationToken(user, token);
@@ -54,9 +62,15 @@ public class AsyncEmailServiceImpl implements AsyncEmailService {
 	 * Send a password reset email with token assigned to given user
 	 */
 	@Override
-	@Async
-	public void sendPWResetEmail(GigUser user, String appUrl, Locale locale) {
-		//TODO: Check if user exists, if not return message saying no user exists with that email
+	@Async("gigaThread")
+	public void sendPWResetEmail(GigUser user,
+			String appUrl,
+			Locale locale) {
+		log.debug("Authentication is {} in new thread {}", SecurityContextHolder.getContext().getAuthentication(),
+				Thread.currentThread().getName());
+		// Misc.pause(3);
+		// TODO: Check if user exists, if not return message saying no user exists with
+		// that email
 		final String token = UUID.randomUUID().toString();
 		String confirmationUrl = String.format("%1$s%2$s%3$s%4$s%5$s", appUrl, "/reg/updatepw?id=", user.getId(),
 				"&token=", token);
@@ -65,10 +79,14 @@ public class AsyncEmailServiceImpl implements AsyncEmailService {
 		sendMail(user, confirmationUrl, subject, locale);
 	}
 
-	private void sendMail(GigUser user, String confirmationUrl, String subject, Locale locale) {
+	private void sendMail(GigUser user,
+			String confirmationUrl,
+			String subject,
+			Locale locale) {
 
 		final SimpleMailMessage email = new SimpleMailMessage();
 		email.setTo(user.getEmail());
+		email.setFrom(supportEmail);
 		email.setSubject(subject);
 		email.setText(confirmationUrl);
 		log.debug("Sending mail : {}", email);

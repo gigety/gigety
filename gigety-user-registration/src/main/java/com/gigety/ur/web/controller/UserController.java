@@ -32,7 +32,6 @@ public class UserController {
 
 	private final GigUserService userService;
 
-	@Autowired
 	public UserController(GigUserService userService) {
 		super();
 		this.userService = userService;

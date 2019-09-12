@@ -26,6 +26,7 @@ public class GigWebMVCConfiguration implements WebMvcConfigurer {
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/login").setViewName("loginPage");
 		registry.addViewController("/forgotpw").setViewName("forgotpw");
+		registry.addViewController("/profile");
 		registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
 	}
 
@@ -74,7 +75,12 @@ public class GigWebMVCConfiguration implements WebMvcConfigurer {
         return messageSource;
     }
 
-
+    private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
+    		"classpath:/META-INF/resources/",
+    		"classpath:/resources/",
+    		"classpath:/static/",
+    		"classpath:/public/"
+    		};
 	/**
 	 * set location for web client resources such as javascript and css
 	 */
@@ -82,7 +88,7 @@ public class GigWebMVCConfiguration implements WebMvcConfigurer {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		// TODO Auto-generated method stub
 		WebMvcConfigurer.super.addResourceHandlers(registry);
-		registry.addResourceHandler("/**").addResourceLocations(new String[] {"classpath:/static/"});
+		registry.addResourceHandler("/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
 	}
 
     

@@ -33,6 +33,9 @@ server:
 logging:
   level:
     com.gigety.ur: debug
+    # org.springframework.security: debug
     
 gigety: 
   root-url: http://localhost:8083
+  email:
+    support: samuelmosessegal@gmail.com
