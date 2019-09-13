@@ -5,7 +5,6 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.security.access.intercept.RunAsImplAuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -13,12 +12,17 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
+import com.gigety.ur.conf.filters.GigLogFilter;
+import com.gigety.ur.security.provider.authentication.CustomAuthenticationProvider;
 import com.gigety.ur.util.GigConstants;
 import com.gigety.ur.util.GigRoles;
 
@@ -31,33 +35,74 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 
 	private final UserDetailsService userDetailsService;
 	private final DataSource dataSource;	
+	private final GigLogFilter gigLogFilter;
+	private final CustomAuthenticationProvider customAuthenticationProvider;
 	
-	public GigSecurityConfiguration(UserDetailsService userDetailsService, DataSource dataSource) {
+	public GigSecurityConfiguration(UserDetailsService userDetailsService, DataSource dataSource,
+			GigLogFilter gigLogFilter, CustomAuthenticationProvider customAuthenticationProvider) {
 		super();
 		this.userDetailsService = userDetailsService;
 		this.dataSource = dataSource;
+		this.gigLogFilter = gigLogFilter;
+		this.customAuthenticationProvider = customAuthenticationProvider;
 	}
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		log.debug("ROLE :: {}",GigRoles.GIG_USER.toString());
 		
-		auth.authenticationProvider(daoAuthenticationProvider());
-		auth.authenticationProvider(runAsAuthenticationProvider());
+		//CONFIGURE STORAGE - extra user is demonstration purpose only
+		/*******************************************************************/
+//		
+//		auth.jdbcAuthentication()
+//			.dataSource(dataSource)
+//			
+//			.withDefaultSchema()
+//			.passwordEncoder(passwordEncoder())
+//			.withUser("gig@gig.com")
+//				.password(passwordEncoder().encode("gig"))
+//				.roles("USER");
+		
+		//auth.inMemoryAuthentication().withUser("inmem@inmem.com").password("inmem").roles("USER");
+		
+		//CONFIGURE PROVIDERS
+		/*******************************************************************/
+		//either define provider manager and reconfigure any options of 
+		//interest as follows:
+//		
+//		ProviderManager authManager = new ProviderManager(
+//				Arrays.asList(customAuthenticationProvider,
+//				daoAuthenticationProvider(), 
+//				runAsAuthenticationProvider()));
+//		authManager.setEraseCredentialsAfterAuthentication(false);
+		
+		//or simply add providers to existing providerManager like so:
+		
+		auth.authenticationProvider(customAuthenticationProvider)
+			.authenticationProvider(daoAuthenticationProvider())
+			.authenticationProvider(runAsAuthenticationProvider());
+		
+		
 		log.debug("Configuring GLOBAL auth :: {}", auth);
 	}
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(daoAuthenticationProvider());
-		auth.authenticationProvider(runAsAuthenticationProvider());
-		log.debug("Configuring auth :: {}", auth);
-	}
+//	@Override
+//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {	
+//		
+//		//TODO: experimenting with custom providers
+//		auth.authenticationProvider(customAuthenticationProvider)
+//			.authenticationProvider(daoAuthenticationProvider())
+//			.authenticationProvider(runAsAuthenticationProvider());
+//		
+//		log.debug("Configuring auth :: {}", auth);
+//	}
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// @formatter:off
 		http
+		//TODO: Experimenting custom filters
+		.addFilterBefore(gigLogFilter, AnonymousAuthenticationFilter.class)
 		.headers().frameOptions().sameOrigin() // for h2 in mem db during dev 
 		.and()
 		.authorizeRequests()
@@ -92,13 +137,27 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		.and()
 		.logout().permitAll().logoutUrl("/logout")
 		.and()
+		//following is for getting activeUsers
+		.sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry()).and().sessionFixation().none()
+		.and()
 		.csrf().disable();
 		// @formatter:on
 	}
 
+	/**
+	 * Used to get active users
+	 * @return
+	 */
+	@Bean 
+	SessionRegistry sessionRegistry() {
+		return new SessionRegistryImpl();
+	}
+	
 	@Bean
-	public PasswordEncoder delegatingPasswordEncoder() {
-		return new BCryptPasswordEncoder();
+	public PasswordEncoder passwordEncoder() {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		log.debug("Defining BCryptPasswordEncoder {} ", encoder);
+		return encoder;
 	}
 	
 	@Bean PersistentTokenRepository persistentTokenRepository() {
@@ -118,7 +177,7 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	public AuthenticationProvider daoAuthenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 		authProvider.setUserDetailsService(userDetailsService);
-		authProvider.setPasswordEncoder(delegatingPasswordEncoder());
+		authProvider.setPasswordEncoder(passwordEncoder());
 		return authProvider;
 	}
 	

@@ -1,6 +1,8 @@
 package com.gigety.ur.web.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -15,10 +17,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.gigety.ur.db.model.GigUser;
+import com.gigety.ur.service.ActiveUserService;
 import com.gigety.ur.service.GigUserService;
 import com.gigety.ur.util.validation.EmailExistsException;
 import com.gigety.ur.util.validation.FormValidationGroup;
-import com.gigety.ur.util.validation.securityQuestion.SecurityQuestionValidationGroup;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,10 +33,13 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 
 	private final GigUserService userService;
+	private final ActiveUserService activeUserService;
 
-	public UserController(GigUserService userService) {
+
+	public UserController(GigUserService userService, ActiveUserService activeUserService) {
 		super();
 		this.userService = userService;
+		this.activeUserService = activeUserService;
 	}
 
 	@RequestMapping
@@ -43,6 +48,16 @@ public class UserController {
 		return new ModelAndView("tl/list", "users", users);
 	}
 
+	@GetMapping("/active")
+	public ModelAndView activeUsers() {
+		List<String> users = activeUserService.getAllActiveUsers();
+		//TODO:write a conversion utility to convert List of usernames to 
+		//collection of gigUsers with ids populated.
+		//fix this asap to avoid confusion 
+		//users.stream().map(s-> new GigUser(1L, s)).collect(Collectors.toList());
+		return new ModelAndView("tl/list", "users", users);
+	}
+	
 	@RequestMapping("{id}")
 	public ModelAndView view(@PathVariable("id") GigUser user) {
 		return new ModelAndView("tl/view", "user", user);

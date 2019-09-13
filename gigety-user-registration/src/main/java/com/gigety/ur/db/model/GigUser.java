@@ -3,13 +3,10 @@ package com.gigety.ur.db.model;
 import java.util.Calendar;
 import java.util.Locale;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -21,6 +18,9 @@ import com.gigety.ur.util.validation.securityQuestion.SecurityQuestionAnsweredCo
 import com.gigety.ur.util.validation.securityQuestion.SecurityQuestionValidationGroup;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Entity
 @PasswordMatches(groups = FormValidationGroup.class)

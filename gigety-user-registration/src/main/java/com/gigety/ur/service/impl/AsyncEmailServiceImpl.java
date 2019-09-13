@@ -19,9 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * Asynchronous Email Services
- * 
- * @author samuelsegal
- *
  */
 @Component
 @Slf4j
@@ -30,10 +27,10 @@ public class AsyncEmailServiceImpl implements AsyncEmailService {
 	private final JavaMailSender mailSender;
 	private final GigUserService userService;
 	private final MessageSource messageSource;
-	
+
 	@Value("${gigety.email.support}")
 	private String supportEmail;
-	
+
 	public AsyncEmailServiceImpl(JavaMailSender mailSender, GigUserService userService, MessageSource messageSource) {
 		super();
 		this.mailSender = mailSender;
@@ -85,7 +82,10 @@ public class AsyncEmailServiceImpl implements AsyncEmailService {
 			Locale locale) {
 
 		final SimpleMailMessage email = new SimpleMailMessage();
-		email.setTo(user.getEmail());
+		log.warn("😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱");
+		log.warn("**  AsyncEmailService is configiured ony to send to {} for dev.", supportEmail);
+		email.setTo(supportEmail);
+		// email.setTo(user.getEmail());
 		email.setFrom(supportEmail);
 		email.setSubject(subject);
 		email.setText(confirmationUrl);

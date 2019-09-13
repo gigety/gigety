@@ -2,6 +2,6 @@ spring:
   profiles:
     active:
     - dev
-    - inmemory
+    # - inmemory
 #  main:
 #    allow-bean-definition-overriding: true

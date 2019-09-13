@@ -7,7 +7,8 @@ import java.util.Optional;
 
 import javax.transaction.Transactional;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.gigety.ur.db.model.GigUser;
@@ -24,9 +25,8 @@ import com.gigety.ur.util.validation.EmailExistsException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author samuelsegal
  * 
- *         GigUserService - service for registering gigety users.
+ * GigUserService - service for registering gigety users.
  */
 @Service
 @Transactional
@@ -34,17 +34,18 @@ import lombok.extern.slf4j.Slf4j;
 public class GigUserServiceImpl implements GigUserService {
 
 	private final GigUserRepository userRepo;
-	private final BCryptPasswordEncoder pwEncoder;
+	private final PasswordEncoder passwordEncoder;
 	private final VerificationTokenRepository verificationTokenRepo;
 	private final PWResetTokenRepository pwResetTokenRepo;
 	private final UserSecurityQuestionRepository userSecurityRepo;
 
-	public GigUserServiceImpl(GigUserRepository userRepo, BCryptPasswordEncoder pwEncoder,
+	@Autowired
+	public GigUserServiceImpl(GigUserRepository userRepo, PasswordEncoder passwordEncoder,
 			VerificationTokenRepository verificationTokenRepo, PWResetTokenRepository pwResetTokenRepo,
 			UserSecurityQuestionRepository userSecurityRepo) {
 		super();
 		this.userRepo = userRepo;
-		this.pwEncoder = pwEncoder;
+		this.passwordEncoder = passwordEncoder;
 		this.verificationTokenRepo = verificationTokenRepo;
 		this.pwResetTokenRepo = pwResetTokenRepo;
 		this.userSecurityRepo = userSecurityRepo;
@@ -56,7 +57,7 @@ public class GigUserServiceImpl implements GigUserService {
 			if (emailExists(gigUser.getEmail())) {
 				throw new EmailExistsException("An account already exists for " + gigUser.getEmail());
 			}
-			String encoded = pwEncoder.encode(gigUser.getPassword());
+			String encoded = passwordEncoder.encode(gigUser.getPassword());
 			gigUser.setEnabled(false);
 			gigUser.setPassword(encoded);
 			gigUser.setPasswordConfirmation(encoded);
@@ -154,7 +155,7 @@ public class GigUserServiceImpl implements GigUserService {
 		try {
 			Optional<GigUser> optional = userRepo.findById(gigUser.getId());
 			GigUser user = optional.get();
-			String encoded = pwEncoder.encode(password);
+			String encoded = passwordEncoder.encode(password);
 			user.setPassword(encoded);
 			user.setPasswordConfirmation(gigUser.getPassword());
 			

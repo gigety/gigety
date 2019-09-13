@@ -2,9 +2,10 @@ package com.gigety.ur;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-//@ComponentScan("com.gigety.ur")
+@ComponentScan("com.gigety.ur")
 public class GigetyUserRegistrationApplication {
 
 	/** 

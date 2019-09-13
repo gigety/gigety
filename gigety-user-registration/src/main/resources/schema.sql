@@ -1,4 +1,6 @@
--- Spring boot loads this table by default
+-- Drop tables created via this schema.sql
+drop table if exists persistent_logins;
+
 
 -- Table used by remember-me feature of spring security
 create table if not exists persistent_logins (
@@ -7,3 +9,5 @@ create table if not exists persistent_logins (
 	token varchar(64) not null,
 	last_used timestamp not null
 );
+
+

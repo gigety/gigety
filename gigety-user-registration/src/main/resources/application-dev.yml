@@ -2,9 +2,7 @@
 spring:
   thymeleaf:
     cache: false
-  jpa:
-    hibernate:
-      ddl-auto: update
+
   mail:
     default-encoding: UTF-8
     host: smtp.gmail.com
@@ -20,6 +18,23 @@ spring:
             enable: true
 
     test-connection: false
+  banner:
+    image:
+      height: 2
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  
+  datasource:
+    # Set initialization-mode: always for schema.sql to execute on startup for databases other than 
+    # H2,DERBY,HSQL. These are only enabled databases by default for data initializing
+    initialization-mode: always
+    url: jdbc:mysql://localhost:3306/gigety_um?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    # url: jdbc:mysql://samo-mysql:3306/gigety_um?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: 
+    driver-class-name: 
+    # driver-class-name: com.mysql.jdbc.Driver 
     
 server:
   tomcat:
@@ -28,13 +43,14 @@ server:
     basedir:
       target/tomcat
       
-  port: 8083
+  port: 8084
 
 logging:
   level:
     com.gigety.ur: debug
     # org.springframework.security: debug
-    
+spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+ 
 gigety: 
   root-url: http://localhost:8083
   email:
