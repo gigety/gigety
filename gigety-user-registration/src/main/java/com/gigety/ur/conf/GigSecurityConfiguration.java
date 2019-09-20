@@ -38,6 +38,8 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	private final GigLogFilter gigLogFilter;
 	private final CustomAuthenticationProvider customAuthenticationProvider;
 	
+
+
 	public GigSecurityConfiguration(UserDetailsService userDetailsService, DataSource dataSource,
 			GigLogFilter gigLogFilter, CustomAuthenticationProvider customAuthenticationProvider) {
 		super();
@@ -46,6 +48,7 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		this.gigLogFilter = gigLogFilter;
 		this.customAuthenticationProvider = customAuthenticationProvider;
 	}
+
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -78,24 +81,26 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		
 		//or simply add providers to existing providerManager like so:
 		
-		auth.authenticationProvider(customAuthenticationProvider)
+		auth
 			.authenticationProvider(daoAuthenticationProvider())
 			.authenticationProvider(runAsAuthenticationProvider());
+			//.authenticationProvider(customAuthenticationProvider);	
 		
 		
 		log.debug("Configuring GLOBAL auth :: {}", auth);
 	}
 
-//	@Override
-//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {	
-//		
-//		//TODO: experimenting with custom providers
-//		auth.authenticationProvider(customAuthenticationProvider)
-//			.authenticationProvider(daoAuthenticationProvider())
-//			.authenticationProvider(runAsAuthenticationProvider());
-//		
-//		log.debug("Configuring auth :: {}", auth);
-//	}
+
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {	
+		
+		//TODO: experimenting with custom providers
+		//auth.authenticationProvider(customAuthenticationProvider);
+		auth.authenticationProvider(daoAuthenticationProvider())
+			.authenticationProvider(runAsAuthenticationProvider());
+		
+		log.debug("Configuring auth :: {}", auth);
+	}
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -132,7 +137,7 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 			//.tokenValiditySeconds(604800)
 			//.rememberMeCookieName("sticky-cookie")
 			//.rememberMeParameter("gig-rem-user")
-			//TODO: useSe ureTrue once https is configuredz
+			//TODO: useSeureTrue once https is configuredz
 			//.useSecureCookie(true)
 		.and()
 		.logout().permitAll().logoutUrl("/logout")

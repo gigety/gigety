@@ -9,11 +9,11 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import com.gigety.ur.util.validation.FormValidationGroup;
+import com.gigety.ur.util.validation.PasswordValidationGroup;
 
 /**
  * PasswordMatches - annotation for {@link PasswordMatchesValidator}
- * Used with {@link FormValidationGroup} for groups options.
+ * Used with {@link PasswordValidationGroup} for groups options.
  * @PasswordMatches(groups = FormValidationGroup.class)
  * now only valid annotations with this groups set will trigger validation.
  * i.e. @Validated(FormValidationGroup.class) 

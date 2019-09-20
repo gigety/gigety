@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gigety.ur.service.RunAsService;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Controller
 @RequestMapping("/runas")
 public class RunAsController {

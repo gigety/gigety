@@ -46,7 +46,7 @@ public class PasswordStrengthValidator implements ConstraintValidator<StrongPass
 			errorMessage.append(detail).append(" -- ");
 		});
 		//rebuild the error message to specific issues.
-		//TODO:Finish this currently it just ads all lerrors
+		//TODO:Finish this currently it just adds all errors
 		context.disableDefaultConstraintViolation();
 		context.buildConstraintViolationWithTemplate(errorMessage.toString()).addConstraintViolation();
 		// @formatter:on

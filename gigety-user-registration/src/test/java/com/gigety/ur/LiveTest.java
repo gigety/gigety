@@ -7,7 +7,7 @@ import io.restassured.specification.RequestSpecification;
 
 public class LiveTest {
 
-	private static String APP_ROOT = "http://localhost:8083";
+	private static String APP_ROOT = "http://localhost:8084";
 	
 	/**
 	 *  givenUser_whenGetCreateForm_thenForbidden
@@ -15,7 +15,7 @@ public class LiveTest {
 	 */
 	@Test
 	public void givenUser_whenGetCreateForm_thenForbidden() {
-		givenAuth("q@q.com", "q")
+		givenAuth("q@q.com", "password")
 		.then().statusCode(403)
 		.when().get("/user/?form").prettyPeek();
 	}

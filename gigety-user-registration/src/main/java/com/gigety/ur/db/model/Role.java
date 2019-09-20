@@ -1,6 +1,6 @@
 package com.gigety.ur.db.model;
 
-import java.util.Date;
+import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,33 +8,37 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-
-/**
- * Token to email to user for account registration verification
- *
- */
 @Entity
 @Data
-@RequiredArgsConstructor
 @NoArgsConstructor
-public class VerificationToken {
-
+@RequiredArgsConstructor
+public class Role {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@NonNull
-	private String token;
-	private Date expiryDate;
 	
-	@OneToOne
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+		name = "roles_privileges",
+		joinColumns = 
+		@JoinColumn(
+			name="role_id",
+			referencedColumnName = "id"),
+		inverseJoinColumns = 
+		@JoinColumn(
+			name="privilege_id",
+			referencedColumnName = "id"))
+	private Collection<Privilege> privileges;
+	
 	@NonNull
-	private GigUser gigUser;
+	private String name;
 }

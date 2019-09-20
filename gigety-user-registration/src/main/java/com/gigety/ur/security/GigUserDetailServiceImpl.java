@@ -1,7 +1,8 @@
 package com.gigety.ur.security;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.transaction.Transactional;
 
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.gigety.ur.db.model.GigUser;
+import com.gigety.ur.db.model.Role;
 import com.gigety.ur.db.repo.GigUserRepository;
 
 import lombok.extern.slf4j.Slf4j;
@@ -40,14 +42,29 @@ public class GigUserDetailServiceImpl implements UserDetailsService {
 			log.debug("No user found with email/username " + username);
 			throw new UsernameNotFoundException("No user found with email/username " + username); 
 		}
-		final User springSecurityUser = new User(user.getEmail(), user.getPassword(), user.getEnabled(), true, true, true, getAuthorities(ROLE_USER));
+		
+		final User springSecurityUser = new User(
+											user.getEmail(), 
+											user.getPassword(), 
+											user.getEnabled(), 
+											true, true, true, 
+											getAuthorities(user.getRoles()));
 		log.debug("Spring Security User (converted) : {}", springSecurityUser);
 		return springSecurityUser;
 		
 	}
 
-	private Collection<? extends GrantedAuthority> getAuthorities(String role){
-		return Arrays.asList(new SimpleGrantedAuthority(role));
+	private Collection<? extends GrantedAuthority> getAuthorities(final Collection<Role> roles){
+//		return Arrays.asList(new SimpleGrantedAuthority(ROLE_USER));
+//		Collection<? extends GrantedAuthority> priveleges = roles.stream()
+//				.flatMap(role -> role.getPrivileges().stream())
+//				.map(p -> new SimpleGrantedAuthority(p.getName()))
+//				.collect(Collectors.toList());
+		Collection<? extends GrantedAuthority> roleList = roles.stream()
+				.map(r -> new SimpleGrantedAuthority(r.getName()))
+				.collect(Collectors.toList());	
+		roleList.forEach(role->log.debug("ROLE: {}", role.getAuthority()));
+		return  roleList;
 	}
 	
 }

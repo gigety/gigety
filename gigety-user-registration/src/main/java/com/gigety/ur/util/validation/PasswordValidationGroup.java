@@ -8,6 +8,6 @@ package com.gigety.ur.util.validation;
  * validate for specified group(s)
  *
  */
-public interface FormValidationGroup {
+public interface PasswordValidationGroup {
 
 }

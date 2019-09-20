@@ -10,7 +10,7 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 import com.gigety.ur.db.model.GigUser;
-import com.gigety.ur.util.validation.FormValidationGroup;
+import com.gigety.ur.util.validation.PasswordValidationGroup;
 import com.gigety.ur.web.controller.RegistrationController;
 
 
@@ -19,7 +19,7 @@ import com.gigety.ur.web.controller.RegistrationController;
  * Due to password encoding, this should only be used on non-encoded passwords.
  * THis requires a groups setting on the annotation to be set, so the 
  * validation is not performed while saving to database when passwords are 
- * encoded. {@link FormValidationGroup} was created for this purpose.
+ * encoded. {@link PasswordValidationGroup} was created for this purpose.
  * @see {@link GigUser} - @StrongPassword(groups = FormValidationGroup.class) 
  * @see {@link RegistrationController} - @Validated(FormValidationGroup.class) 
  */

@@ -10,8 +10,10 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 
 import com.gigety.ur.db.model.GigUser;
+import com.gigety.ur.db.model.Role;
 import com.gigety.ur.db.model.SecurityQuestion;
 import com.gigety.ur.db.model.UserSecurityQuestion;
+import com.gigety.ur.db.repo.RoleRepository;
 import com.gigety.ur.db.repo.SecurityQuestionRepository;
 import com.gigety.ur.service.GigUserService;
 import com.gigety.ur.service.SecurityQuestionService;
@@ -27,21 +29,24 @@ public class AppInitializer{
 	private final SecurityQuestionService securityQuetionService; 
 	private final GigUserService userService;
 	private final SecurityQuestionRepository securityQuestionRepo;
+	private final RoleRepository roleRepo;
 
 
 	public AppInitializer(SecurityQuestionService securityQuetionService, GigUserService userService,
-			SecurityQuestionRepository securityQuestionRepo) {
+			SecurityQuestionRepository securityQuestionRepo, RoleRepository roleRepo) {
 		super();
 		this.securityQuetionService = securityQuetionService;
 		this.userService = userService;
 		this.securityQuestionRepo = securityQuestionRepo;
+		this.roleRepo = roleRepo;
 	}
 
 	@EventListener(ContextRefreshedEvent.class)
 	public void loadData(ContextRefreshedEvent event) {
 		
 		List<SecurityQuestion> qList = loadSecurityQuestions();
-		createUser("samuelmosessegal@gmail.com", "password", qList.get(0));
+		loadRoles();
+		createUserAllRoles("samuelmosessegal@gmail.com", "password", qList.get(0));
 		createUser("q@q.com", "password", qList.get(1));
 		
 	}
@@ -70,10 +75,37 @@ public class AppInitializer{
 		user.setEnabled(true);
 		user.setPassword(password);
 		user.setPasswordConfirmation(password);
-		//user.setUserSecurityQuestion(new UserSecurityQuestion(q1,user,"dunno" ));
+		
 		log.debug("Adding dev user : {}", user);
 		try {
-			userService.registerNewUser(user, new UserSecurityQuestion(securityQuestion,user,"dunno" ));
+			user = userService.registerNewUser(user, new UserSecurityQuestion(securityQuestion,user,"dunno" ));
+			user.setEnabled(true);
+			userService.updateExistingUser(user);
+			
+		} catch (EmailExistsException | Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	private void createUserAllRoles(String email,
+			String password,
+			SecurityQuestion securityQuestion) {
+		//Initialize dev user
+		GigUser user = new GigUser();
+		user.setEmail(email);
+		user.setEnabled(true);
+		user.setPassword(password);
+		user.setPasswordConfirmation(password);
+		user.setRoles(roleRepo.findAll());
+		
+		log.debug("Adding dev user : {}", user);
+		try {
+			user = userService.registerNewUser(user, new UserSecurityQuestion(securityQuestion,user,"dunno" ));
+			user.setEnabled(true);
+			userService.updateExistingUser(user);
+			
 		} catch (EmailExistsException | Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -82,7 +114,10 @@ public class AppInitializer{
 	}
 
 
-
+	private void loadRoles() {
+		roleRepo.save(new Role("ROLE_GIG_ADMIN"));
+	}
+	
 	private List<SecurityQuestion> loadSecurityQuestions() {
 		final SecurityQuestion q1 = new SecurityQuestion("Name your first pet?");
 		final SecurityQuestion q2 = new SecurityQuestion("Name your favorite comedian?");

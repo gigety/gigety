@@ -14,7 +14,7 @@
                 <a class="brand" href="/" th:text=#{home}> Home </a>
                 <ul class="nav">
                     <li><a th:href="@{/user/}" href="users.html" th:text="#{users}"> users </a></li>
-                    <li><a th:href="@{/user/active}" href="users.html" th:text="#{users.active}"> users </a></li>
+                    <li><a th:href="@{/user/activeList}" href="users.html" th:text="#{users.active}"> users </a></li>
                 </ul>
                 <ul class="nav pull-right">
                 	<li><a th:href="@{/profile}" class="menu-right"><span sec:authentication="principal.username" class="menu-left"></span></a></li>

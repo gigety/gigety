@@ -1,7 +1,6 @@
 package com.gigety.ur.web.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -19,8 +18,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.gigety.ur.db.model.GigUser;
 import com.gigety.ur.service.ActiveUserService;
 import com.gigety.ur.service.GigUserService;
+import com.gigety.ur.util.transformer.GigUserConverter;
 import com.gigety.ur.util.validation.EmailExistsException;
-import com.gigety.ur.util.validation.FormValidationGroup;
+import com.gigety.ur.util.validation.PasswordValidationGroup;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,7 +35,6 @@ public class UserController {
 	private final GigUserService userService;
 	private final ActiveUserService activeUserService;
 
-
 	public UserController(GigUserService userService, ActiveUserService activeUserService) {
 		super();
 		this.userService = userService;
@@ -48,14 +47,24 @@ public class UserController {
 		return new ModelAndView("tl/list", "users", users);
 	}
 
-	@GetMapping("/active")
+	@GetMapping("/active/{email}")
+	public ModelAndView getByUserName(@PathVariable("email") String email) {
+		GigUser gigUser = userService.findByEmail(email);
+		//log.debug("PASSWORD {}", user.getPassword());
+		return new ModelAndView("tl/view", "user", gigUser);
+	}
+	
+	@GetMapping("/activeList")
 	public ModelAndView activeUsers() {
-		List<String> users = activeUserService.getAllActiveUsers();
+		List<String> usernames = activeUserService.getAllActiveUsers();
 		//TODO:write a conversion utility to convert List of usernames to 
 		//collection of gigUsers with ids populated.
 		//fix this asap to avoid confusion 
 		//users.stream().map(s-> new GigUser(1L, s)).collect(Collectors.toList());
-		return new ModelAndView("tl/list", "users", users);
+		List<GigUser> users = userService.findByEmails(usernames);
+		ModelAndView view = new ModelAndView("tl/list", "users", users);
+		view.addObject("isFromActive", true);
+		return view;
 	}
 	
 	@RequestMapping("{id}")
@@ -66,7 +75,7 @@ public class UserController {
 	@PostMapping()
 	@PreAuthorize("isGigAdmin() and hasRole('USER') and principal.username == 'samuelmosessegal@gmail.com'")
 	public ModelAndView create(
-			@Validated(FormValidationGroup.class) final GigUser user,
+			@Validated(PasswordValidationGroup.class) final GigUser user,
 			final BindingResult result,
 			final RedirectAttributes redirect) {
 
@@ -108,7 +117,7 @@ public class UserController {
 	}
 
 	@PostMapping("/update")
-	public ModelAndView update(@Validated(FormValidationGroup.class) final GigUser gigUser,
+	public ModelAndView update(@Validated(PasswordValidationGroup.class) final GigUser gigUser,
 			final BindingResult result,
 			final RedirectAttributes redirect) {
 		log.debug("Updating User : {}", gigUser);

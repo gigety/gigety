@@ -33,7 +33,7 @@ import com.gigety.ur.service.GigUserService;
 import com.gigety.ur.service.SecurityQuestionService;
 import com.gigety.ur.util.GigUrls;
 import com.gigety.ur.util.validation.EmailExistsException;
-import com.gigety.ur.util.validation.FormValidationGroup;
+import com.gigety.ur.util.validation.PasswordValidationGroup;
 import com.gigety.ur.util.validation.securityQuestion.SecurityQuestionValidationGroup;
 
 import lombok.extern.slf4j.Slf4j;
@@ -89,7 +89,7 @@ public class RegistrationController {
 	 * @return
 	 */
 	@RequestMapping("/reg/register")
-	public ModelAndView registerUser(@Validated(FormValidationGroup.class) final GigUser user,
+	public ModelAndView registerUser(@Validated(PasswordValidationGroup.class) final GigUser user,
 			final BindingResult result,
 			@RequestParam final Long questionId,
 			@RequestParam final String answer,
@@ -261,7 +261,7 @@ public class RegistrationController {
 	@PostMapping("/reg/savepw")
 	@ResponseBody
 	public ModelAndView savePassword(
-			@Validated({ FormValidationGroup.class, SecurityQuestionValidationGroup.class }) final GigUser gigUser,
+			@Validated({ PasswordValidationGroup.class, SecurityQuestionValidationGroup.class }) final GigUser gigUser,
 			final BindingResult result,
 			@RequestParam("token") String token,
 			final RedirectAttributes redirectAttributes,

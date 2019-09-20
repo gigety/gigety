@@ -1,5 +1,7 @@
 package com.gigety.ur.service;
 
+import java.util.List;
+
 import com.gigety.ur.db.model.GigUser;
 import com.gigety.ur.db.model.PWResetToken;
 import com.gigety.ur.db.model.UserSecurityQuestion;
@@ -18,6 +20,7 @@ public interface GigUserService {
 	boolean changePassword(GigUser gigUser, String password);
 	void removeUser(Long id);
 	Iterable<GigUser> findAll();
+	List<GigUser> findByEmails(List<String> emails);
 	GigUser registerNewUser(GigUser user,
 			UserSecurityQuestion userSecurityQuestion) throws EmailExistsException, Exception;
 }

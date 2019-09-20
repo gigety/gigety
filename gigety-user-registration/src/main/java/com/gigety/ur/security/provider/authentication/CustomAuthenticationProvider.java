@@ -15,6 +15,10 @@ import com.gigety.ur.security.GigUserDetailServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * CustomAuthenticationProvider - for demonstration purpose only, do not use as
+ * all users will pass authentication
+ */
 @Component
 @Slf4j
 public class CustomAuthenticationProvider implements AuthenticationProvider {

@@ -3,6 +3,7 @@ package com.gigety.ur.service.impl;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -76,11 +77,11 @@ public class GigUserServiceImpl implements GigUserService {
 
 	@Override
 	public GigUser updateExistingUser(GigUser gigUser) {
-		Optional<GigUser> optional = userRepo.findById(gigUser.getId());
-		GigUser user = optional.get();
+		//Optional<GigUser> optional = userRepo.findById(gigUser.getId());
+		//GigUser user = optional.get();
 		//TODO: Currently this updates ZERO fields. First lets determine best approach 
 		//for merging updated fields. As for passwords just use changePassword
-		return userRepo.save(user);
+		return userRepo.save(gigUser);
 	}
 
 	@Override
@@ -179,6 +180,11 @@ public class GigUserServiceImpl implements GigUserService {
 	@Override
 	public Iterable<GigUser> findAll() {
 		return userRepo.findAll();
+	}
+
+	@Override
+	public List<GigUser> findByEmails(List<String> emails) {
+		return userRepo.findByEmailIn(emails);
 	}
 
 }
