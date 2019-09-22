@@ -32,7 +32,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-		
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'		
+
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:2.4.1'
 	implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5', version: '3.0.4.RELEASE'
 	implementation 'javax.mail:mail:1.4.7'	

@@ -1,5 +1,6 @@
 package com.gigety.ur.web.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +19,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.gigety.ur.db.model.GigUser;
 import com.gigety.ur.service.ActiveUserService;
 import com.gigety.ur.service.GigUserService;
-import com.gigety.ur.util.transformer.GigUserConverter;
+import com.gigety.ur.service.cached.LockedUserService;
+import com.gigety.ur.util.RoleConstants;
 import com.gigety.ur.util.validation.EmailExistsException;
 import com.gigety.ur.util.validation.PasswordValidationGroup;
 
@@ -34,11 +36,14 @@ public class UserController {
 
 	private final GigUserService userService;
 	private final ActiveUserService activeUserService;
-
-	public UserController(GigUserService userService, ActiveUserService activeUserService) {
+	private final LockedUserService lockUserService;
+	
+	public UserController(GigUserService userService, ActiveUserService activeUserService,
+			LockedUserService lockUserService) {
 		super();
 		this.userService = userService;
 		this.activeUserService = activeUserService;
+		this.lockUserService = lockUserService;
 	}
 
 	@RequestMapping
@@ -55,15 +60,11 @@ public class UserController {
 	}
 	
 	@GetMapping("/activeList")
+	@PreAuthorize(RoleConstants.AUTHORIZE_ADMIN)
 	public ModelAndView activeUsers() {
 		List<String> usernames = activeUserService.getAllActiveUsers();
-		//TODO:write a conversion utility to convert List of usernames to 
-		//collection of gigUsers with ids populated.
-		//fix this asap to avoid confusion 
-		//users.stream().map(s-> new GigUser(1L, s)).collect(Collectors.toList());
 		List<GigUser> users = userService.findByEmails(usernames);
 		ModelAndView view = new ModelAndView("tl/list", "users", users);
-		view.addObject("isFromActive", true);
 		return view;
 	}
 	
@@ -73,7 +74,7 @@ public class UserController {
 	}
 
 	@PostMapping()
-	@PreAuthorize("isGigAdmin() and hasRole('USER') and principal.username == 'samuelmosessegal@gmail.com'")
+	@PreAuthorize(RoleConstants.AUTHORIZE_ADMIN)
 	public ModelAndView create(
 			@Validated(PasswordValidationGroup.class) final GigUser user,
 			final BindingResult result,
@@ -107,11 +108,19 @@ public class UserController {
 
 	@GetMapping("modify/{id}")
 	public ModelAndView modifyForm(@PathVariable("id") final GigUser user) {
-		return new ModelAndView("tl/updateForm", "gigUser", user);
+		return new ModelAndView("tl/updateForm", "user", user);
+	}
+	
+	@GetMapping("lock/{id}")
+	public ModelAndView lock(@PathVariable("id") final Long id ,  final Principal principal) {
+		log.debug("locking user: {}", id);
+		lockUserService.lockUser(id, principal.getName());
+		GigUser user = userService.findById(id);
+		return new ModelAndView("tl/view", "user", user);
 	}
 
 	@GetMapping(params = "form")
-	@PreAuthorize("isGigAdmin()  and hasRole('USER') and principal.username == 'samuelmosessegal@gmail.com'")
+	@PreAuthorize(RoleConstants.AUTHORIZE_ADMIN)
 	public String createForm(@ModelAttribute final GigUser user) {
 		return "tl/form";
 	}

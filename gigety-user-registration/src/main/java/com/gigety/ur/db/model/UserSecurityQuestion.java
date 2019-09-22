@@ -1,5 +1,7 @@
 package com.gigety.ur.db.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,7 +24,7 @@ import lombok.ToString;
 @Data
 @RequiredArgsConstructor
 @NoArgsConstructor
-public class UserSecurityQuestion {
+public class UserSecurityQuestion implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

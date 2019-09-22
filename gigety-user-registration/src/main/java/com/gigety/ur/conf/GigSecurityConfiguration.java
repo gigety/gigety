@@ -1,11 +1,18 @@
 package com.gigety.ur.conf;
 
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.intercept.RunAsImplAuthenticationProvider;
+import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.RoleVoter;
+import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,14 +24,16 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import com.gigety.ur.conf.filters.GigLogFilter;
-import com.gigety.ur.security.provider.authentication.CustomAuthenticationProvider;
+import com.gigety.ur.security.RealTimeLockVoter;
 import com.gigety.ur.util.GigConstants;
 import com.gigety.ur.util.GigRoles;
+import com.google.common.collect.Lists;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,18 +45,9 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	private final UserDetailsService userDetailsService;
 	private final DataSource dataSource;	
 	private final GigLogFilter gigLogFilter;
-	private final CustomAuthenticationProvider customAuthenticationProvider;
+	private final RealTimeLockVoter realTimeLockVoter;
+	//private final CustomAuthenticationProvider customAuthenticationProvider;
 	
-
-
-	public GigSecurityConfiguration(UserDetailsService userDetailsService, DataSource dataSource,
-			GigLogFilter gigLogFilter, CustomAuthenticationProvider customAuthenticationProvider) {
-		super();
-		this.userDetailsService = userDetailsService;
-		this.dataSource = dataSource;
-		this.gigLogFilter = gigLogFilter;
-		this.customAuthenticationProvider = customAuthenticationProvider;
-	}
 
 
 	@Autowired
@@ -91,6 +91,16 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	}
 
 
+	public GigSecurityConfiguration(UserDetailsService userDetailsService, DataSource dataSource,
+			GigLogFilter gigLogFilter, RealTimeLockVoter realTimeLockVoter) {
+		super();
+		this.userDetailsService = userDetailsService;
+		this.dataSource = dataSource;
+		this.gigLogFilter = gigLogFilter;
+		this.realTimeLockVoter = realTimeLockVoter;
+	}
+
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {	
 		
@@ -124,7 +134,7 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 					"/js/**",
 					"/h2-console/**" ) //h2-console for early dev stage only
 			.permitAll()
-			.anyRequest().authenticated()
+			.anyRequest().authenticated().accessDecisionManager(unanimous())
 			
 		.and()
 		.formLogin()
@@ -185,5 +195,15 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		authProvider.setPasswordEncoder(passwordEncoder());
 		return authProvider;
 	}
-	
+
+	@Bean
+	public AccessDecisionManager unanimous() {
+		List<AccessDecisionVoter<? extends Object>> decisionVoters = 
+				Lists.newArrayList(
+						new RoleVoter(),
+						new AuthenticatedVoter(), 
+						new WebExpressionVoter(), 
+						realTimeLockVoter);
+		return new UnanimousBased(decisionVoters);
+	}
 }

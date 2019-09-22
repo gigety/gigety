@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 /**
  * Overrides DefaultMethodSecurityExpressionHandler createSecurityExpressionRoot
  * Here we can plug in our custom Security ExpressionRoot which can create 
- * custom method level programttic expressions to be used in @Preauthorize
+ * custom method level programatic expressions to be used in @Preauthorize
  * annotations.
  * 
  * @see GigSecurityExpressionRoot

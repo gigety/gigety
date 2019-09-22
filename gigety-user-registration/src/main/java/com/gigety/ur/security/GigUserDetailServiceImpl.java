@@ -26,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 public class GigUserDetailServiceImpl implements UserDetailsService {
 
 	private final GigUserRepository userRepo;
-	private static final String ROLE_USER = "ROLE_USER";
 	
 	public GigUserDetailServiceImpl(GigUserRepository userRepo) {
 		super();

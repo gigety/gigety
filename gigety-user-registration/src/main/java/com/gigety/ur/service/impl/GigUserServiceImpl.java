@@ -187,4 +187,14 @@ public class GigUserServiceImpl implements GigUserService {
 		return userRepo.findByEmailIn(emails);
 	}
 
+	@Override
+	public void lockUser(Long id, boolean lock) {
+		userRepo.setLock(id, lock);
+	}
+
+	@Override
+	public GigUser findById(Long id) {
+		return userRepo.findById(id).get();
+	}
+
 }

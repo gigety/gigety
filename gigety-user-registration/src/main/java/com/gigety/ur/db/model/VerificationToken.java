@@ -1,5 +1,6 @@
 package com.gigety.ur.db.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -24,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 @RequiredArgsConstructor
 @NoArgsConstructor
-public class VerificationToken {
+public class VerificationToken implements Serializable{
 
 
 	@Id

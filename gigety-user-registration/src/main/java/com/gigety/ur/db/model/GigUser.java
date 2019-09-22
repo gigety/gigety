@@ -1,5 +1,6 @@
 package com.gigety.ur.db.model;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Locale;
@@ -25,8 +26,6 @@ import com.gigety.ur.util.validation.securityQuestion.SecurityQuestionValidation
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Entity
@@ -34,7 +33,12 @@ import lombok.ToString;
 @SecurityQuestionAnsweredCorrect(groups = SecurityQuestionValidationGroup.class)
 @Data
 @NoArgsConstructor
-public class GigUser {
+public class GigUser implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -50,7 +54,8 @@ public class GigUser {
 	
 	private Calendar created = Calendar.getInstance();
 	private Boolean enabled;
-
+	private Boolean locked;
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "users_roles",
 			joinColumns = 

@@ -23,4 +23,6 @@ public interface GigUserService {
 	List<GigUser> findByEmails(List<String> emails);
 	GigUser registerNewUser(GigUser user,
 			UserSecurityQuestion userSecurityQuestion) throws EmailExistsException, Exception;
+	void lockUser(Long id, boolean lock);
+	GigUser findById(Long id);
 }

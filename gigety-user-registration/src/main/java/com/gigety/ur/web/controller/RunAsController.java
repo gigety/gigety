@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.gigety.ur.service.RunAsService;
+import com.gigety.ur.util.RoleConstants;
 
 @Controller
 @RequestMapping("/runas")
@@ -22,7 +23,7 @@ public class RunAsController {
 
 	@RequestMapping
 	@ResponseBody
-	@Secured({"ROLE_USER", "RUN_AS_REPORTER"})
+	@Secured({RoleConstants.ROLE_USER, RoleConstants.RUN_AS_REPORTER})
 	public String tryRunAs() {
 		return runAsService.getCurrentUser().getAuthorities().toString();
 	}
