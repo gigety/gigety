@@ -35,10 +35,7 @@ import lombok.ToString;
 @NoArgsConstructor
 public class GigUser implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -8403657444076517083L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

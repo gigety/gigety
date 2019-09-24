@@ -114,11 +114,19 @@ public class UserController {
 	@GetMapping("lock/{id}")
 	public ModelAndView lock(@PathVariable("id") final Long id ,  final Principal principal) {
 		log.debug("locking user: {}", id);
-		lockUserService.lockUser(id, principal.getName());
 		GigUser user = userService.findById(id);
+		lockUserService.lockUser( user.getEmail(), principal.getName());
+		
 		return new ModelAndView("tl/view", "user", user);
 	}
-
+	@GetMapping("unlock/{id}")
+	public ModelAndView unlock(@PathVariable("id") final Long id ,  final Principal principal) {
+		log.debug("locking user: {}", id);
+		GigUser user = userService.findById(id);
+		lockUserService.unlockUser( user.getEmail());
+		
+		return new ModelAndView("tl/view", "user", user);
+	}
 	@GetMapping(params = "form")
 	@PreAuthorize(RoleConstants.AUTHORIZE_ADMIN)
 	public String createForm(@ModelAttribute final GigUser user) {

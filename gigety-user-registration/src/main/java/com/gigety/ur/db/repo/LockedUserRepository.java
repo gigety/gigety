@@ -6,4 +6,5 @@ import com.gigety.ur.db.model.LockedUser;
 
 public interface LockedUserRepository extends JpaRepository<LockedUser, Long> {
 	LockedUser findByLockedUserName(String userName);
+	void deleteByLockedUserName(String email);
 }

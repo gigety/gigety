@@ -1,7 +1,8 @@
 package com.gigety.ur.service.cached.impl;
 
+import javax.transaction.Transactional;
+
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@Transactional
 public class LockedUserServiceImpl implements LockedUserService{
 
 	private final LockedUserRepository lockedUserRepo;
@@ -29,14 +31,13 @@ public class LockedUserServiceImpl implements LockedUserService{
 
 	@Override
 	@Caching(
-		put = { @CachePut(value = "lockedUserCache", key = "#lockedUserId")},
-		evict = { @CacheEvict(value="allLockedUserCache", allEntries = true )}
+		evict = { @CacheEvict(value="lockedUserCache", key = "#email")}
 	)
-	public LockedUser lockUser(Long lockedUserId,
+	public LockedUser lockUser(String email,
 			String lockEnforcerId) {
-		log.debug("Locking user {} :: locked by {}", lockedUserId, lockEnforcerId);
+		log.debug("Locking user {} :: locked by {}", email, lockEnforcerId);
 		LockedUser lu = new LockedUser();
-		GigUser lockedUser = userRepo.findById(lockedUserId).get();
+		GigUser lockedUser = userRepo.findByEmail(email);
 		GigUser lockEnforcer = userRepo.findByEmail(lockEnforcerId);
 		lu.setLockedUser(lockedUser);
 		lu.setLockEnforcer(lockEnforcer);
@@ -47,9 +48,12 @@ public class LockedUserServiceImpl implements LockedUserService{
 	}
 
 	@Override
-	public void unlockUser(Long lockedUserId) {
-		// TODO Auto-generated method stub
-		//TODO FINISH AND TEST UNLCOKING AND LOCKING AND CACHIONG _ GOOD JOB!!
+	@Caching(
+		evict = { @CacheEvict(value="lockedUserCache", key = "#email")}
+	)
+	public void unlockUser(String email) {
+		log.debug("Unlocking user {}", email);
+		lockedUserRepo.deleteByLockedUserName(email);
 	}
 
 	@Override
@@ -59,6 +63,7 @@ public class LockedUserServiceImpl implements LockedUserService{
 		log.debug("LOCKED USERS:");
 		lockedUserRepo.findAll().forEach(lockedUser -> log.debug(lockedUser.toString()));
 		LockedUser lu = lockedUserRepo.findByLockedUserName(email);
+		log.debug("Found LOCKED USER - {}", lu);
 		if(lu != null && lu.getLockedUserName().equals(email)) {
 			return true;
 		}

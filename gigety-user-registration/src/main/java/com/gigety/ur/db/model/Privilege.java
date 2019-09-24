@@ -15,6 +15,8 @@ import lombok.Data;
 @Data
 public class Privilege implements Serializable{
 
+	private static final long serialVersionUID = 6171042245955761737L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

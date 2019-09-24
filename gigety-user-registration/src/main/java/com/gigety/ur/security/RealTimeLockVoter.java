@@ -39,8 +39,9 @@ public class RealTimeLockVoter implements AccessDecisionVoter<Object> {
 	public int vote(Authentication authentication,
 			Object object,
 			Collection<ConfigAttribute> attributes) {
-		log.debug("Vote checking locked users for {}", authentication.getName());
-		if(lockedUserService.isUserLocked(authentication.getName())) {
+		log.debug("{} is locked = {}", authentication.getName(),
+				lockedUserService.isUserLocked(authentication.getName()));
+		if (lockedUserService.isUserLocked(authentication.getName())) {
 			return ACCESS_DENIED;
 		}
 		return ACCESS_GRANTED;
