@@ -2,9 +2,13 @@ package com.gigety.ur.conf;
 
 import java.util.List;
 
+import javax.servlet.Filter;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
@@ -13,6 +17,7 @@ import org.springframework.security.access.intercept.RunAsImplAuthenticationProv
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.access.vote.UnanimousBased;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -24,10 +29,17 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2ClientContext;
+import org.springframework.security.oauth2.client.OAuth2RestTemplate;
+import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
+import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.context.request.RequestContextListener;
 
 import com.gigety.ur.conf.filters.GigLogFilter;
 import com.gigety.ur.security.RealTimeLockVoter;
@@ -39,16 +51,19 @@ import lombok.extern.slf4j.Slf4j;
 
 @EnableWebSecurity
 @Configuration
+@EnableOAuth2Client
 @Slf4j
 public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 
-	private final UserDetailsService userDetailsService;
-	private final DataSource dataSource;	
-	private final GigLogFilter gigLogFilter;
-	private final RealTimeLockVoter realTimeLockVoter;
+	@Autowired
+	private UserDetailsService userDetailsService;
+	@Autowired
+	private DataSource dataSource;	
+	@Autowired
+	private GigLogFilter gigLogFilter;
+	@Autowired
+	private RealTimeLockVoter realTimeLockVoter;
 	//private final CustomAuthenticationProvider customAuthenticationProvider;
-	
-
 
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -91,14 +106,6 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	}
 
 
-	public GigSecurityConfiguration(UserDetailsService userDetailsService, DataSource dataSource,
-			GigLogFilter gigLogFilter, RealTimeLockVoter realTimeLockVoter) {
-		super();
-		this.userDetailsService = userDetailsService;
-		this.dataSource = dataSource;
-		this.gigLogFilter = gigLogFilter;
-		this.realTimeLockVoter = realTimeLockVoter;
-	}
 
 
 	@Override
@@ -111,7 +118,7 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		
 		log.debug("Configuring auth :: {}", auth);
 	}
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// @formatter:off
@@ -132,6 +139,10 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 					"/reg/confirm-reg/**",
 					"/registrationConfirm*", 		
 					"/js/**",
+					"/oauth/**",
+					"/oauth/token/**",
+					//"/auth/**",
+					//"/login",
 					"/h2-console/**" ) //h2-console for early dev stage only
 			.permitAll()
 			.anyRequest().authenticated().accessDecisionManager(unanimous())
@@ -206,4 +217,12 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 						realTimeLockVoter);
 		return new UnanimousBased(decisionVoters);
 	}
+	
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+		// TODO Auto-generated method stub
+		return super.authenticationManagerBean();
+	}
+	
 }

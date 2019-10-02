@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.gigety.ur.db.model.GigUser;
 import com.gigety.ur.db.model.Role;
@@ -30,15 +31,18 @@ public class AppInitializer{
 	private final GigUserService userService;
 	private final SecurityQuestionRepository securityQuestionRepo;
 	private final RoleRepository roleRepo;
+	private final PasswordEncoder passwordEncoder;
+
 
 
 	public AppInitializer(SecurityQuestionService securityQuetionService, GigUserService userService,
-			SecurityQuestionRepository securityQuestionRepo, RoleRepository roleRepo) {
+			SecurityQuestionRepository securityQuestionRepo, RoleRepository roleRepo, PasswordEncoder passwordEncoder) {
 		super();
 		this.securityQuetionService = securityQuetionService;
 		this.userService = userService;
 		this.securityQuestionRepo = securityQuestionRepo;
 		this.roleRepo = roleRepo;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@EventListener(ContextRefreshedEvent.class)
