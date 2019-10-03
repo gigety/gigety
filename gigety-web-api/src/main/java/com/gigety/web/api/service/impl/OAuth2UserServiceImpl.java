@@ -2,7 +2,6 @@ package com.gigety.web.api.service.impl;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -19,16 +18,16 @@ import com.gigety.web.api.security.oauth2.user.OAuth2UserInfo;
 import com.gigety.web.api.security.oauth2.user.OAuth2UserInfoFactory;
 import com.gigety.web.api.util.AuthProvider;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-//@AllArgsConstructor
+@AllArgsConstructor
 @Slf4j
 public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
-
-	@Autowired
-	private UserRepository userRepository;
-
+	
+	private final UserRepository userRepository;
+	
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 		OAuth2User oauth2User = super.loadUser(userRequest);

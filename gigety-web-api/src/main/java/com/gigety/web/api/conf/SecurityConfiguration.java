@@ -54,7 +54,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
 	}
 
-
 	@Bean
 	public JwtAuthenticationFilter tokenAuthenticationFilter() {
 		return new JwtAuthenticationFilter();
@@ -70,7 +69,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		//Overriding to add @Bean(BeanIds.AUTHENTICATION_MANAGER) to assure our authentication is available to context
 		return super.authenticationManager();
 	}
-	
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {

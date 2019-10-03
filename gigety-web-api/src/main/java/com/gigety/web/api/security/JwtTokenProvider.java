@@ -7,7 +7,7 @@ import java.util.Map;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.gigety.web.api.conf.AppProperties;
+import com.gigety.web.api.conf.properties.GigAuthProperties;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -24,21 +24,18 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class JwtTokenProvider {
-	
 
-	private final AppProperties appProperties;
+	private final GigAuthProperties gigAuthProperties;
 	
-	
-	
-	public JwtTokenProvider(AppProperties appProperties) {
+	public JwtTokenProvider(GigAuthProperties gigAuthProperties) {
 		super();
-		this.appProperties = appProperties;
+		this.gigAuthProperties = gigAuthProperties;
 	}
 
 	public String createToken(Authentication authentication) {
 		UserPrincipal user = (UserPrincipal) authentication.getPrincipal();
 		Date now = new Date();
-		Date expireDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
+		Date expireDate = new Date(now.getTime() + gigAuthProperties.getAuth().getTokenExpirationMsec());
 		
 		String userid = String.valueOf(user.getId());
 		
@@ -50,7 +47,7 @@ public class JwtTokenProvider {
 				.setClaims(claims)
 				.setIssuedAt(now)
 				.setExpiration(expireDate)
-				.signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
+				.signWith(SignatureAlgorithm.HS512, gigAuthProperties.getAuth().getTokenSecret())
 				.compact();
 		log.debug("Generating token :: {}", ret);
 		return ret;
@@ -64,7 +61,7 @@ public class JwtTokenProvider {
 	public boolean validateToken(String token) {
 
 			try {
-				Jwts.parser().setSigningKey(appProperties.getAuth().getTokenSecret()).parseClaimsJws(token);
+				Jwts.parser().setSigningKey(gigAuthProperties.getAuth().getTokenSecret()).parseClaimsJws(token);
 				return true;
 			} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException
 					| IllegalArgumentException e) {
@@ -80,7 +77,7 @@ public class JwtTokenProvider {
 	 * @return
 	 */
 	public Long getUserIdFromToken(String token) {
-		Claims claims = Jwts.parser().setSigningKey(appProperties.getAuth().getTokenSecret()).parseClaimsJws(token).getBody();
+		Claims claims = Jwts.parser().setSigningKey(gigAuthProperties.getAuth().getTokenSecret()).parseClaimsJws(token).getBody();
 		claims.values().forEach(claim -> log.debug("VALUE :: {}", claim));
 		return Long.parseLong(String.valueOf(claims.get("gig-user-id")));
 	}

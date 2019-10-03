@@ -47,10 +47,10 @@ spring:
               https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
 gig:
   auth:
-    tokenSecret: gigety-token-secret
-    tokenExpirationMsec: 864000000
+    token-secret: gigety-token-secret
+    token-expiration-msec: 864000000
   oauth2:
-    authorizedRedirectUris:
+    authorized-redirect-uris:
       # After authenticating with OAuth2 Provider
       # We generate an auth token for the user. 
       # redirect to the uri mentioned by front end in /oath2/authorize
@@ -58,7 +58,14 @@ gig:
       - http://localhost:3000/oauth2/redirect
       - androidapp://oauth2/redirect
       - iosapp://oauth2/redirect
-    
+  endpoints:
+    web:
+      cors:
+        allowed-origins: 
+          - http://localhost:3000
+          - http://gigety.com
+        allowed-methods: 
+          - "*"
 logging:
   level:
     com.gigety.web.api: debug

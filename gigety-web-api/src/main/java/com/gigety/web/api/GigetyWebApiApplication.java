@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-import com.gigety.web.api.conf.AppProperties;
+import com.gigety.web.api.conf.properties.GigAuthProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties(AppProperties.class)
+@EnableConfigurationProperties(GigAuthProperties.class)
 public class GigetyWebApiApplication {
 
 	public static void main(String[] args) {
