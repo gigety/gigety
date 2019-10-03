@@ -6,7 +6,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
       #naming:
       #  implicit-strategy: org.hibernate.cfg.ImprovedNamingStrategy
       #  physical-strategy: org.hibernate.cfg.ImprovedNamingStrategy
@@ -47,10 +47,10 @@ spring:
               https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
 gig:
   auth:
-    token-secret: samo
-    token-expiration-msec: 864000000
+    tokenSecret: gigety-token-secret
+    tokenExpirationMsec: 864000000
   oauth2:
-    authorization-redirect-uris:
+    authorizedRedirectUris:
       # After authenticating with OAuth2 Provider
       # We generate an auth token for the user. 
       # redirect to the uri mentioned by front end in /oath2/authorize

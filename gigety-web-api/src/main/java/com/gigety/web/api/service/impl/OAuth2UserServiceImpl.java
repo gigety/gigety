@@ -2,6 +2,8 @@ package com.gigety.web.api.service.impl;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -17,21 +19,26 @@ import com.gigety.web.api.security.oauth2.user.OAuth2UserInfo;
 import com.gigety.web.api.security.oauth2.user.OAuth2UserInfoFactory;
 import com.gigety.web.api.util.AuthProvider;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@AllArgsConstructor
+//@AllArgsConstructor
 @Slf4j
 public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
 
-	private final UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 		OAuth2User oauth2User = super.loadUser(userRequest);
 		log.debug("Loading OAuth2 User :: {}",oauth2User);
-		return processOAuth2User(userRequest, oauth2User);
+		try {
+			return processOAuth2User(userRequest, oauth2User);
+		} catch (Exception e) {
+			log.error("Error processsing OAUTH2 USER :: {}",e);
+			throw new InternalAuthenticationServiceException(e.getMessage(), e.getCause());
+		}
 	}
 
 	private OAuth2User processOAuth2User(OAuth2UserRequest userRequest, OAuth2User oauth2User) {
@@ -49,7 +56,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
 			log.debug("User found :: {}", user);
 			if (!user.getProvider().equals(AuthProvider.valueOf(regId))) {
 				throw new OAuth2AuthenticationProcessException(
-						String.format("Account is already signup up via %s. Please login via %s", user.getProvider()));
+						String.format("Account is already signup up via %s.", user.getProvider().name()));
 			}
 			user = updateExistingUser(user, oAuth2UserInfo);
 		}else {
@@ -57,7 +64,7 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
 			user = registerNewUser(regId, oAuth2UserInfo);
 			log.debug("Registering new user :: {}", user);
 		}
-		return UserPrincipal.create(user);
+		return UserPrincipal.create(user, oauth2User.getAttributes());
 
 	}
 

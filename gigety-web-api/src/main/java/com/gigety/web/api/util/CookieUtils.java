@@ -17,6 +17,7 @@ public class CookieUtils {
 
 	public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
 		return Arrays.asList(request.getCookies()).stream().filter(cookie -> cookie.getName().equals(name)).findAny();
+
 	}
 
 	public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
@@ -39,6 +40,7 @@ public class CookieUtils {
 		cookie.setHttpOnly(true);
 		cookie.setMaxAge(maxAge);
 		log.debug("Adding Cookie {}", cookie);
+		response.addCookie(cookie);
 	}
 	
 	public static <T> T deserialize(Cookie cookie, Class<T> cls) {

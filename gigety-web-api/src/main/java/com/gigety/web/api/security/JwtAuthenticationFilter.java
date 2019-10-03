@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.gigety.web.api.service.impl.UserDetailsServiceImpl;
@@ -27,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	@Autowired
-	private JwtTokenProvider provider;
+	private JwtTokenProvider jwtTokenProvider;
 
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
@@ -38,10 +39,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		try {
 			String jwt = parseTokenFromRequest(request);
-			if (jwt != null) {
+			if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
 				log.debug("Bearer token provided: {}", jwt);
 				// Get user from token
-				Long userid = provider.getUserIdFromToken(jwt);
+				Long userid = jwtTokenProvider.getUserIdFromToken(jwt);
 
 				// Get user with details from UserDetails Service
 				UserDetails userDetails = userDetailsService.loadByUserId(userid);

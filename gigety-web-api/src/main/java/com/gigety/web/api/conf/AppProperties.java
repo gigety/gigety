@@ -22,6 +22,6 @@ public class AppProperties {
 	
 	@Data
 	public final static class OAuth2 {
-		private List<String> authorizationRedirectUris;
+		private List<String> authorizedRedirectUris;
 	}
 }

@@ -35,20 +35,18 @@ public class JwtTokenProvider {
 		this.appProperties = appProperties;
 	}
 
-	public String generateToken(Authentication authentication) {
+	public String createToken(Authentication authentication) {
 		UserPrincipal user = (UserPrincipal) authentication.getPrincipal();
-		Date now = new Date(System.currentTimeMillis());
+		Date now = new Date();
 		Date expireDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
 		
 		String userid = String.valueOf(user.getId());
 		
 		Map<String, Object> claims = new HashMap<>();
 		
-		claims.put("id", user.getName());
-		claims.put("username", user.getEmail());
-		
+		claims.put("gig-user-id", userid);
+		claims.put("whatever", "itmaybe");
 		String ret = Jwts.builder()
-				.setSubject(userid)
 				.setClaims(claims)
 				.setIssuedAt(now)
 				.setExpiration(expireDate)
@@ -83,6 +81,7 @@ public class JwtTokenProvider {
 	 */
 	public Long getUserIdFromToken(String token) {
 		Claims claims = Jwts.parser().setSigningKey(appProperties.getAuth().getTokenSecret()).parseClaimsJws(token).getBody();
-		return Long.valueOf(String.valueOf(claims.get("id")));
+		claims.values().forEach(claim -> log.debug("VALUE :: {}", claim));
+		return Long.parseLong(String.valueOf(claims.get("gig-user-id")));
 	}
 }

@@ -12,7 +12,7 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Component
+//@Component
 @Slf4j
 public class HttpCookieOAuth2AuthorizationRequestRepository
 		implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
@@ -53,11 +53,12 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
 	@Override
 	public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request) {
 		log.debug("Removing or Loading Authorization Request??????");
-		return this.loadAuthorizationRequest(request);
-		
+		OAuth2AuthorizationRequest ret = this.loadAuthorizationRequest(request);
+		log.debug("AUTH REQUEST :: {}", ret);
+		return ret;
 	}
 	
-	public void removeAuthorizationRequetCookies(HttpServletRequest request, HttpServletResponse response) {
+	public void removeAuthorizationRequestCookies(HttpServletRequest request, HttpServletResponse response) {
 		log.debug("Removing Authorization Cookies");
 		CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
 		CookieUtils.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);

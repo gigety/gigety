@@ -1,5 +1,6 @@
 package com.gigety.web.api.conf;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.gigety.web.api.security.JwtAuthenticationFilter;
-import com.gigety.web.api.security.RestAutheticationEntryPoint;
+import com.gigety.web.api.security.RestAuthenticationEntryPoint;
 import com.gigety.web.api.security.SecurityConstants;
 import com.gigety.web.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.gigety.web.api.security.oauth2.OAuth2AuthenticationFailureHandler;
@@ -35,37 +36,32 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
-	private final UserDetailsServiceImpl userDetailsServiceImpl;
-	private final OAuth2UserServiceImpl oauth2UserServiceImpl;
-	private final OAuth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler;
-	private final OAuth2AuthenticationFailureHandler oauth2AuthenticationFailureHandler;
-	private final HttpCookieOAuth2AuthorizationRequestRepository cookieAuthRepo;
-	private final RestAutheticationEntryPoint restAutheticationEntryPoint;
+	@Autowired
+	private UserDetailsServiceImpl userDetailsServiceImpl;
+	@Autowired
+	private OAuth2UserServiceImpl oauth2UserServiceImpl;
+	@Autowired
+	private OAuth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler;
+	@Autowired
+	private OAuth2AuthenticationFailureHandler oauth2AuthenticationFailureHandler;
+	@Autowired
+	private HttpCookieOAuth2AuthorizationRequestRepository cookieAuthRepo;
+	//private final RestAuthenticationEntryPoint restAutheticationEntryPoint;
 
-	public SecurityConfiguration(UserDetailsServiceImpl userDetailsServiceImpl, OAuth2UserServiceImpl oAuth2ServiceImpl,
-			OAuth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler,
-			OAuth2AuthenticationFailureHandler oauth2AuthenticationFailureHandler,
-			HttpCookieOAuth2AuthorizationRequestRepository cookieAuthRepo,
-			RestAutheticationEntryPoint restAutheticationEntryPoint) {
-		super();
-		this.userDetailsServiceImpl = userDetailsServiceImpl;
-		this.oauth2UserServiceImpl = oAuth2ServiceImpl;
-		this.oauth2AuthenticationSuccessHandler = oauth2AuthenticationSuccessHandler;
-		this.oauth2AuthenticationFailureHandler = oauth2AuthenticationFailureHandler;
-		this.cookieAuthRepo = cookieAuthRepo;
-		this.restAutheticationEntryPoint = restAutheticationEntryPoint;
-	}
+
 
 	@Bean
 	public JwtAuthenticationFilter tokenAuthenticationFilter() {
 		return new JwtAuthenticationFilter();
 	}
 	
-//	@Bean
-//	public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
-//		log.debug("Using stateless HttpCookieOAuth2AuthorizationRequestRepository for saving authorization requests");
-//		return cookieAuthRepo;//new HttpCookieOAuth2AuthorizationRequestRepository();
-//	}
+
+
+	@Bean
+	public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
+		log.debug("Using stateless HttpCookieOAuth2AuthorizationRequestRepository for saving authorization requests");
+		return new HttpCookieOAuth2AuthorizationRequestRepository();
+	}
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -86,36 +82,54 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
-		http.cors().and().csrf().disable()
-			.exceptionHandling().authenticationEntryPoint(restAutheticationEntryPoint)
-			.and()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-			.and()
-			.formLogin().disable()
-			.httpBasic().disable()
-			.headers().frameOptions().sameOrigin() //To enable H2 Database
-			.and()
-			.authorizeRequests()
-			.antMatchers(SecurityConstants.WEB_RESOURCES_URL).permitAll()
-			.antMatchers(SecurityConstants.SIGN_UP_URL).permitAll()
-			.antMatchers(SecurityConstants.AUTH_URLS).permitAll()
-			.anyRequest().authenticated()
-			.and()
-			.oauth2Login()
-				.authorizationEndpoint()
-					.baseUri("/oauth2/authorize")
-					.authorizationRequestRepository(cookieAuthRepo)
-					.and()
-				.redirectionEndpoint()
-					.baseUri("/oauth2/callback/*")
-					.and()
-				.userInfoEndpoint()
-					.userService(oauth2UserServiceImpl)
-					.and()
-				.successHandler(oauth2AuthenticationSuccessHandler)
-				.failureHandler(oauth2AuthenticationFailureHandler);
-		http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-		super.configure(http);
+        http
+        .cors()
+            .and()
+        .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+        .csrf()
+            .disable()
+        .formLogin()
+            .disable()
+        .httpBasic()
+            .disable()
+        .exceptionHandling()
+            .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+            .and()
+        .authorizeRequests()
+            .antMatchers("/",
+                "/error",
+                "/favicon.ico",
+                "/**/*.png",
+                "/**/*.gif",
+                "/**/*.svg",
+                "/**/*.jpg",
+                "/**/*.html",
+                "/**/*.css",
+                "/**/*.js")
+                .permitAll()
+            .antMatchers("/auth/**", "/oauth2/**")
+                .permitAll()
+            .anyRequest()
+                .authenticated()
+            .and()
+        .oauth2Login()
+            .authorizationEndpoint()
+                .baseUri("/oauth2/authorize")
+                .authorizationRequestRepository(cookieAuthorizationRequestRepository())
+                .and()
+            .redirectionEndpoint()
+                .baseUri("/oauth2/callback/*")
+                .and()
+            .userInfoEndpoint()
+                .userService(oauth2UserServiceImpl)
+                .and()
+            .successHandler(oauth2AuthenticationSuccessHandler)
+            .failureHandler(oauth2AuthenticationFailureHandler);
+
+// Add our custom Token based authentication filter
+http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 	
 }

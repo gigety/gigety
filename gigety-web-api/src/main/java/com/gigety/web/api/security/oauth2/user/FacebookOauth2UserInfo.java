@@ -30,7 +30,7 @@ public class FacebookOauth2UserInfo extends OAuth2UserInfo {
 			Map<String, Object> picture = (Map<String, Object>) attributes.get("picture");
 			if(picture.containsKey("data")) {
 				@SuppressWarnings("unchecked")
-				Map<String, Object> data = (Map<String, Object>) attributes.get("data");
+				Map<String, Object> data = (Map<String, Object>) picture.get("data");
 				if(data.containsKey("url")) {
 					return (String) data.get("url");
 				}

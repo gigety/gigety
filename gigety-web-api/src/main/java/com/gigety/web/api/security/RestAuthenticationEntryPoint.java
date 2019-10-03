@@ -16,9 +16,9 @@ import com.google.gson.Gson;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Component
+//@Component
 @Slf4j
-public class RestAutheticationEntryPoint implements AuthenticationEntryPoint{
+public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint{
 
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
