@@ -12,7 +12,7 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
-//@Component
+@Component
 @Slf4j
 public class HttpCookieOAuth2AuthorizationRequestRepository
 		implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
