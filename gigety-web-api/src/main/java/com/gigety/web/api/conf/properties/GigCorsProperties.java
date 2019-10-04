@@ -3,7 +3,6 @@ package com.gigety.web.api.conf.properties;
 import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +12,6 @@ import lombok.ToString;
 @Getter
 @AllArgsConstructor
 @ToString
-@Component
 public class GigCorsProperties {
 
 	private final List<String> allowedOrigins;
