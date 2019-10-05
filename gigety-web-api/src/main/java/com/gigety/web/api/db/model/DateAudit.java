@@ -1,4 +1,4 @@
-package com.gigety.web.api.conf.db.model;
+package com.gigety.web.api.db.model;
 
 import java.io.Serializable;
 import java.time.Instant;

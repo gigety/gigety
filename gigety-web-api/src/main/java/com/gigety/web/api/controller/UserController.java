@@ -4,8 +4,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gigety.web.api.conf.db.model.User;
-import com.gigety.web.api.conf.db.repo.UserRepository;
+import com.gigety.web.api.db.model.User;
+import com.gigety.web.api.db.repo.UserRepository;
 import com.gigety.web.api.exception.ResourceNotFoundException;
 import com.gigety.web.api.security.CurrentUser;
 import com.gigety.web.api.security.UserPrincipal;

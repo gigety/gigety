@@ -8,8 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.gigety.web.api.conf.db.model.User;
-import com.gigety.web.api.conf.db.repo.UserRepository;
+import com.gigety.web.api.db.model.User;
+import com.gigety.web.api.db.repo.UserRepository;
 import com.gigety.web.api.exception.ResourceNotFoundException;
 import com.gigety.web.api.security.UserPrincipal;
 

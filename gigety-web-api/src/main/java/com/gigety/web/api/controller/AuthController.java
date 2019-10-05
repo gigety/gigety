@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.gigety.web.api.conf.db.model.User;
-import com.gigety.web.api.conf.db.repo.UserRepository;
+import com.gigety.web.api.db.model.User;
+import com.gigety.web.api.db.repo.UserRepository;
 import com.gigety.web.api.exception.BadRequestException;
 import com.gigety.web.api.payload.ApiResponse;
 import com.gigety.web.api.payload.AuthResponse;
@@ -25,11 +25,13 @@ import com.gigety.web.api.payload.SignupRequest;
 import com.gigety.web.api.security.JwtTokenProvider;
 import com.gigety.web.api.transformer.UserConverter;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
 @RequestMapping("/auth")
+@AllArgsConstructor
 public class AuthController {
 
 	private final AuthenticationManager authenticationManager;
@@ -37,14 +39,6 @@ public class AuthController {
 	private final JwtTokenProvider jwtTokenProvider;
 	private final UserConverter userConverter;
 
-	public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
-			JwtTokenProvider jwtTokenProvider, UserConverter userConverter) {
-		super();
-		this.authenticationManager = authenticationManager;
-		this.userRepository = userRepository;
-		this.jwtTokenProvider = jwtTokenProvider;
-		this.userConverter = userConverter;
-	}
 
 	@PostMapping("/login")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {

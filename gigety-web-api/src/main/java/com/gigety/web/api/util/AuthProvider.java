@@ -6,5 +6,5 @@ public enum AuthProvider {
 	google,
 	github,
 	linkedin,
-	twitter,
+	gigety,
 }
