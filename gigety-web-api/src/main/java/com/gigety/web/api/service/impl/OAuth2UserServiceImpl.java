@@ -14,14 +14,14 @@ import com.gigety.web.api.db.model.OauthProvider;
 import com.gigety.web.api.db.model.User;
 import com.gigety.web.api.db.model.UserOauthProvider;
 import com.gigety.web.api.db.model.UserOauthProviderIdentity;
-import com.gigety.web.api.db.repo.OauthProviderRepository;
-import com.gigety.web.api.db.repo.UserOauthProviderRepository;
 import com.gigety.web.api.db.repo.UserRepository;
 import com.gigety.web.api.exception.OAuth2AuthenticationProcessException;
+import com.gigety.web.api.exception.ResourceNotFoundException;
 import com.gigety.web.api.security.UserPrincipal;
 import com.gigety.web.api.security.oauth2.user.OAuth2UserInfo;
 import com.gigety.web.api.security.oauth2.user.OAuth2UserInfoFactory;
-import com.gigety.web.api.util.AuthProvider;
+import com.gigety.web.api.service.UserOauthProviderService;
+import com.gigety.web.api.service.cached.OauthProviderService;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,19 +30,19 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Slf4j
 public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
-	
+
 	private final UserRepository userRepository;
-	private final OauthProviderRepository oauthProviderRepository;
-	private final UserOauthProviderRepository userOauthProviderRepository;
-	
+	private final OauthProviderService oauthProviderService;
+	private final UserOauthProviderService userOauthProviderService;
+
 	@Override
 	public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 		OAuth2User oauth2User = super.loadUser(userRequest);
-		log.debug("Loading OAuth2 User :: {}",oauth2User);
+		log.debug("Loading OAuth2 User :: {}", oauth2User);
 		try {
 			return processOAuth2User(userRequest, oauth2User);
 		} catch (Exception e) {
-			log.error("Error processsing OAUTH2 USER :: {}",e.getMessage(),e);
+			log.error("Error processsing OAUTH2 USER :: {}", e.getMessage(), e);
 			throw new InternalAuthenticationServiceException(e.getMessage(), e.getCause());
 		}
 	}
@@ -64,9 +64,9 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
 //				throw new OAuth2AuthenticationProcessException(
 //						String.format("Account is already signup up via %s.", user.getProvider().name()));
 //			}
-			user = updateExistingUser(user, oAuth2UserInfo);
-		}else {
-			// Register new USER 
+			user = updateExistingUser(user, regId, oAuth2UserInfo);
+		} else {
+			// Register new USER
 			user = registerNewUser(regId, oAuth2UserInfo);
 			log.debug("Registering new user :: {}", user);
 		}
@@ -74,26 +74,48 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
 
 	}
 
-	private User registerNewUser(String registrationId, OAuth2UserInfo oAuth2UserInfo) {
-		//TODO: Revisit registration process. look at gigety-ur
+	private User registerNewUser(String regId, OAuth2UserInfo oAuth2UserInfo) {
+		// TODO: Revisit registration process. look at gigety-ur
 
 		User user = new User();
 
 		user.setName(oAuth2UserInfo.getName());
 		user.setEmail(oAuth2UserInfo.getEmail());
 		user.setImageUrl(oAuth2UserInfo.getImageUrl());
-		user.setProvider(AuthProvider.valueOf(registrationId));
+		user.setProvider(regId);
 		user = userRepository.save(user);
 //		//TODO: replace this query with a cached service for providers. Go Redis!!
-		OauthProvider provider = oauthProviderRepository.findByName(AuthProvider.valueOf(registrationId));
-		UserOauthProvider userProvider = new UserOauthProvider(new UserOauthProviderIdentity(user.getId(),provider.getId()), oAuth2UserInfo.getId());
-		userOauthProviderRepository.save(userProvider);
+		OauthProvider provider = oauthProviderService.findByName(regId)
+				.orElseThrow(() -> new ResourceNotFoundException("oauthProvider", "name", regId));
+		UserOauthProvider userProvider = new UserOauthProvider(
+				new UserOauthProviderIdentity(user.getId(), provider.getId()), oAuth2UserInfo.getId());
+		userOauthProviderService.save(userProvider);
 		return user;
 	}
 
-	private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
+	private User updateExistingUser(User existingUser, String regId, OAuth2UserInfo oAuth2UserInfo) {
+
 		existingUser.setName(oAuth2UserInfo.getName());
 		existingUser.setImageUrl(oAuth2UserInfo.getImageUrl());
+		OauthProvider oauthProvider = oauthProviderService.findByName(regId)
+				.orElseThrow(() -> new ResourceNotFoundException("oauthProvider", "name", regId));
+
+		Optional<UserOauthProvider> userOauthProviderOptional = userOauthProviderService
+				.findByUserIdAndProviderId(existingUser.getId(), oauthProvider.getId());
+		if (!userOauthProviderOptional.isPresent()) {
+			UserOauthProvider userOauthProvider = UserOauthProvider.builder()
+					.userOauthProviderIdentity(
+							new UserOauthProviderIdentity(existingUser.getId(), oauthProvider.getId()))
+					.providerId(oAuth2UserInfo.getId()).build();
+			userOauthProviderService.save(userOauthProvider);
+		}
+//		userOauthProviders.stream()
+//		Predicate<OauthProvider> predicate = oap -> oap.getName().equals(regId);
+//		if (existingUser.getOauthProviders().stream().noneMatch(predicate)) {
+//			OauthProvider provider = oauthProviderService.findByName(regId);
+//			existingUser.getOauthProviders().add(provider);
+//		}
+
 		return userRepository.save(existingUser);
 	}
 

@@ -16,12 +16,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.gigety.web.api.security.JwtAuthenticationFilter;
 import com.gigety.web.api.security.RestAuthenticationEntryPoint;
-import com.gigety.web.api.security.SecurityConstants;
 import com.gigety.web.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.gigety.web.api.security.oauth2.OAuth2AuthenticationFailureHandler;
 import com.gigety.web.api.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.gigety.web.api.service.impl.OAuth2UserServiceImpl;
 import com.gigety.web.api.service.impl.UserDetailsServiceImpl;
+import com.gigety.web.api.util.SecurityConstants;
 
 @Configuration
 @EnableWebSecurity

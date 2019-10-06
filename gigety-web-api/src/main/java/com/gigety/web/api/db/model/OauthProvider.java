@@ -1,12 +1,11 @@
 package com.gigety.web.api.db.model;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,9 +17,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.NaturalId;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gigety.web.api.util.AuthProvider;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,7 +40,13 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @RequiredArgsConstructor
-public class OauthProvider {
+public class OauthProvider implements Serializable {
+
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1756026587575689594L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,12 +54,12 @@ public class OauthProvider {
 	
 	@NonNull
 	@NotNull
-	@NaturalId
+	//@NaturalId
 	@Size(max = 50)
-	@Enumerated(EnumType.STRING)
-	private AuthProvider name;
+	private String name;
 	
-	@ManyToMany(fetch = FetchType.LAZY,
+	@ManyToMany(
+			fetch = FetchType.LAZY,
 			cascade = {
 					CascadeType.PERSIST,
 					CascadeType.MERGE
@@ -60,5 +67,9 @@ public class OauthProvider {
 			mappedBy = "oauthProviders")
 	@JsonIgnore
 	private Set<User> users = new HashSet<>();
-	
+
 }
+
+
+
+

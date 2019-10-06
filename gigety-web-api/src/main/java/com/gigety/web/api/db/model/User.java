@@ -1,14 +1,13 @@
 package com.gigety.web.api.db.model;
 
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,22 +21,25 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gigety.web.api.util.AuthProvider;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Entity
 @Table(
-	name = "users", 
-	uniqueConstraints = 
-	{
+	name = "gig_users", 
+	uniqueConstraints = {
 		@UniqueConstraint(columnNames = "email")
 	}
 )
 @Data
 @EqualsAndHashCode(exclude = "oauthProviders")
-public class User {
+@ToString(exclude = "oauthProviders")
+public class User implements Serializable{
+
+
+	private static final long serialVersionUID = 3520228726883354940L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,19 +59,20 @@ public class User {
 	@JsonIgnore
 	private String password;
 
-	@ManyToMany(fetch = FetchType.LAZY,
+	@ManyToMany(
+			fetch = FetchType.LAZY,
 			cascade = {
 					CascadeType.PERSIST,
 					CascadeType.MERGE
 			})
-	@JoinTable(name = "user_oauth_provider",
+	@JoinTable(
+			name = "user_oauth_provider",
 			joinColumns = {@JoinColumn(name  = "user_id")},
 			inverseJoinColumns = {@JoinColumn(name = "oauth_provider_id")})
 	@JsonIgnore
 	private Set<OauthProvider> oauthProviders = new HashSet<>();
 	
 	@NotNull
-	@Enumerated(EnumType.STRING)
-	private AuthProvider provider;
+	private String provider;
 	private String providerId;
 }

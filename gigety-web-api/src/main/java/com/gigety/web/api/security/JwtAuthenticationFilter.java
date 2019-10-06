@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.gigety.web.api.service.impl.UserDetailsServiceImpl;
+import com.gigety.web.api.util.SecurityConstants;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -60,7 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				log.debug("No bearer token provided");
 			}
 		} catch (Exception e) {
-			log.error("Error in setting Authetication: {}", e.getMessage(), e);
+			log.warn(String.format("Exception in setting Authetication: %s", e.getMessage()));
 		}
 		filterChain.doFilter(request, response);
 	}

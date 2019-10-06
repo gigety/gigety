@@ -1,4 +1,4 @@
-package com.gigety.web.api.security;
+package com.gigety.web.api.util;
 
 public class SecurityConstants {
 	public static final String[] AUTH_URLS = {
@@ -24,5 +24,6 @@ public class SecurityConstants {
 	public static final String TOKEN_PREFIX = "Bearer ";
 	public static final String HEADER_TOKEN = "Authorization";
 	public static final long EXPIRATION_TIME = 5_000_000; //600 seconds
+	
 	 
 }
