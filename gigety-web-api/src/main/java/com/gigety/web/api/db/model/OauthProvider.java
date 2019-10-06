@@ -42,10 +42,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OauthProvider implements Serializable {
 
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -1756026587575689594L;
 
 	@Id
@@ -66,7 +62,7 @@ public class OauthProvider implements Serializable {
 			},
 			mappedBy = "oauthProviders")
 	@JsonIgnore
-	private Set<User> users = new HashSet<>();
+	private Set<User> users;
 
 }
 

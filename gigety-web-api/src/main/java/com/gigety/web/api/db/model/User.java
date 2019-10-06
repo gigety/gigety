@@ -38,7 +38,6 @@ import lombok.ToString;
 @ToString(exclude = "oauthProviders")
 public class User implements Serializable{
 
-
 	private static final long serialVersionUID = 3520228726883354940L;
 
 	@Id
@@ -70,7 +69,7 @@ public class User implements Serializable{
 			joinColumns = {@JoinColumn(name  = "user_id")},
 			inverseJoinColumns = {@JoinColumn(name = "oauth_provider_id")})
 	@JsonIgnore
-	private Set<OauthProvider> oauthProviders = new HashSet<>();
+	private Set<OauthProvider> oauthProviders;
 	
 	@NotNull
 	private String provider;

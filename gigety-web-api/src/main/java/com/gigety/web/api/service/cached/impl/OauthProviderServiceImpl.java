@@ -25,14 +25,14 @@ public class OauthProviderServiceImpl implements OauthProviderService{
 	private final OauthProviderRepository oauthProviderRepo;
 	
 	@Override
-	//@Cacheable(value = "oauthProviderCache", key = "#name")
+	@Cacheable(value = "oauthProviderCache", key = "#name", unless="#result == null")
 	public Optional<OauthProvider> findByName(String name) {
 		log.debug("Findindg oauthProvider {} ...", name);
 		return oauthProviderRepo.findByName(name);
 	}
 
 	@Override
-	//@Cacheable(value = "oauthProviderCache")
+	@Cacheable(value = "oauthProviderCache")
 	public Set<OauthProvider> getAll() {
 		return new HashSet<>(oauthProviderRepo.findAll());
 	}
