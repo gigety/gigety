@@ -1,13 +1,10 @@
 package com.gigety.ur.conf;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +15,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
@@ -35,8 +31,6 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private UserDetailsService userDetailsService;
-	@Autowired
-	private DataSource dataSource;
 	
 	public AuthorizationServerConfiguration() {
 		super();
@@ -44,33 +38,30 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		// @formatter:off
 		clients
 			.inMemory()
 			//.jdbc(dataSource)
 			.withClient("samo")
-			//.secret(passwordEncoder.encode("samo"))
-			.secret("samo")
-			.authorizedGrantTypes("password", "authorization_code","refresh_token")
+			.secret(passwordEncoder.encode("samo"))
+			.authorizedGrantTypes( "password","authorization_code","refresh_token")
 			.refreshTokenValiditySeconds(3600 * 24)
 			.scopes("read", "write", "trust")
 			.resourceIds("samo")
-			.redirectUris("http://localhost:8080/login/oauth2/code/custom-client", "http://localhost:8080/login/oauth2/callback/custom-client","http://localhost:8082/login")
+			.redirectUris("http://localhost:8080/oauth2/code/samo", "http://localhost:8080/oauth2/callback/samo","http://localhost:8080")
 			.autoApprove(true)
+			
 			.accessTokenValiditySeconds(3600)
 			.and().build();
-		// @formatter:on
-
 	}
 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		endpoints
+		endpoints 
 			.tokenStore(tokenStore())
 			.authenticationManager(authenticationManager)
 			.userDetailsService(userDetailsService)
-			.accessTokenConverter(accessTokenConverter())
-			.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
+			.accessTokenConverter(accessTokenConverter());
+			//.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST, HttpMethod.OPTIONS);
 	}
 	
 	@Override

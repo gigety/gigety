@@ -23,6 +23,9 @@ spring:
       height: 2
       
   jpa:
+    properties:
+      hibernate: 
+        dialect: org.hibernate.dialect.MySQL5Dialect
     hibernate:
       ddl-auto: create-drop
   datasource:
@@ -55,7 +58,11 @@ spring:
     cache-names:
     - lockedUserCache
     - allLockedUserCache
-    
+  #security:
+    #oauth2:
+      #resourceserver:
+        #jwt:
+          #jwk-set-uri:  http://localhost:8084/endpoint/jwks.json
 server:
   tomcat:
     accesslog:
@@ -68,8 +75,7 @@ server:
 logging:
   level:
     com.gigety.ur: debug
-    # org.springframework.security: debug
-spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+    org.springframework.security: debug
  
 gigety: 
   root-url: http://localhost:8083

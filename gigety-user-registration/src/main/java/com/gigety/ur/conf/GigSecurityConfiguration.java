@@ -2,15 +2,13 @@ package com.gigety.ur.conf;
 
 import java.util.List;
 
-import javax.servlet.Filter;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.intercept.RunAsImplAuthenticationProvider;
@@ -29,17 +27,10 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.OAuth2ClientContext;
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
-import org.springframework.security.oauth2.client.token.grant.code.AuthorizationCodeResourceDetails;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.web.context.request.RequestContextListener;
 
 import com.gigety.ur.conf.filters.GigLogFilter;
 import com.gigety.ur.security.RealTimeLockVoter;
@@ -49,9 +40,10 @@ import com.google.common.collect.Lists;
 
 import lombok.extern.slf4j.Slf4j;
 
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @Configuration
-@EnableOAuth2Client
+//@EnableOAuth2Client
+@Order(2147483640)
 @Slf4j
 public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 

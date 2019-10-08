@@ -1,5 +1,7 @@
 package com.gigety.web.api.security.oauth2;
 
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -43,6 +45,18 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
 		CookieUtils.addCookie(response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME, 
 				CookieUtils.serialize(authorizationRequest), cookieExpireSeconds);
 		String redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
+		
+		Enumeration<String> paramNames = request.getParameterNames();
+		while(paramNames.hasMoreElements()) {
+			String name = paramNames.nextElement();
+			log.debug("PAramName :: {}", name);
+			String[] paramValues = request.getParameterValues(name); 
+			for(String pv : paramValues) {
+				log.debug(pv);
+			}
+		}
+		
+		
 		if(StringUtils.isNotBlank(redirectUriAfterLogin)) {
 			CookieUtils.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, 
 					redirectUriAfterLogin, cookieExpireSeconds);

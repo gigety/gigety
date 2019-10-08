@@ -2,7 +2,6 @@ package com.gigety.web.api.db.model;
 
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;

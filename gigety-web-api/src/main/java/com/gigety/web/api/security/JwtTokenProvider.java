@@ -16,6 +16,7 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -23,14 +24,10 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Component
 @Slf4j
+@AllArgsConstructor
 public class JwtTokenProvider {
 
 	private final GigAuthProperties gigAuthProperties;
-	
-	public JwtTokenProvider(GigAuthProperties gigAuthProperties) {
-		super();
-		this.gigAuthProperties = gigAuthProperties;
-	}
 
 	public String createToken(Authentication authentication) {
 		UserPrincipal user = (UserPrincipal) authentication.getPrincipal();

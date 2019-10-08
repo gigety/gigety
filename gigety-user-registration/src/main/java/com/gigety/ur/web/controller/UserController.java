@@ -24,6 +24,7 @@ import com.gigety.ur.util.RoleConstants;
 import com.gigety.ur.util.validation.EmailExistsException;
 import com.gigety.ur.util.validation.PasswordValidationGroup;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -31,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Controller
 @RequestMapping("/user")
+@AllArgsConstructor
 @Slf4j
 public class UserController {
 
@@ -38,14 +40,6 @@ public class UserController {
 	private final ActiveUserService activeUserService;
 	private final LockedUserService lockUserService;
 	
-	public UserController(GigUserService userService, ActiveUserService activeUserService,
-			LockedUserService lockUserService) {
-		super();
-		this.userService = userService;
-		this.activeUserService = activeUserService;
-		this.lockUserService = lockUserService;
-	}
-
 	@RequestMapping
 	public ModelAndView list() {
 		Iterable<GigUser> users = userService.findAll();

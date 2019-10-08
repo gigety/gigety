@@ -1,6 +1,7 @@
 package com.gigety.web.api.security;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -67,7 +68,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	}
 
 	private String parseTokenFromRequest(HttpServletRequest request) {
+
 		String token = request.getHeader(SecurityConstants.HEADER_TOKEN);
+		
 		if (token != null && token.startsWith(SecurityConstants.TOKEN_PREFIX)) {
 			return token.substring(7, token.length());
 		}

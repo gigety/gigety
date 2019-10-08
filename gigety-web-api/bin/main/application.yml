@@ -20,6 +20,21 @@ spring:
     oauth2:
       client:
         registration:
+          samo:
+            client-id:
+              samo
+            client-secret:
+              samo
+            client-name:
+              samo
+            scope:
+              read
+            provider:
+              samo
+            redirect-uri:
+              "{baseUrl}/oauth2/callback/{registrationId}"
+            authorization-grant-type:
+              authorization_code
           google: 
             client-id:
               ${SPRING_OAUTH_GOOGLE_CLIENT_ID}
@@ -41,6 +56,15 @@ spring:
               - email
               - public_profile
         provider:
+          samo:
+            token-uri:
+              http://localhost:8084/oauth/token
+            authorization-uri:
+              http://localhost:8084/oauth/authorize
+            user-info-uri:
+              http://localhost:8084/users/info
+            user-name-attribute:
+              user_name
           facebook: 
             authorization-uri: 
               https://www.facebook.com/v3.0/dialog/oauth

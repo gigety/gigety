@@ -36,6 +36,7 @@ import com.gigety.ur.util.validation.EmailExistsException;
 import com.gigety.ur.util.validation.PasswordValidationGroup;
 import com.gigety.ur.util.validation.securityQuestion.SecurityQuestionValidationGroup;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -45,6 +46,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Controller
 @Slf4j
+@AllArgsConstructor
 public class RegistrationController {
 
 	private final GigUserService userService;
@@ -52,17 +54,6 @@ public class RegistrationController {
 	private final MessageSource messageSource;
 	private final AsyncEmailService emailService;
 	private final SecurityQuestionService securityQuestionService;
-
-	public RegistrationController(GigUserService userService, ApplicationEventPublisher appEventPublisher,
-			MessageSource messageSource, AsyncEmailService emailService,
-			SecurityQuestionService securityQuestionService) {
-		super();
-		this.userService = userService;
-		this.appEventPublisher = appEventPublisher;
-		this.messageSource = messageSource;
-		this.emailService = emailService;
-		this.securityQuestionService = securityQuestionService;
-	}
 
 	/**
 	 * Sign up - redirects to registration sign up page
