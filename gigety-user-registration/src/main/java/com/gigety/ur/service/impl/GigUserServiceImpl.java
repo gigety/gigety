@@ -23,6 +23,7 @@ import com.gigety.ur.db.repo.VerificationTokenRepository;
 import com.gigety.ur.service.GigUserService;
 import com.gigety.ur.util.validation.EmailExistsException;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -32,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Transactional
 @Slf4j
+@AllArgsConstructor
 public class GigUserServiceImpl implements GigUserService {
 
 	private final GigUserRepository userRepo;
@@ -39,18 +41,6 @@ public class GigUserServiceImpl implements GigUserService {
 	private final VerificationTokenRepository verificationTokenRepo;
 	private final PWResetTokenRepository pwResetTokenRepo;
 	private final UserSecurityQuestionRepository userSecurityRepo;
-
-	@Autowired
-	public GigUserServiceImpl(GigUserRepository userRepo, PasswordEncoder passwordEncoder,
-			VerificationTokenRepository verificationTokenRepo, PWResetTokenRepository pwResetTokenRepo,
-			UserSecurityQuestionRepository userSecurityRepo) {
-		super();
-		this.userRepo = userRepo;
-		this.passwordEncoder = passwordEncoder;
-		this.verificationTokenRepo = verificationTokenRepo;
-		this.pwResetTokenRepo = pwResetTokenRepo;
-		this.userSecurityRepo = userSecurityRepo;
-	}
 
 	@Override
 	public GigUser registerNewUser(GigUser gigUser, UserSecurityQuestion userSecurityQuestion) throws EmailExistsException, Exception {

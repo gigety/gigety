@@ -13,22 +13,18 @@ import com.gigety.ur.db.repo.SecurityQuestionRepository;
 import com.gigety.ur.db.repo.UserSecurityQuestionRepository;
 import com.gigety.ur.service.SecurityQuestionService;
 
+import lombok.AllArgsConstructor;
+
 /**
  * Security Question Service
  */
 @Service
 @Transactional
+@AllArgsConstructor
 public class SecurityQuestionsServiceImpl implements SecurityQuestionService {
 
-	final SecurityQuestionRepository questionRepo;
-	final UserSecurityQuestionRepository userSecurityRepo;
-
-	public SecurityQuestionsServiceImpl(SecurityQuestionRepository questionRepo,
-			UserSecurityQuestionRepository userSecurityRepo) {
-		super();
-		this.questionRepo = questionRepo;
-		this.userSecurityRepo = userSecurityRepo;
-	}
+	private final SecurityQuestionRepository questionRepo;
+	private final UserSecurityQuestionRepository userSecurityRepo;
 
 	@Override
 	public List<SecurityQuestion> findAll() {

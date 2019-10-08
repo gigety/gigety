@@ -10,15 +10,13 @@ import org.springframework.stereotype.Service;
 
 import com.gigety.ur.service.ActiveUserService;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 public class ActiveUserServiceImpl implements ActiveUserService {
 
 	private final SessionRegistry sessionRegistry;
-
-	public ActiveUserServiceImpl(SessionRegistry sessionRegistry) {
-		super();
-		this.sessionRegistry = sessionRegistry;
-	}
 
 	@Override
 	public List<String> getAllActiveUsers() {

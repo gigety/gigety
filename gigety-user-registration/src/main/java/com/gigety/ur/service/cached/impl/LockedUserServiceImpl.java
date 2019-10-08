@@ -13,21 +13,17 @@ import com.gigety.ur.db.repo.GigUserRepository;
 import com.gigety.ur.db.repo.LockedUserRepository;
 import com.gigety.ur.service.cached.LockedUserService;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 @Transactional
+@AllArgsConstructor
 public class LockedUserServiceImpl implements LockedUserService{
 
 	private final LockedUserRepository lockedUserRepo;
 	private final GigUserRepository userRepo;
-
-	public LockedUserServiceImpl(LockedUserRepository lockedUserRepo, GigUserRepository userRepo) {
-		super();
-		this.lockedUserRepo = lockedUserRepo;
-		this.userRepo = userRepo;
-	}
 
 	@Override
 	@Caching(

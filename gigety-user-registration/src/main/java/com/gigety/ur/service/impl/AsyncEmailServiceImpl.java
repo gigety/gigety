@@ -15,6 +15,8 @@ import com.gigety.ur.db.model.GigUser;
 import com.gigety.ur.service.AsyncEmailService;
 import com.gigety.ur.service.GigUserService;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -22,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class AsyncEmailServiceImpl implements AsyncEmailService {
 
 	private final JavaMailSender mailSender;
@@ -30,13 +33,6 @@ public class AsyncEmailServiceImpl implements AsyncEmailService {
 
 	@Value("${gigety.email.support}")
 	private String supportEmail;
-
-	public AsyncEmailServiceImpl(JavaMailSender mailSender, GigUserService userService, MessageSource messageSource) {
-		super();
-		this.mailSender = mailSender;
-		this.userService = userService;
-		this.messageSource = messageSource;
-	}
 
 	/**
 	 * Send a confirmation email with assigned token to user. This link will enable
