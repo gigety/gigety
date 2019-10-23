@@ -5,7 +5,7 @@ import jwt_decode from 'jwt-decode';
 
 export const createNewUser = (newUser, history) => async dispatch => {
 	try {
-		await axios.post('/api/users/register', newUser);
+		await axios.post('/signup', newUser);
 		history.push('/login');
 		dispatch({
 			type: GET_ERRORS,
@@ -19,10 +19,11 @@ export const createNewUser = (newUser, history) => async dispatch => {
 	}
 };
 
-export const login = LoginRequest => async dispatch => {
+export const loginAction = LoginRequest => async dispatch => {
 	try {
-		//post => Login Request
-		const res = await axios.post('/api/users/login', LoginRequest);
+		console.log('sdfgbhsdfgbnsfgnsfgnsfgnsfgnsfgnsfgnsfgn');
+		//post => Login Request`
+		const res = await axios.post('/signup', LoginRequest);
 
 		//extract token
 		const { token } = res.data;
@@ -42,8 +43,7 @@ export const login = LoginRequest => async dispatch => {
 			payload: decoded,
 		});
 	} catch (error) {
-		console.log('Dispatching errors');
-		console.dir(error.response.data);
+		console.log('Dispatching errors', error.response.data);
 		dispatch({
 			type: GET_ERRORS,
 			payload: error.response.data,

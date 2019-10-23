@@ -8,6 +8,7 @@ const initialState = {
 export default function(state = initialState, action) {
 	switch (action.type) {
 		case SET_CURRENT_USR:
+			console.log('useruseruser::: ', action.payload);
 			return {
 				...state,
 				validToken: action.payload ? true : false,
