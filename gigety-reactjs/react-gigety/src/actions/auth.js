@@ -19,14 +19,9 @@ export const createNewUser = (newUser, history) => async dispatch => {
 	}
 };
 
-export const loginAction = LoginRequest => async dispatch => {
+export const loginAction = token => async dispatch => {
 	try {
-		console.log('sdfgbhsdfgbnsfgnsfgnsfgnsfgnsfgnsfgnsfgn');
-		//post => Login Request`
-		const res = await axios.post('/signup', LoginRequest);
-
-		//extract token
-		const { token } = res.data;
+		console.log('login action called');
 
 		//store token in local storage
 		localStorage.setItem('jwtToken', token);
@@ -52,10 +47,11 @@ export const loginAction = LoginRequest => async dispatch => {
 };
 
 export const logout = () => dispatch => {
+	console.log('Loggin out...');
 	localStorage.removeItem('jwtToken');
 	setJwtTokenHeader(false);
 	dispatch({
 		type: SET_CURRENT_USR,
-		payload: {},
+		payload: null,
 	});
 };

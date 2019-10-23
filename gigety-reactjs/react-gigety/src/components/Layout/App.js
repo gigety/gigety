@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Root from 'components/Layout/Root';
+import AuthProvider from 'components/Layout/AuthProvider';
 import Header from './Header';
 import Landing from './Landing';
 import Login from 'components/Auth/Login';
@@ -8,7 +8,7 @@ import Oauth2RedirectHandler from '../Auth/Oauth2RedirectHandler';
 const app = () => {
 	return (
 		<div className="ui container">
-			<Root>
+			<AuthProvider>
 				<BrowserRouter>
 					<div>
 						<Header />
@@ -18,7 +18,7 @@ const app = () => {
 						<Switch></Switch>
 					</div>
 				</BrowserRouter>
-			</Root>
+			</AuthProvider>
 		</div>
 	);
 };
