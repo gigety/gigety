@@ -1,10 +1,10 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import jwt_decode from 'jwt-decode';
-import { SET_CURRENT_USR } from 'actions/types';
-import { setJwtTokenHeader } from 'utils/jwtUtil';
-import { logout } from 'actions/auth';
-import { store } from 'utils/store';
+import { SET_CURRENT_USR } from '../../actions/types';
+import { setJwtTokenHeader, getUrlParameter } from '../../utils/jwtUtil';
+import { logout, loginAction } from '../../actions/auth';
+import { store } from '../../utils/store';
 
 const jwtToken = localStorage.getItem('jwtToken');
 
@@ -19,6 +19,18 @@ if (jwtToken) {
 	const now = Date.now() / 1000;
 	if (decodedToken.exp < now) {
 		store.dispatch(logout());
+		window.location.href = '/';
+	}
+} else {
+	const uri = window.location.search;
+	
+	console.log(`uri: ${uri}`);
+	const token = getUrlParameter('token', uri);
+	console.log(`token: ${token}`);
+	const error = getUrlParameter('error', uri);
+	console.log(`error: ${error}`);
+	if (token) {
+		store.dispatch(loginAction(token));
 		window.location.href = '/';
 	}
 }

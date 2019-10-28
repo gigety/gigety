@@ -58,6 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				// Set the authentication for context of this request
 				log.debug("Set COntextHolder Authentication :: {}", authentication);
 				SecurityContextHolder.getContext().setAuthentication(authentication);
+				//response.addHeader("Access-Control-Allow-Origin", "*");
 			}else {
 				log.debug("No bearer token provided");
 			}

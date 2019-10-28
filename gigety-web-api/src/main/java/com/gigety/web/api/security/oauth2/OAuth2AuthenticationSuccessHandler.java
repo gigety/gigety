@@ -48,6 +48,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
         clearAuthenticationAttributes(request, response);
+        String token = tokenProvider.createToken(authentication);
+        //response.getWriter().write(token);
+        //response.addHeader("Access-Control-Allow-Origin", "*");
+        //targetUrl = targetUrl.replace(":8080", "");
+        
+        response.addHeader("Access-Control-Allow-Origin", "http://localhost");
+        response.addHeader("Access-Control-Allow-Credentials", "true");
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 

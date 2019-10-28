@@ -79,7 +79,7 @@ public class AsyncEmailServiceImpl implements AsyncEmailService {
 
 		final SimpleMailMessage email = new SimpleMailMessage();
 		log.warn("😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱😱");
-		log.warn("**  AsyncEmailService is configiured ony to send to {} for dev.", supportEmail);
+		log.warn("**  AsyncEmailService is configured ony to send to {} for dev.", supportEmail);
 		email.setTo(supportEmail);
 		// email.setTo(user.getEmail());
 		email.setFrom(supportEmail);

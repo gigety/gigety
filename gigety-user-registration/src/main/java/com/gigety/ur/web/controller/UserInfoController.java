@@ -9,12 +9,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Controller
+@Slf4j
 public class UserInfoController {
 
 	@RequestMapping(method = RequestMethod.GET, value = "/users/info")
 	@ResponseBody
 	public Map<String, Object> getExtraInfo(OAuth2Authentication auth){
+		log.debug("GIGETY AUTH users/info request :: {}", auth);
+		
 		//TODO: add ids expected in client app
 		Map<String, Object> map = new HashMap<>();
 		map.put("user_name", auth.getName());

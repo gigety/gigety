@@ -27,7 +27,7 @@ spring:
       hibernate: 
         dialect: org.hibernate.dialect.MySQL5Dialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
   datasource:
     # Set initialization-mode: always for schema.sql to execute on startup for databases other than 
     # H2,DERBY,HSQL. These are only enabled databases by default for data initializing
@@ -71,7 +71,8 @@ server:
       target/tomcat
       
   port: 8084
-
+  servlet:
+    context-path: /ur
 logging:
   level:
     com.gigety.ur: debug
@@ -81,4 +82,19 @@ gigety:
   root-url: http://localhost:8083
   email:
     support: samuelmosessegal@gmail.com
-    
+  redirect-uris: 
+    - "http://localhost:8080/login/oauth2/code/samo"
+    - "http://localhost/login/oauth2/code/samo"
+    - "http://localhost/api/oauth2/code/samo"
+    - "http://localhost/api/oauth2/callback/samo"
+    - "http://localhost/api"
+    - "http://localhost:8080/api/oauth2/code/samo"
+    - "http://localhost:8080/api/oauth2/callback/samo"
+    - "http://localhost:8080/api"
+    - "http://localhost/oauth2/code/samo"
+    - "http://localhost/oauth2/callback/samo"
+    - "http://localhost"
+    - "http://localhost:8080/oauth2/code/samo"
+    - "http://localhost:8080/oauth2/callback/samo"
+    - "http://localhost:8080"    
+    - "http://localhost:8080/api/login/oauth2/code/samo"

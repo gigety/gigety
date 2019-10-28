@@ -13,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 import com.gigety.web.api.security.JwtAuthenticationFilter;
 import com.gigety.web.api.security.RestAuthenticationEntryPoint;
@@ -99,6 +100,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 						.authorizationRequestRepository(cookieAuthRepo)
 						.and()
 					.redirectionEndpoint()
+						
 						.baseUri("/oauth2/callback/*")
 						.and()
 					.userInfoEndpoint()
@@ -107,6 +109,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 					.successHandler(oauth2AuthenticationSuccessHandler)
 					.failureHandler(oauth2AuthenticationFailureHandler);
 			http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);	
+//            http.headers().addHeaderWriter(
+//                    new StaticHeadersWriter("Access-Control-Allow-Origin", "*"));
 	}
 	
 }

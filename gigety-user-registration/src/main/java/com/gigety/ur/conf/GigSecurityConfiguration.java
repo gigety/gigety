@@ -158,6 +158,7 @@ public class GigSecurityConfiguration extends WebSecurityConfigurerAdapter{
 		//following is for getting activeUsers
 		.sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry()).and().sessionFixation().none()
 		.and()
+		.cors().and()
 		.csrf().disable();
 		// @formatter:on
 	}

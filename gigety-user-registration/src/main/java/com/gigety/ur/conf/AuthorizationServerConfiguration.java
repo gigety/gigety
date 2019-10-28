@@ -18,10 +18,14 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
+import com.gigety.ur.conf.properties.GigetyAuthProperties;
+
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableAuthorizationServer
+@NoArgsConstructor
 @Slf4j
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
@@ -31,10 +35,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private UserDetailsService userDetailsService;
-	
-	public AuthorizationServerConfiguration() {
-		super();
-	}
+	@Autowired
+	private GigetyAuthProperties gigetyAuthProperties;
+//	public AuthorizationServerConfiguration() {
+//		super();
+//	}
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
@@ -43,15 +48,15 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 			//.jdbc(dataSource)
 			.withClient("samo")
 			.secret(passwordEncoder.encode("samo"))
-			.authorizedGrantTypes( "password","authorization_code","refresh_token")
+			.authorizedGrantTypes( "password","authorization_code","refresh_token") 
 			.refreshTokenValiditySeconds(3600 * 24)
 			.scopes("read", "write", "trust")
 			.resourceIds("samo")
-			.redirectUris("http://localhost:8080/oauth2/code/samo", "http://localhost:8080/oauth2/callback/samo","http://localhost:8080")
-			.autoApprove(true)
-			
+			.redirectUris(gigetyAuthProperties.getRedirectUris().stream().toArray(String[]::new))
+			.autoApprove(true)		
 			.accessTokenValiditySeconds(3600)
 			.and().build();
+		
 	}
 
 	@Override
@@ -61,7 +66,19 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 			.authenticationManager(authenticationManager)
 			.userDetailsService(userDetailsService)
 			.accessTokenConverter(accessTokenConverter());
-			//.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST, HttpMethod.OPTIONS);
+//			.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST, HttpMethod.OPTIONS);
+//        endpoints.addInterceptor(new HandlerInterceptorAdapter() {
+//
+//            @Override
+//            public boolean preHandle(HttpServletRequest hsr, HttpServletResponse rs, Object o) throws Exception {
+//                rs.setHeader("Access-Control-Allow-Origin", "*");
+//                rs.setHeader("Access-Control-Allow-Methods", "GET");
+//                rs.setHeader("Access-Control-Max-Age", "3600");
+//                rs.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+//                return true;
+//                }
+//            });
+//        
 	}
 	
 	@Override
