@@ -4,7 +4,6 @@ import AuthProvider from '../Auth/AuthProvider';
 import Header from './Header';
 import Landing from './Landing';
 import Login from 'components/Auth/Login';
-import Oauth2RedirectHandler from '../Auth/Oauth2RedirectHandler';
 import Profile from '../User/Profile';
 import SecuredRoute from '../../utils/SecuredRoute';
 const app = () => {
@@ -16,7 +15,6 @@ const app = () => {
 						<Header />
 						<Route exact path="/" component={Landing} />
 						<Route exact path="/login" component={Login} />
-						<Route path="/oauth2/redirect" component={Oauth2RedirectHandler} />
 						<Switch>
 							<SecuredRoute path="/user/profile" component={Profile} />
 						</Switch>

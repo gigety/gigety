@@ -1,5 +1,5 @@
 import { GET_ERRORS, GET_CURRENT_USR } from './types';
-import gigety from '../apis/gigety';
+import gigety from 'apis/gigety';
 export const getCurrentUser = () => async dispatch => {
 	try {
 		console.log('getting current user...');

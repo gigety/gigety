@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCurrentUser } from '../actions/gigUser';
+import { getCurrentUser } from 'redux/actions/gigUser';
 
 export const useGigUser = () => {
 	const content = useSelector(state => state.giguser);

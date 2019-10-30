@@ -1,4 +1,4 @@
-import { SET_CURRENT_USR } from '../actions/types';
+import { SET_CURRENT_USR } from 'redux/actions/types';
 
 const initialState = {
 	validToken: false,

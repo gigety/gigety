@@ -1,10 +1,10 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import jwt_decode from 'jwt-decode';
-import { SET_CURRENT_USR } from '../../actions/types';
-import { setJwtTokenHeader, getUrlParameter } from '../../utils/jwtUtil';
-import { logout, loginAction } from '../../actions/auth';
-import { store } from '../../utils/store';
+import { SET_CURRENT_USR } from 'redux/actions/types';
+import { setJwtTokenHeader, getUrlParameter } from 'utils/jwtUtil';
+import { logout, loginAction } from 'redux/actions/auth';
+import { store } from 'redux/store';
 
 const jwtToken = localStorage.getItem('jwtToken');
 

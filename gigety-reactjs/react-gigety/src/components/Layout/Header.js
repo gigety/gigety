@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { logout } from 'actions/auth';
+import { logout } from 'redux/actions/auth';
 import { Button } from 'semantic-ui-react';
+import LoginDropdown from '../Auth/LoginDropdown';
 const Header = props => {
 	console.log(`auth:: ${props.isAuthenticated}`);
 	const signinSignout = props.isAuthenticated ? (
@@ -10,9 +11,9 @@ const Header = props => {
 			Logout
 		</Button>
 	) : (
-		<Link to="/login" className="item">
-			Login
-		</Link>
+		<div>
+			<LoginDropdown />
+		</div>
 	);
 	return (
 		<div className="ui massive menu">

@@ -1,5 +1,5 @@
 import { GET_ERRORS, SET_CURRENT_USR } from './types';
-import { setJwtTokenHeader } from '../utils/jwtUtil';
+import { setJwtTokenHeader } from 'utils/jwtUtil';
 import jwt_decode from 'jwt-decode';
 
 export const loginAction = token => async dispatch => {

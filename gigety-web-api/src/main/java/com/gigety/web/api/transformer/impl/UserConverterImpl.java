@@ -17,6 +17,9 @@ import com.gigety.web.api.util.AuthProviderConstants;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Converts SignupRequest to User
+ */
 @Component
 @RequiredArgsConstructor
 public class UserConverterImpl implements UserConverter {
