@@ -1,5 +1,9 @@
 import React from 'react';
 
-export default function Profile() {
-	return <div>You really kinda did it most likely</div>;
-}
+import { useGigUser } from '../../hooks/useGigUser';
+const Profile = () => {
+	const { giguser } = useGigUser();
+	return giguser ? <div> {giguser.email}</div> : <div>No profile</div>;
+};
+
+export default Profile;

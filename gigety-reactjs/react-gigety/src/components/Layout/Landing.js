@@ -17,12 +17,12 @@ const Landing = props => {
 };
 
 Landing.propTypes = {
-	errors: PropTypes.object.isRequired,
+	//errors: PropTypes.object.isRequired,
 	authentication: PropTypes.object.isRequired,
 };
 const mapStateToProps = state => ({
 	authentication: state.authentication,
-	errors: state.errors,
+	//errors: state.errors,
 });
 
 export default connect(

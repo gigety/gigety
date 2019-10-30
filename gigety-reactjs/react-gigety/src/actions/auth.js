@@ -1,25 +1,6 @@
-import axios from 'axios';
 import { GET_ERRORS, SET_CURRENT_USR } from './types';
-import { setJwtTokenHeader } from 'utils/jwtUtil';
+import { setJwtTokenHeader } from '../utils/jwtUtil';
 import jwt_decode from 'jwt-decode';
-import gigety from '../apis/gigety';
-import { FACEBOOK_AUTH_URL } from '../constants';
-
-export const createNewUser = (newUser, history) => async dispatch => {
-	try {
-		await axios.post('/signup', newUser);
-		history.push('/login');
-		dispatch({
-			type: GET_ERRORS,
-			payload: {},
-		});
-	} catch (error) {
-		dispatch({
-			type: GET_ERRORS,
-			payload: error.response.data,
-		});
-	}
-};
 
 export const loginAction = token => async dispatch => {
 	try {
@@ -50,7 +31,7 @@ export const loginAction = token => async dispatch => {
 // export const loginAction = () => async dispatch => {
 // 	try {
 // 		console.log('login action called');
-// 		const token = await gigety.get(FACEBOOK_AUTH_URL);
+// 		const token = await gigety.post(FACEBOOK_AUTH_URL);
 // 		console.log('TOKEN:::::', token);
 // 		//store token in local storage
 // 		localStorage.setItem('jwtToken', token);

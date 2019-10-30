@@ -17,7 +17,7 @@ const Login = props => {
 				<img src={fbLogo} alt="Facebook" />
 				Signup with Facebook
 			</a>
-			<Link to={FACEBOOK_AUTH_URL} />
+			<Link to={FACEBOOK_AUTH_URL}>Login Link</Link>
 			<Button onClick={handleSubmit}>toke</Button>
 		</div>
 	);

@@ -23,9 +23,9 @@ if (jwtToken) {
 	}
 } else {
 	const uri = window.location.search;
-	
+
 	console.log(`uri: ${uri}`);
-	const token = getUrlParameter('token', uri);
+	const token = getUrlParameter('t', uri);
 	console.log(`token: ${token}`);
 	const error = getUrlParameter('error', uri);
 	console.log(`error: ${error}`);
