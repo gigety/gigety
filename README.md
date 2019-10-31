@@ -1,18 +1,7 @@
 # Gigety  
 
-## mysql   
-```
-docker start samo-mysql
-docker network connect samo-mysql gigety
-```  
-
-## redis
-```
-docker run -d --name gig-redis -p 6379:6379 --network gigety redis 
-```  
-
-## gigety-user-registration  
-```
-docker container run --network gigety --name gig-ur -p 8083:8084 -e SMS_GMAIL_NAME=$SMS_GMAIL_NAME -e SMS_GMAIL_PW=$SMS_GMAIL_PW -d gig-ur
-```  
-
+1) Build gigety-user-registration  
+  * ```cd gigety-user-registration```  
+  *```./gradlew clean build -x test```  
+2) Build docker images   
+  *```docker-compose build``` - builds project  
