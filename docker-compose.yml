@@ -1,0 +1,32 @@
+version: '3.7'
+
+services: 
+
+  gigety-ur-mysql: 
+    restart: always
+    container_name: gigety-ur-mysql
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DEV_GIGETY_PW}
+      MYSQL_USER: ${DEV_GIGETY_USR}
+      MYSQL_PASSWORD: ${DEV_GIGETY_PW}
+      MYSQL_DATABASE: gigety_um
+
+  gigety-redis:
+    image: redis
+    container_name: gigety-redis
+    command: redis-server --requirepass ${DEV_GIGETY_PW}
+
+  gigety-user-registration:
+    container_name: gigety-user-registration
+    build: ./gigety-user-registration/
+    depends_on:
+      - gigety-ur-mysql
+    ports: 
+      - "8084:8084"
+    environment: 
+      DEV_GIGETY_USR: ${DEV_GIGETY_USR}
+      DEV_GIGETY_PW: ${DEV_GIGETY_PW}
+      SMS_GMAIL_PW: ${SMS_GMAIL_PW}
+      SMS_GMAIL_NAME: ${SMS_GMAIL_NAME}
+
