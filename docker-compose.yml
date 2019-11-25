@@ -2,15 +2,28 @@ version: '3.7'
 
 services: 
 
-  gigety-ur-mysql: 
+  gigety-nginx: 
+    container_name: gigety-nginx
+    image: nginx:latest
     restart: always
-    container_name: gigety-ur-mysql
-    image: mysql:8.0
-    environment:
+    ports:
+      - 80:80
+      - 443:443
+    volumes: 
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - gigety-user-registration
+
+  gigety-ur-mysql: 
+    image: samuelsegal/gigety-ur-mysql
+    environment: 
       MYSQL_ROOT_PASSWORD: ${DEV_GIGETY_PW}
       MYSQL_USER: ${DEV_GIGETY_USR}
       MYSQL_PASSWORD: ${DEV_GIGETY_PW}
       MYSQL_DATABASE: gigety_um
+    #volumes:
+    #  - /Users/samuelsegal/db/mysql/data:/var/lib/mysql
+    #  - /Users/samuelsegal/db/mysql/init:/docker-entrypoint-initdb.d/:ro
 
   gigety-redis:
     image: redis
@@ -19,9 +32,9 @@ services:
 
   gigety-user-registration:
     container_name: gigety-user-registration
-    build: ./gigety-user-registration/
     depends_on:
       - gigety-ur-mysql
+    build: ./gigety-user-registration/
     ports: 
       - "8084:8084"
     environment: 
@@ -29,4 +42,5 @@ services:
       DEV_GIGETY_PW: ${DEV_GIGETY_PW}
       SMS_GMAIL_PW: ${SMS_GMAIL_PW}
       SMS_GMAIL_NAME: ${SMS_GMAIL_NAME}
+    restart: always
 
