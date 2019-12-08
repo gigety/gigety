@@ -6,12 +6,12 @@ server:
 spring:
 
   datasource:
-    #url: jdbc:mysql://localhost:3306/gigety_users?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-    #username: root
-    #password: 
-    url: jdbc:mysql://gigety-web-api-mysql:3306/gigety_users?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-    username: ${DEV_GIGETY_USR}
-    password: ${DEV_GIGETY_PW}
+    url: jdbc:mysql://localhost:3306/gigety_users?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: 
+    #url: jdbc:mysql://gigety-web-api-mysql:3306/gigety_users?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    #username: ${DEV_GIGETY_USR}
+    #password: ${DEV_GIGETY_PW}
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
@@ -69,13 +69,13 @@ spring:
         provider:
           samo:
             token-uri:
-              http://nginx/ur/oauth/token
+              http://localhost/ur/oauth/token
               #http://gigety-user-registration:8084/ur/oauth/token
             authorization-uri:
-              http://nginx/ur/oauth/authorize
+              http://localhost/ur/oauth/authorize
               #http://gigety-user-registration:8084/ur/oauth/authorize
             user-info-uri:
-              http://nginx/ur/users/info
+              http://localhost/ur/users/info
               #http://gigety-user-registration:8084/ur/users/info
             user-name-attribute:
               user_name
@@ -88,11 +88,11 @@ spring:
             user-info-uri:
               https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
   redis:
-    #host: localhost
-    host: gigety-redis
+    host: localhost
+    #host: gigety-redis
     port: 6379
-    #password: 
-    password: ${DEV_GIGETY_PW}
+    password: 
+    #password: ${DEV_GIGETY_PW}
     jedis:
       pool:
         max-active: 7
@@ -107,10 +107,6 @@ spring:
     type: redis
     cache-names:
       - oauthProviderCache              
-  profiles:
-    active:
-    - default
-    #- local
 gig:
   auth:
     token-secret: gigety-token-secret
@@ -124,8 +120,6 @@ gig:
       - http://localhost:3000
       - http://localhost:3000/oauth2/redirect
       - http://localhost
-      - http://nginx
-      - http://gigety
       - http://gigety-web-api
       - http://gigety-user-registration
       - http://localhost/oauth2/redirect
@@ -135,8 +129,7 @@ gig:
     web:
       cors:
         allowed-origins: 
-          - "*"
-          #- http://localhost
+          - http://localhost
           #- http://localhost:3000
           #- http://gigety.com
         allowed-methods: 

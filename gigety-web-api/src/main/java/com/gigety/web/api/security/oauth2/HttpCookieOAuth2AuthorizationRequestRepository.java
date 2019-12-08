@@ -33,6 +33,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
 	@Override
 	public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request,
 			HttpServletResponse response) {
+		log.debug("Saving auth REQUEST");
 		if (authorizationRequest == null) {
 			log.debug("Authorization is null :: Removing Cookies {} and {}", 
 					OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
@@ -46,6 +47,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
 				CookieUtils.serialize(authorizationRequest), cookieExpireSeconds);
 		String redirectUriAfterLogin = request.getParameter(REDIRECT_URI_PARAM_COOKIE_NAME);
 		
+		
 		Enumeration<String> paramNames = request.getParameterNames();
 		while(paramNames.hasMoreElements()) {
 			String name = paramNames.nextElement();
@@ -55,7 +57,8 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
 				log.debug(pv);
 			}
 		}
-		
+		log.debug("authorizationRequest :: {}",authorizationRequest.getAuthorizationUri());
+		log.debug("redirectUriAfterLogin :: {}", redirectUriAfterLogin);
 		
 		if(StringUtils.isNotBlank(redirectUriAfterLogin)) {
 			CookieUtils.addCookie(response, REDIRECT_URI_PARAM_COOKIE_NAME, 
@@ -63,12 +66,24 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
 		}
 
 	}
-
 	@Override
-	public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request) {
+	public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request ) {
 		log.debug("Removing or Loading Authorization Request??????");
 		OAuth2AuthorizationRequest ret = this.loadAuthorizationRequest(request);
 		log.debug("AUTH REQUEST :: {}", ret);
+		ret.getAttributes().forEach((k,v)->{
+			log.debug("KEY: {}, VALUE: {}", k, v);
+		});
+		return ret;
+	}
+	@Override
+	public OAuth2AuthorizationRequest removeAuthorizationRequest(HttpServletRequest request, HttpServletResponse response) {
+		log.debug("Removing or Loading Authorization Request??????");
+		OAuth2AuthorizationRequest ret = this.loadAuthorizationRequest(request);
+		log.debug("AUTH REQUEST :: {}", ret);
+		ret.getAttributes().forEach((k,v)->{
+			log.debug("KEY: {}, VALUE: {}", k, v);
+		});
 		return ret;
 	}
 	

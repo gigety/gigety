@@ -1,7 +1,6 @@
 spring:
   profiles:
-    active:
+    active: 
+    #- local
     - dev
-
-
-
+  

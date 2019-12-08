@@ -25,7 +25,7 @@ import com.gigety.web.api.service.impl.UserDetailsServiceImpl;
 import com.gigety.web.api.util.SecurityConstants;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 @EnableGlobalMethodSecurity(
 	securedEnabled = true,
 	jsr250Enabled = true,

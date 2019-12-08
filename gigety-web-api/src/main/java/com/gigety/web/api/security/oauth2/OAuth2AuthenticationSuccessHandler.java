@@ -63,7 +63,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         Optional<String> redirectUri = CookieUtils.getCookie(request, HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
-
+        log.debug("DETERMINE TARGET URL :: {}", redirectUri);
         if(redirectUri.isPresent() && !isAuthorizedRedirectUri(redirectUri.get())) {
             throw new BadRequestException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
         }
@@ -83,11 +83,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     private boolean isAuthorizedRedirectUri(String uri) {
+    	log.debug("IS AUTHORIZED REDIRECT URI :: {}",uri);
         URI clientRedirectUri = URI.create(uri);
 
         return gigAuthProperties.getOauth2().getAuthorizedRedirectUris()
                 .stream()
                 .anyMatch(authorizedRedirectUri -> {
+                	log.debug("authorizedRedirectUri :: {}", authorizedRedirectUri);
                     // Only validate host and port. Let the clients use different paths if they want to
                     URI authorizedURI = URI.create(authorizedRedirectUri);
                     if(authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost())

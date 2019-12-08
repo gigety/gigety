@@ -10,10 +10,10 @@ export const getCurrentUser = () => async dispatch => {
 			payload: response.data,
 		});
 	} catch (error) {
-		console.log('Dispatching errors', error.response.data);
+		console.log('Dispatching errors', error);
 		dispatch({
 			type: GET_ERRORS,
-			payload: error.response.data,
+			payload: error,
 		});
 	}
 };

@@ -22,7 +22,7 @@ import com.gigety.ur.util.validation.EmailExistsException;
 
 import lombok.extern.slf4j.Slf4j;
 
-@Profile({"dev", "inmemory"})
+@Profile({"dev", "inmemory", "local"})
 @Configuration
 @Slf4j
 public class AppInitializer{
