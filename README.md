@@ -5,4 +5,4 @@
    * ```./gradlew clean build -x test```  
 2) Build docker images   
    * ```docker-compose build``` - builds project  
-3) [Detailed Documentation](https://github.com/samuelsegal/gigety/wiki).  
+3) [Wiki for Detailed Documentation](https://github.com/samuelsegal/gigety/wiki).  
