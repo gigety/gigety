@@ -1,7 +1,8 @@
 version: '3.7'
 
 services:
-    nginx:
+    gigety-nginx:
+        container_name: gigety-nginx
         depends_on:
             - gigety-user-registration
             - gigety-web-api-mysql

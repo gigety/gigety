@@ -46,7 +46,7 @@ public class SpringAsyncConfiguration implements AsyncConfigurer {
 	 * methodInvokingFactoryBean - sets the securityContextHolder strategy to 
 	 * SecurityContextHolder.MODE_INHERITABLETHREADLOCAL. THis allows 
 	 * securityContext to propagate to async threads. Without setting this 
-	 * strategy, the securityContext will b e null in saync threads.
+	 * strategy, the securityContext will be null in async threads.
 	 * example - @see {@link AsyncEmailServiceImpl}
 	 * @return
 	 */
