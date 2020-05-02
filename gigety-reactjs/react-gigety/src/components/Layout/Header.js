@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import LoginDropdown from '../Auth/LoginDropdown';
 import ProfileDropdown from '../Auth/ProfileDropdown';
-const Header = props => {
+const Header = (props) => {
 	console.log(`auth:: ${props.isAuthenticated}`);
 	const signinSignout = props.isAuthenticated ? <ProfileDropdown /> : <LoginDropdown />;
 	return (
@@ -15,7 +15,7 @@ const Header = props => {
 		</div>
 	);
 };
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
 	isAuthenticated: state.authentication.validToken,
 });
 export default connect(mapStateToProps)(Header);

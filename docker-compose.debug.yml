@@ -1,0 +1,120 @@
+version: '3.7'
+
+services:
+    gigety-nginx:
+        container_name: gigety-nginx
+        depends_on:
+            - gigety-user-registration
+            - gigety-web-api-mysql
+            - gigety-reactjs
+        restart: always
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./nginx
+        ports:
+            - '80:80'
+        networks:
+            - gigety
+
+    gigety-ur-mysql:
+        image: mysql
+        container_name: gigety-ur-mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DEV_GIGETY_PW}
+            MYSQL_USER: ${DEV_GIGETY_USR}
+            MYSQL_PASSWORD: ${DEV_GIGETY_PW}
+            MYSQL_DATABASE: gigety_um
+        volumes:
+            - ${GIGETY_UR_MYSQL}:/var/lib/mysql
+        networks:
+            - ur-mysql
+
+    gigety-web-api-mysql:
+        image: mysql
+        container_name: gigety-web-api-mysql
+
+        environment:
+            MYSQL_ROOT_PASSWORD: ${DEV_GIGETY_PW}
+            MYSQL_USER: ${DEV_GIGETY_USR}
+            MYSQL_PASSWORD: ${DEV_GIGETY_PW}
+            MYSQL_DATABASE: gigety_users
+        volumes:
+            - ${GIGETY_API_MYSQL}:/var/lib/mysql
+        networks:
+            - api-mysql
+
+    gigety-redis:
+        image: redis
+        container_name: gigety-redis
+        command: redis-server --requirepass ${DEV_GIGETY_PW}
+        networks:
+            - gigety
+
+    gigety-user-registration:
+        container_name: gigety-user-registration
+        depends_on:
+            - gigety-ur-mysql
+        build:
+            context: ./gigety-user-registration
+            dockerfile: Dockerfile
+        #TODO: Remote debugging not working for user-registration, probably something a config in the project, revisit
+        #command: java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8001 -jar build/libs/gigety-user-registration-0.0.1-SNAPSHOT.jar
+        volumes:
+            - gigety-user-registration:/data/gigety-user-registration
+        environment:
+            DEV_GIGETY_USR: ${DEV_GIGETY_USR}
+            DEV_GIGETY_PW: ${DEV_GIGETY_PW}
+            SMS_GMAIL_PW: ${SMS_GMAIL_PW}
+            SMS_GMAIL_NAME: ${SMS_GMAIL_NAME}
+        restart: always
+        networks:
+            - ur-mysql
+            - gigety
+
+    gigety-web-api:
+        container_name: gigety-web-api
+        depends_on:
+            - gigety-web-api-mysql
+        ports:
+            - 8080:8080
+            - 8000:8000
+        build:
+            context: ./gigety-web-api
+            dockerfile: Dockerfile
+        # ENABLING REMOTE DEBUG FOR gigety-web-api
+        command: java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000 -jar build/libs/gigety-web-api-0.0.1-SNAPSHOT.jar
+        volumes:
+            - gigety-web-api:/data/gigety-web-api
+        environment:
+            DEV_GIGETY_USR: ${DEV_GIGETY_USR}
+            DEV_GIGETY_PW: ${DEV_GIGETY_PW}
+            SPRING_OAUTH_GOOGLE_CLIENT_ID: ${SPRING_OAUTH_GOOGLE_CLIENT_ID}
+            SPRING_OAUTH_GOOGLE_CLIENT_SECRET: ${SPRING_OAUTH_GOOGLE_CLIENT_SECRET}
+            SPRING_OAUTH_FACEBOOK_APP_ID: ${SPRING_OAUTH_FACEBOOK_APP_ID}
+            SPRING_OAUTH_FACEBOOK_APP_SECRET: ${SPRING_OAUTH_FACEBOOK_APP_SECRET}
+        restart: always
+        networks:
+            - gigety
+            - api-mysql
+
+    gigety-reactjs:
+        container_name: gigety-reactjs
+        build:
+            context: ./gigety-reactjs/react-gigety
+            dockerfile: Dockerfile.dev
+        volumes:
+            - /app/node_modules
+            - ./gigety-reactjs/react-gigety:/app
+        networks:
+            - gigety
+networks:
+    gigety:
+        driver: bridge
+    ur-mysql:
+        driver: bridge
+    api-mysql:
+        driver: bridge
+
+volumes:
+    gigety-web-api:
+    gigety-user-registration:

@@ -1,0 +1,188 @@
+networks:
+  api-mysql:
+    driver: overlay
+  gigety:
+    driver: overlay
+  ur-mysql:
+    driver: overlay
+secrets:
+  DEV_GIGETY_PW:
+    file: /Users/samuelsegal/git/gigety/secrets/DEV_GIGETY_PW.txt
+  DEV_GIGETY_USR:
+    file: /Users/samuelsegal/git/gigety/secrets/DEV_GIGETY_USR.txt
+services:
+  gigety-nginx:
+    container_name: gigety-nginx
+    depends_on:
+    - gigety-reactjs
+    - gigety-user-registration
+    - gigety-web-api-mysql
+    deploy:
+      labels:
+        APP: gigety-nginx
+      mode: replicated
+      placement:
+        constraints:
+        - node.role==manager
+      replicas: 1
+    image: samuelsegal/gigety-nginx
+    networks:
+      gigety: {}
+    ports:
+    - published: 80
+      target: 80
+    restart: always
+  gigety-reactjs:
+    container_name: gigety-reactjs
+    deploy:
+      labels:
+        APP: gigety-reactjs
+      mode: replicated
+      placement:
+        constraints:
+        - node.role==manager
+      replicas: 1
+    image: samuelsegal/gigety-reactjs
+    networks:
+      gigety: {}
+  gigety-redis:
+    command: redis-server --requirepass giggidy
+    container_name: gigety-redis
+    deploy:
+      labels:
+        APP: gigety-redis
+      mode: replicated
+      placement:
+        constraints:
+        - node.role==manager
+      replicas: 1
+    image: redis
+    networks:
+      gigety: {}
+    secrets:
+    - source: DEV_GIGETY_PW
+  gigety-ur-mysql:
+    container_name: gigety-ur-mysql
+    deploy:
+      labels:
+        APP: gigety-ur-mysql
+      mode: replicated
+      placement:
+        constraints:
+        - node.role==manager
+      replicas: 1
+    environment:
+      MYSQL_DATABASE: gigety_um
+      MYSQL_PASSWORD_FILE: /run/secrets/DEV_GIGETY_PW
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/DEV_GIGETY_PW
+      MYSQL_USER_FILE: /run/secrets/DEV_GIGETY_USR
+    image: mysql
+    networks:
+      ur-mysql: {}
+    secrets:
+    - source: DEV_GIGETY_PW
+    - source: DEV_GIGETY_USR
+    volumes:
+    - ur-mysql:/var/lib/mysql:rw
+  gigety-user-registration:
+    container_name: gigety-user-registration
+    depends_on:
+    - gigety-ur-mysql
+    deploy:
+      labels:
+        APP: gigety-user-registration
+      mode: replicated
+      placement:
+        constraints:
+        - node.role==manager
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+    environment:
+      DEV_GIGETY_PW_FILE: /run/secrets/DEV_GIGETY_PW
+      DEV_GIGETY_USR_FILE: /run/secrets/DEV_GIGETY_USR
+      SMS_GMAIL_NAME: samuelmosessegal@gmail.com
+      SMS_GMAIL_PW: kkeqvrhyfvncgjcy
+    image: samuelsegal/gigety-user-registration
+    networks:
+      gigety: {}
+      ur-mysql: {}
+    restart: always
+    secrets:
+    - source: DEV_GIGETY_PW
+    - source: DEV_GIGETY_USR
+  gigety-web-api:
+    container_name: gigety-web-api
+    depends_on:
+    - gigety-web-api-mysql
+    deploy:
+      labels:
+        APP: gigety-web-api
+      mode: replicated
+      placement:
+        constraints:
+        - node.role==manager
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+    environment:
+      DEV_GIGETY_PW_FILE: /run/secrets/DEV_GIGETY_PW
+      DEV_GIGETY_USR_FILE: /run/secrets/DEV_GIGETY_USR
+      SPRING_OAUTH_FACEBOOK_APP_ID: '2449381685283284'
+      SPRING_OAUTH_FACEBOOK_APP_SECRET: 670afe3554a3b384c5d941c098a0ede2
+      SPRING_OAUTH_GOOGLE_CLIENT_ID: 426062609919-0s9r6avfneifs48migmhnnagaeqebn4d.apps.googleusercontent.com
+      SPRING_OAUTH_GOOGLE_CLIENT_SECRET: d9sdp8IM5hJ01hedWnhq2TZ9
+    image: samuelsegal/gigety-web-api
+    networks:
+      api-mysql: {}
+      gigety: {}
+    ports:
+    - published: 8000
+      target: 8000
+    - published: 8080
+      target: 8080
+    restart: always
+    secrets:
+    - source: DEV_GIGETY_PW
+    - source: DEV_GIGETY_USR
+  gigety-web-api-mysql:
+    container_name: gigety-web-api-mysql
+    deploy:
+      labels:
+        APP: gigety-web-api-mysql
+      mode: replicated
+      placement:
+        constraints:
+        - node.role==manager
+      replicas: 1
+    environment:
+      MYSQL_DATABASE: gigety_users
+      MYSQL_PASSWORD_FILE: /run/secrets/DEV_GIGETY_PW
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/DEV_GIGETY_PW
+      MYSQL_USER_FILE: /run/secrets/DEV_GIGETY_USR
+    healthcheck:
+      interval: 2s
+      retries: 10
+      test: /usr/bin/mysql --user=root --password=root--execute "SHOW DATABASES;"
+      timeout: 20s
+    image: mysql
+    networks:
+      api-mysql: {}
+    secrets:
+    - source: DEV_GIGETY_PW
+    - source: DEV_GIGETY_USR
+    volumes:
+    - api-mysql:/var/lib/mysql:rw
+version: '3.7'
+volumes:
+  api-mysql: {}
+  gigety-user-registration: {}
+  gigety-web-api: {}
+  ur-mysql: {}
+

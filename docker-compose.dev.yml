@@ -1,0 +1,104 @@
+version: '3.7'
+
+services:
+    gigety-nginx:
+        image: samuelsegal/gigety-nginx
+        restart: always
+        networks:
+            - gigety
+
+    gigety-ur-mysql:
+        secrets:
+            - DEV_GIGETY_PW
+            - DEV_GIGETY_USR
+        environment:
+            MYSQL_ROOT_PASSWORD_FILE: /run/secrets/DEV_GIGETY_PW
+            MYSQL_USER_FILE: /run/secrets/DEV_GIGETY_USR
+            MYSQL_PASSWORD_FILE: /run/secrets/DEV_GIGETY_PW
+            MYSQL_DATABASE: gigety_um
+        volumes:
+            - ur-mysql:/var/lib/mysql
+        networks:
+            - ur-mysql
+
+    gigety-web-api-mysql:
+        secrets:
+            - DEV_GIGETY_PW
+            - DEV_GIGETY_USR
+        environment:
+            MYSQL_ROOT_PASSWORD_FILE: /run/secrets/DEV_GIGETY_PW
+            MYSQL_USER_FILE: /run/secrets/DEV_GIGETY_USR
+            MYSQL_PASSWORD_FILE: /run/secrets/DEV_GIGETY_PW
+            MYSQL_DATABASE: gigety_users
+        volumes:
+            - api-mysql:/var/lib/mysql
+        networks:
+            - api-mysql
+        healthcheck:
+            test: '/usr/bin/mysql --user=root --password=root--execute "SHOW DATABASES;"'
+            interval: 2s
+            timeout: 20s
+            retries: 10
+    gigety-redis:
+        secrets:
+            - DEV_GIGETY_PW
+        command: redis-server --requirepass ${DEV_GIGETY_PW}
+        networks:
+            - gigety
+
+    gigety-user-registration:
+        image: samuelsegal/gigety-user-registration
+        secrets:
+            - DEV_GIGETY_PW
+            - DEV_GIGETY_USR
+        environment:
+            DEV_GIGETY_USR_FILE: /run/secrets/DEV_GIGETY_USR
+            DEV_GIGETY_PW_FILE: /run/secrets/DEV_GIGETY_PW
+            SMS_GMAIL_PW: ${SMS_GMAIL_PW}
+            SMS_GMAIL_NAME: ${SMS_GMAIL_NAME}
+        restart: always
+        networks:
+            - ur-mysql
+            - gigety
+
+    gigety-web-api:
+        image: samuelsegal/gigety-web-api
+        secrets:
+            - DEV_GIGETY_PW
+            - DEV_GIGETY_USR
+
+        environment:
+            DEV_GIGETY_USR_FILE: /run/secrets/DEV_GIGETY_USR
+            DEV_GIGETY_PW_FILE: /run/secrets/DEV_GIGETY_PW
+            SPRING_OAUTH_GOOGLE_CLIENT_ID: ${SPRING_OAUTH_GOOGLE_CLIENT_ID}
+            SPRING_OAUTH_GOOGLE_CLIENT_SECRET: ${SPRING_OAUTH_GOOGLE_CLIENT_SECRET}
+            SPRING_OAUTH_FACEBOOK_APP_ID: ${SPRING_OAUTH_FACEBOOK_APP_ID}
+            SPRING_OAUTH_FACEBOOK_APP_SECRET: ${SPRING_OAUTH_FACEBOOK_APP_SECRET}
+        restart: always
+        networks:
+            - gigety
+            - api-mysql
+
+    gigety-reactjs:
+        image: samuelsegal/gigety-reactjs
+        networks:
+            - gigety
+networks:
+    gigety:
+        driver: overlay
+    ur-mysql:
+        driver: overlay
+    api-mysql:
+        driver: overlay
+
+secrets:
+    DEV_GIGETY_PW:
+        file: ./secrets/DEV_GIGETY_PW.txt
+    DEV_GIGETY_USR:
+        file: ./secrets/DEV_GIGETY_USR.txt
+
+volumes:
+    api-mysql:
+    ur-mysql:
+    gigety-web-api:
+    gigety-user-registration:

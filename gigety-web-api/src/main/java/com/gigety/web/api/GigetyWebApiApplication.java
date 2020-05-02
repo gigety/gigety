@@ -12,6 +12,12 @@ import com.gigety.web.api.conf.properties.GigCorsProperties;
 public class GigetyWebApiApplication {
 
 	public static void main(String[] args) {
+		System.out.println("########## LOADING GIGETY WEB API ##############");
+		System.out.println("########## LOADING GIGETY WEB API ##############");
+		System.out.println("########## LOADING GIGETY WEB API ##############");
+		System.out.println("########## LOADING GIGETY WEB API ##############");
+		System.out.println("########## LOADING GIGETY WEB API ##############");
+		System.out.println("########## LOADING GIGETY WEB API ##############");
 		SpringApplication.run(GigetyWebApiApplication.class, args);
 	}
 

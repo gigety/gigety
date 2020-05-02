@@ -1,0 +1,75 @@
+version: '3.7'
+
+services:
+    gigety-nginx:
+        deploy:
+            mode: replicated
+            replicas: 1
+            labels: [APP=gigety-nginx]
+            placement:
+                constraints:
+                    - 'node.role==manager'
+
+    gigety-ur-mysql:
+        deploy:
+            mode: replicated
+            replicas: 1
+            labels: [APP=gigety-ur-mysql]
+            placement:
+                constraints:
+                    - 'node.role==manager'
+
+    gigety-web-api-mysql:
+        deploy:
+            mode: replicated
+            replicas: 1
+            labels: [APP=gigety-web-api-mysql]
+            placement:
+                constraints:
+                    - 'node.role==manager'
+
+    gigety-redis:
+        deploy:
+            mode: replicated
+            replicas: 1
+            labels: [APP=gigety-redis]
+            placement:
+                constraints:
+                    - 'node.role==manager'
+
+    gigety-user-registration:
+        deploy:
+            mode: replicated
+            replicas: 1
+            labels: [APP=gigety-user-registration]
+            restart_policy:
+                condition: on-failure
+                delay: 10s
+                max_attempts: 3
+                window: 120s
+            placement:
+                constraints:
+                    - 'node.role==manager'
+
+    gigety-web-api:
+        deploy:
+            mode: replicated
+            replicas: 1
+            labels: [APP=gigety-web-api]
+            restart_policy:
+                condition: on-failure
+                delay: 10s
+                max_attempts: 3
+                window: 120s
+            placement:
+                constraints:
+                    - 'node.role==manager'
+
+    gigety-reactjs:
+        deploy:
+            mode: replicated
+            replicas: 1
+            labels: [APP=gigety-reactjs]
+            placement:
+                constraints:
+                    - 'node.role==manager'
