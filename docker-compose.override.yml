@@ -18,7 +18,7 @@ services:
         volumes:
             - ${GIGETY_UR_MYSQL}:/var/lib/mysql
         networks:
-            - ur-mysql
+            - gigety-ur-mysql
 
     gigety-web-api-mysql:
         environment:
@@ -29,7 +29,7 @@ services:
         volumes:
             - ${GIGETY_API_MYSQL}:/var/lib/mysql
         networks:
-            - api-mysql
+            - gigety-web-api-mysql
 
     gigety-redis:
         command: redis-server --requirepass ${DEV_GIGETY_PW}
@@ -51,7 +51,7 @@ services:
             SMS_GMAIL_NAME: ${SMS_GMAIL_NAME}
         restart: always
         networks:
-            - ur-mysql
+            - gigety-ur-mysql
             - gigety
 
     gigety-web-api:
@@ -72,7 +72,7 @@ services:
         restart: always
         networks:
             - gigety
-            - api-mysql
+            - gigety-web-api-mysql
 
     gigety-reactjs:
         build:
@@ -86,9 +86,9 @@ services:
 networks:
     gigety:
         driver: bridge
-    ur-mysql:
+    gigety-ur-mysql:
         driver: bridge
-    api-mysql:
+    gigety-web-api-mysql:
         driver: bridge
 
 volumes:

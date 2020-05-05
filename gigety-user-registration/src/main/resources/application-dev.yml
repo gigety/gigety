@@ -1,7 +1,7 @@
 # Docker Secrets used to set secret environment variables
 docker-secret:
-  bind-path: /run/secrets
-  
+    bind-path: /run/secrets
+
 # Allow Thymeleaf to hot reload
 spring:
     thymeleaf:

@@ -17,9 +17,8 @@ services:
     gigety-web-api-mysql:
         image: mysql
         container_name: gigety-web-api-mysql
-
     gigety-redis:
-        image: redis
+        image: redis:alpine3.11
         container_name: gigety-redis
 
     gigety-user-registration:
