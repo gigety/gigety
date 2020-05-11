@@ -2,10 +2,11 @@ version: '3.7'
 
 services:
     gigety-nginx:
-        image: samuelsegal/gigety-nginx
         restart: always
         networks:
             - gigety
+        volumes:
+            - ./gigety-nginx/dev:/etc/nginx/conf.d
 
     gigety-ur-mysql:
         secrets:
@@ -64,7 +65,6 @@ services:
         secrets:
             - DEV_GIGETY_PW
             - DEV_GIGETY_USR
-
         environment:
             DEV_GIGETY_USR_FILE: /run/secrets/DEV_GIGETY_USR
             DEV_GIGETY_PW_FILE: /run/secrets/DEV_GIGETY_PW
@@ -76,6 +76,9 @@ services:
         networks:
             - gigety
             - gigety-web-api-mysql
+        ports:
+            - 8080:8080
+            - 8000:8000
 
     gigety-reactjs:
         image: samuelsegal/gigety-reactjs

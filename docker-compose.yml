@@ -2,6 +2,7 @@ version: '3.7'
 
 services:
     gigety-nginx:
+        image: nginx:1.17
         container_name: gigety-nginx
         depends_on:
             - gigety-user-registration
@@ -17,6 +18,7 @@ services:
     gigety-web-api-mysql:
         image: mysql
         container_name: gigety-web-api-mysql
+
     gigety-redis:
         image: redis:alpine3.11
         container_name: gigety-redis
@@ -30,9 +32,6 @@ services:
         container_name: gigety-web-api
         depends_on:
             - gigety-web-api-mysql
-        ports:
-            - 8080:8080
-            - 8000:8000
 
     gigety-reactjs:
         container_name: gigety-reactjs

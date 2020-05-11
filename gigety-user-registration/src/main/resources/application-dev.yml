@@ -117,3 +117,7 @@ gigety:
         - 'http://gigety/api/oauth2/callback/samo'
         - 'http://gigety/api'
         - 'http://gigety/api/login/oauth2/code/samo'
+        - 'http://gigety.com/api/oauth2/code/samo'
+        - 'http://gigety.com/api/oauth2/callback/samo'
+        - 'http://gigety.com/api'
+        - 'http://gigety.com/api/login/oauth2/code/samo'

@@ -3,11 +3,10 @@ version: '3.7'
 services:
     gigety-nginx:
         restart: always
-        build:
-            dockerfile: Dockerfile.dev
-            context: ./nginx
         networks:
             - gigety
+        volumes:
+            - ./gigety-nginx/dev:/etc/nginx/conf.d
 
     gigety-ur-mysql:
         environment:
