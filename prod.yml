@@ -2,6 +2,8 @@ networks:
   gigety:
     attachable: true
     driver: overlay
+    external: true
+    name: gigety
   gigety-ur-mysql:
     attachable: true
     driver: overlay
@@ -14,16 +16,7 @@ secrets:
   DEV_GIGETY_USR:
     file: /Users/samuelsegal/git/gigety/secrets/DEV_GIGETY_USR.txt
 services:
-  certbot:
-    entrypoint: /bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h &
-      wait $${!}; done;'
-    image: certbot/certbot
-    volumes:
-    - /Users/samuelsegal/git/gigety/gigety-nginx/certbot/conf:/etc/letsencrypt:rw
-    - /Users/samuelsegal/git/gigety/gigety-nginx/certbot/www:/var/www/certbot:rw
   gigety-nginx:
-    command: /bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done
-      & nginx -g "daemon off;"'
     container_name: gigety-nginx
     depends_on:
     - gigety-reactjs
@@ -32,7 +25,18 @@ services:
     deploy:
       labels:
         APP: gigety-nginx
+        traefik.backend: blog-1
+        traefik.backend.loadbalancer.sticky: "false"
+        traefik.backend.loadbalancer.swarm: "true"
+        traefik.docker.network: appnet
+        traefik.entrypoints: https
+        traefik.frontend.passHostHeader: "true"
+        traefik.frontend.rule: Host:gigety.com
+        traefik.port: '2368'
       mode: replicated
+      placement:
+        constraints:
+        - node.role == worker
       replicas: 1
     image: nginx:1.17
     networks:
@@ -42,9 +46,7 @@ services:
       target: 80
     restart: always
     volumes:
-    - /Users/samuelsegal/git/gigety/gigety-nginx/certbot/conf:/etc/letsencrypt:rw
     - /Users/samuelsegal/git/gigety/gigety-nginx/dev:/etc/nginx/conf.d:rw
-    - /Users/samuelsegal/git/gigety/gigety-nginx/certbot/www:/var/www/certbot:rw
   gigety-reactjs:
     container_name: gigety-reactjs
     deploy:

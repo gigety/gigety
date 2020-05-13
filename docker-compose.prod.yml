@@ -1,14 +1,111 @@
 version: '3.7'
 
 services:
-    gigety-nginx:
-        command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+    gigety-ur-mysql:
+        secrets:
+            - DEV_GIGETY_PW
+            - DEV_GIGETY_USR
+        environment:
+            MYSQL_ROOT_PASSWORD_FILE: ${RUN_SECRETS}/DEV_GIGETY_PW
+            MYSQL_USER_FILE: ${RUN_SECRETS}/DEV_GIGETY_USR
+            MYSQL_PASSWORD_FILE: ${RUN_SECRETS}/DEV_GIGETY_PW
+            MYSQL_DATABASE: gigety_um
+            MYSQL_ROOT_HOST: '%'
         volumes:
-            - ./gigety-nginx/certbot/conf:/etc/letsencrypt
-            - ./gigety-nginx/certbot/www:/var/www/certbot
-    certbot:
-        image: certbot/certbot
-        entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+            - ur-mysql:/var/lib/mysql
+        networks:
+            - gigety-ur-mysql
+
+    gigety-web-api-mysql:
+        secrets:
+            - DEV_GIGETY_PW
+            - DEV_GIGETY_USR
+        environment:
+            MYSQL_ROOT_PASSWORD_FILE: ${RUN_SECRETS}/DEV_GIGETY_PW
+            MYSQL_USER_FILE: ${RUN_SECRETS}/DEV_GIGETY_USR
+            MYSQL_PASSWORD_FILE: ${RUN_SECRETS}/DEV_GIGETY_PW
+            MYSQL_DATABASE: gigety_users
+            MYSQL_ROOT_HOST: '%'
         volumes:
-            - ./gigety-nginx/certbot/conf:/etc/letsencrypt
-            - ./gigety-nginx/certbot/www:/var/www/certbot
+            - api-mysql:/var/lib/mysql
+        networks:
+            - gigety-web-api-mysql
+
+    gigety-redis:
+        secrets:
+            - DEV_GIGETY_PW
+        command: redis-server --requirepass ${DEV_GIGETY_PW}
+        networks:
+            - gigety
+
+    gigety-user-registration:
+        image: samuelsegal/gigety-user-registration
+        secrets:
+            - DEV_GIGETY_PW
+            - DEV_GIGETY_USR
+        environment:
+            DEV_GIGETY_USR_FILE: ${RUN_SECRETS}/DEV_GIGETY_USR
+            DEV_GIGETY_PW_FILE: ${RUN_SECRETS}/DEV_GIGETY_PW
+            SMS_GMAIL_PW_FILE: ${RUN_SECRETS}/SMS_GMAIL_PW
+            SMS_GMAIL_NAME_FILE: ${RUN_SECRETS}/SMS_GMAIL_NAME
+        restart: always
+        networks:
+            - gigety-ur-mysql
+            - gigety
+
+    gigety-web-api:
+        image: samuelsegal/gigety-web-api
+        secrets:
+            - DEV_GIGETY_PW
+            - DEV_GIGETY_USR
+        environment:
+            DEV_GIGETY_USR_FILE: ${RUN_SECRETS}/DEV_GIGETY_USR
+            DEV_GIGETY_PW_FILE: ${RUN_SECRETS}/DEV_GIGETY_PW
+            SPRING_OAUTH_GOOGLE_CLIENT_ID_FILE: ${RUN_SECRETS}/SPRING_OAUTH_GOOGLE_CLIENT_ID
+            SPRING_OAUTH_GOOGLE_CLIENT_SECRET_FILE: ${RUN_SECRETS}/SPRING_OAUTH_GOOGLE_CLIENT_SECRET
+            SPRING_OAUTH_FACEBOOK_APP_ID_FILE: ${RUN_SECRETS}/SPRING_OAUTH_FACEBOOK_APP_ID
+            SPRING_OAUTH_FACEBOOK_APP_SECRET_FILE: ${RUN_SECRETS}/SPRING_OAUTH_FACEBOOK_APP_SECRET
+        restart: always
+        networks:
+            - gigety
+            - gigety-web-api-mysql
+
+    gigety-reactjs:
+        image: samuelsegal/gigety-reactjs
+        networks:
+            - gigety
+networks:
+    gigety:
+        driver: overlay
+        attachable: true
+        external: true
+    gigety-ur-mysql:
+        driver: overlay
+        attachable: true
+    gigety-web-api-mysql:
+        driver: overlay
+        attachable: true
+        #ipam:
+        #    driver: default
+        #    config:
+        #        - subnet: '192.168.99.0/24'
+
+secrets:
+    DEV_GIGETY_PW:
+        file: ./secrets/DEV_GIGETY_PW.txt
+    DEV_GIGETY_USR:
+        file: ./secrets/DEV_GIGETY_USR.txt
+    SPRING_OAUTH_GOOGLE_CLIENT_ID:
+        file: ./secrets/SPRING_OAUTH_GOOGLE_CLIENT_ID.txt
+    SPRING_OAUTH_GOOGLE_CLIENT_SECRET:
+        file: ./secrets/SPRING_OAUTH_GOOGLE_CLIENT_SECRET.txt
+    SPRING_OAUTH_FACEBOOK_APP_ID:
+        file: ./secrets/SPRING_OAUTH_FACEBOOK_APP_ID.txt
+    SPRING_OAUTH_FACEBOOK_APP_SECRET:
+        file: ./secrets/SPRING_OAUTH_FACEBOOK_APP_SECRET.txt
+
+volumes:
+    api-mysql:
+    ur-mysql:
+    gigety-web-api:
+    gigety-user-registration:

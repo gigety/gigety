@@ -1,12 +1,28 @@
 version: '3.7'
 
 services:
-    gigety-nginx:
+    gigety:
+        image: traefik:1.7.3
+        command: --web \
+            --docker \
+            --docker.swarmmode \
+            --docker.domain=gigety.com \
+            --docker.watch \
+            --logLevel=DEBUG
+        networks:
+            - gigety
+        ports:
+            - '80:80'
+            - '8080:8080'
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - /dev/null:/traefik.toml
         deploy:
             mode: replicated
             replicas: 1
             labels: [APP=gigety-nginx]
-
+            placement:
+                constraints: [node.role==manager]
     gigety-ur-mysql:
         deploy:
             mode: replicated
@@ -29,7 +45,12 @@ services:
         deploy:
             mode: replicated
             replicas: 1
-            labels: [APP=gigety-user-registration]
+            labels:
+                - 'APP=gigety-user-registration'
+                - 'traefik.enable=true'
+                - 'traefik.port=8080'
+                - 'traefik.docker.network=gigety'
+                - 'traefik.frontend.rule=Host:gigety.com/ur'
             restart_policy:
                 condition: on-failure
                 delay: 10s
@@ -40,7 +61,12 @@ services:
         deploy:
             mode: replicated
             replicas: 1
-            labels: [APP=gigety-web-api]
+            labels:
+                - 'APP=gigety-web-api'
+                - 'traefik.enable=true'
+                - 'traefik.port=8080'
+                - 'traefik.docker.network=gigety'
+                - 'traefik.frontend.rule=Host:gigety.com/api'
             restart_policy:
                 condition: on-failure
                 delay: 10s
@@ -51,4 +77,9 @@ services:
         deploy:
             mode: replicated
             replicas: 1
-            labels: [APP=gigety-reactjs]
+            labels:
+                - 'APP=gigety-reactjs'
+                - 'traefik.enable=true'
+                - 'traefik.port=3000'
+                - 'traefik.docker.network=gigety'
+                - 'traefik.frontend.rule=Host:gigety.com'

@@ -7,7 +7,8 @@ services:
             - gigety
         volumes:
             - ./gigety-nginx/dev:/etc/nginx/conf.d
-
+        ports:
+            - '80:80'
     gigety-ur-mysql:
         secrets:
             - DEV_GIGETY_PW
@@ -88,6 +89,7 @@ networks:
     gigety:
         driver: overlay
         attachable: true
+        external: true
     gigety-ur-mysql:
         driver: overlay
         attachable: true
