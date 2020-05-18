@@ -15,43 +15,47 @@ secrets:
     file: /Users/samuelsegal/git/gigety/secrets/DEV_GIGETY_PW.txt
   DEV_GIGETY_USR:
     file: /Users/samuelsegal/git/gigety/secrets/DEV_GIGETY_USR.txt
+  SPRING_OAUTH_FACEBOOK_APP_ID:
+    file: /Users/samuelsegal/git/gigety/secrets/SPRING_OAUTH_FACEBOOK_APP_ID.txt
+  SPRING_OAUTH_FACEBOOK_APP_SECRET:
+    file: /Users/samuelsegal/git/gigety/secrets/SPRING_OAUTH_FACEBOOK_APP_SECRET.txt
+  SPRING_OAUTH_GOOGLE_CLIENT_ID:
+    file: /Users/samuelsegal/git/gigety/secrets/SPRING_OAUTH_GOOGLE_CLIENT_ID.txt
+  SPRING_OAUTH_GOOGLE_CLIENT_SECRET:
+    file: /Users/samuelsegal/git/gigety/secrets/SPRING_OAUTH_GOOGLE_CLIENT_SECRET.txt
 services:
-  gigety-nginx:
-    container_name: gigety-nginx
-    depends_on:
-    - gigety-reactjs
-    - gigety-user-registration
-    - gigety-web-api-mysql
+  gigety:
+    command: --web \ --docker \ --docker.swarmmode \ --docker.domain=gigety.com \
+      --acme.email=samuelmosessegal@gmail.com --acme.httpChallenge.entryPoint=http
+      --logLevel=DEBUG
     deploy:
       labels:
         APP: gigety-nginx
-        traefik.backend: blog-1
-        traefik.backend.loadbalancer.sticky: "false"
-        traefik.backend.loadbalancer.swarm: "true"
-        traefik.docker.network: appnet
-        traefik.entrypoints: https
-        traefik.frontend.passHostHeader: "true"
-        traefik.frontend.rule: Host:gigety.com
-        traefik.port: '2368'
       mode: replicated
       placement:
         constraints:
-        - node.role == worker
+        - node.role==manager
       replicas: 1
-    image: nginx:1.17
+    image: traefik:1.7.3
     networks:
       gigety: {}
     ports:
     - published: 80
       target: 80
-    restart: always
+    - published: 8080
+      target: 8080
     volumes:
-    - /Users/samuelsegal/git/gigety/gigety-nginx/dev:/etc/nginx/conf.d:rw
+    - /dev/null:/traefik.toml:rw
+    - /var/run/docker.sock:/var/run/docker.sock:rw
   gigety-reactjs:
     container_name: gigety-reactjs
     deploy:
       labels:
         APP: gigety-reactjs
+        traefik.docker.network: gigety
+        traefik.enable: "true"
+        traefik.frontend.rule: Host:gigety.com
+        traefik.port: '3000'
       mode: replicated
       replicas: 1
     image: samuelsegal/gigety-reactjs
@@ -98,6 +102,10 @@ services:
     deploy:
       labels:
         APP: gigety-user-registration
+        traefik.docker.network: gigety
+        traefik.enable: "true"
+        traefik.frontend.rule: Host:gigety.com/ur
+        traefik.port: '8080'
       mode: replicated
       replicas: 1
       restart_policy:
@@ -108,8 +116,8 @@ services:
     environment:
       DEV_GIGETY_PW_FILE: /run/secrets/DEV_GIGETY_PW
       DEV_GIGETY_USR_FILE: /run/secrets/DEV_GIGETY_USR
-      SMS_GMAIL_NAME: samuelmosessegal@gmail.com
-      SMS_GMAIL_PW: kkeqvrhyfvncgjcy
+      SMS_GMAIL_NAME_FILE: /run/secrets/SMS_GMAIL_NAME
+      SMS_GMAIL_PW_FILE: /run/secrets/SMS_GMAIL_PW
     image: samuelsegal/gigety-user-registration
     networks:
       gigety: {}
@@ -125,6 +133,10 @@ services:
     deploy:
       labels:
         APP: gigety-web-api
+        traefik.docker.network: gigety
+        traefik.enable: "true"
+        traefik.frontend.rule: Host:gigety.com/api
+        traefik.port: '8080'
       mode: replicated
       replicas: 1
       restart_policy:
@@ -135,19 +147,14 @@ services:
     environment:
       DEV_GIGETY_PW_FILE: /run/secrets/DEV_GIGETY_PW
       DEV_GIGETY_USR_FILE: /run/secrets/DEV_GIGETY_USR
-      SPRING_OAUTH_FACEBOOK_APP_ID: '2449381685283284'
-      SPRING_OAUTH_FACEBOOK_APP_SECRET: 670afe3554a3b384c5d941c098a0ede2
-      SPRING_OAUTH_GOOGLE_CLIENT_ID: 426062609919-0s9r6avfneifs48migmhnnagaeqebn4d.apps.googleusercontent.com
-      SPRING_OAUTH_GOOGLE_CLIENT_SECRET: d9sdp8IM5hJ01hedWnhq2TZ9
+      SPRING_OAUTH_FACEBOOK_APP_ID_FILE: /run/secrets/SPRING_OAUTH_FACEBOOK_APP_ID
+      SPRING_OAUTH_FACEBOOK_APP_SECRET_FILE: /run/secrets/SPRING_OAUTH_FACEBOOK_APP_SECRET
+      SPRING_OAUTH_GOOGLE_CLIENT_ID_FILE: /run/secrets/SPRING_OAUTH_GOOGLE_CLIENT_ID
+      SPRING_OAUTH_GOOGLE_CLIENT_SECRET_FILE: /run/secrets/SPRING_OAUTH_GOOGLE_CLIENT_SECRET
     image: samuelsegal/gigety-web-api
     networks:
       gigety: {}
       gigety-web-api-mysql: {}
-    ports:
-    - published: 8000
-      target: 8000
-    - published: 8080
-      target: 8080
     restart: always
     secrets:
     - source: DEV_GIGETY_PW

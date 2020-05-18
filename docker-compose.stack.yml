@@ -7,7 +7,8 @@ services:
             --docker \
             --docker.swarmmode \
             --docker.domain=gigety.com \
-            --docker.watch \
+            --acme.email=samuelmosessegal@gmail.com
+            --acme.httpChallenge.entryPoint=http
             --logLevel=DEBUG
         networks:
             - gigety

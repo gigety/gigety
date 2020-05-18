@@ -1,13 +1,6 @@
 version: '3.7'
 
 services:
-    gigety-nginx:
-        restart: always
-        networks:
-            - gigety
-        volumes:
-            - ./gigety-nginx/dev:/etc/nginx/conf.d
-
     gigety-ur-mysql:
         environment:
             MYSQL_ROOT_PASSWORD: ${DEV_GIGETY_PW}
