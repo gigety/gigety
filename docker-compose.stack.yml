@@ -2,26 +2,44 @@ version: '3.7'
 
 services:
     gigety:
-        image: traefik:1.7.3
-        command: --web \
-            --docker \
-            --docker.swarmmode \
-            --docker.domain=gigety.com \
-            --acme.email=samuelmosessegal@gmail.com
-            --acme.httpChallenge.entryPoint=http
-            --logLevel=DEBUG
+        image: traefik:v2.2
+        ports:
+            - target: 80
+              published: 80
+              mode: host
+            - target: 443
+              published: 443
+              mode: host
+            - target: 8080
+              published: 8080
+              mode: host
+        command:
+            - '--providers.docker=true'
+            - '--providers.docker.endpoint=unix:///var/run/docker.sock'
+            - '--providers.docker.swarmMode=true'
+            - '--providers.docker.exposedByDefault=false'
+            - '--providers.docker.network=gigety'
+            - '--entrypoints.web.address=:80'
+            - '--entrypoints.websecure.address=:443'
+            - '--certificatesresolvers.letsencryptresolver.acme.httpchallenge=true'
+            - '--certificatesresolvers.letsencryptresolver.acme.httpchallenge.entrypoint=web'
+            - '--certificatesresolvers.letsencryptresolver.acme.email=samuelmosessegal@gmail.com'
+            - '--certificatesresolvers.letsencryptresolver.acme.storage=/letsencrypt/acme.json'
+
         networks:
             - gigety
-        ports:
-            - '80:80'
-            - '8080:8080'
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - /dev/null:/traefik.toml
+            - traefik-certificates:/letsencrypt
         deploy:
-            mode: replicated
-            replicas: 1
-            labels: [APP=gigety-nginx]
+            mode: global
+            labels:
+                - 'APP=gigety'
+                - 'traefik.enable=true'
+                - 'traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)'
+                - 'traefik.http.routers.http-catchall.entrypoints=web'
+                - 'traefik.http.routers.http-catchall.middlewares=redirect-to-https@docker'
+                - 'traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https'
             placement:
                 constraints: [node.role==manager]
     gigety-ur-mysql:
@@ -47,11 +65,13 @@ services:
             mode: replicated
             replicas: 1
             labels:
-                - 'APP=gigety-user-registration'
-                - 'traefik.enable=true'
-                - 'traefik.port=8080'
-                - 'traefik.docker.network=gigety'
-                - 'traefik.frontend.rule=Host:gigety.com/ur'
+                - APP=gigety-user-registration
+                - traefik.enable=true
+                - traefik.docker.network=gigety
+                - traefik.http.routers.gigety-user-registration.rule=(Host(`gigety.com`) && PathPrefix(`/ur`))
+                - traefik.http.routers.gigety-user-registration.entrypoints=websecure
+                - traefik.http.routers.gigety-user-registration.tls.certresolver=letsencryptresolver
+                - traefik.http.services.gigety-user-registration.loadbalancer.server.port=8084
             restart_policy:
                 condition: on-failure
                 delay: 10s
@@ -63,11 +83,13 @@ services:
             mode: replicated
             replicas: 1
             labels:
-                - 'APP=gigety-web-api'
-                - 'traefik.enable=true'
-                - 'traefik.port=8080'
-                - 'traefik.docker.network=gigety'
-                - 'traefik.frontend.rule=Host:gigety.com/api'
+                - APP=gigety-web-api
+                - traefik.enable=true
+                - traefik.docker.network=gigety
+                - traefik.http.routers.gigety-web-api.rule=(Host(`gigety.com`) && PathPrefix(`/api`))
+                - traefik.http.routers.gigety-web-api.entrypoints=websecure
+                - traefik.http.routers.gigety-web-api.tls.certresolver=letsencryptresolve
+                - traefik.http.services.gigety-web-api.loadbalancer.server.port=8080
             restart_policy:
                 condition: on-failure
                 delay: 10s
@@ -79,8 +101,18 @@ services:
             mode: replicated
             replicas: 1
             labels:
-                - 'APP=gigety-reactjs'
-                - 'traefik.enable=true'
-                - 'traefik.port=3000'
-                - 'traefik.docker.network=gigety'
-                - 'traefik.frontend.rule=Host:gigety.com'
+                - APP=gigety-reactjs
+                - traefik.enable=true
+                - traefik.docker.network=gigety
+                - traefik.http.routers.gigety-reactjs.rule=Host(`gigety.com`)
+                - traefik.http.routers.gigety-reactjs.entrypoints=websecure
+                - traefik.http.routers.gigety-reactjs.tls.certresolver=letsencryptresolve
+                - traefik.http.services.gigety-reactjs.loadbalancer.server.port=3000
+
+volumes:
+    traefik-certificates:
+
+networks:
+    gigety:
+        driver: overlay
+        external: true

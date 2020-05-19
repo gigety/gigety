@@ -25,27 +25,45 @@ secrets:
     file: /Users/samuelsegal/git/gigety/secrets/SPRING_OAUTH_GOOGLE_CLIENT_SECRET.txt
 services:
   gigety:
-    command: --web \ --docker \ --docker.swarmmode \ --docker.domain=gigety.com \
-      --acme.email=samuelmosessegal@gmail.com --acme.httpChallenge.entryPoint=http
-      --logLevel=DEBUG
+    command:
+    - --providers.docker=true
+    - --providers.docker.endpoint=unix:///var/run/docker.sock
+    - --providers.docker.swarmMode=true
+    - --providers.docker.exposedByDefault=false
+    - --providers.docker.network=gigety
+    - --entrypoints.web.address=:80
+    - --entrypoints.websecure.address=:443
+    - --certificatesresolvers.letsencryptresolver.acme.httpchallenge=true
+    - --certificatesresolvers.letsencryptresolver.acme.httpchallenge.entrypoint=web
+    - --certificatesresolvers.letsencryptresolver.acme.email=samuelmosessegal@gmail.com
+    - --certificatesresolvers.letsencryptresolver.acme.storage=/letsencrypt/acme.json
     deploy:
       labels:
-        APP: gigety-nginx
-      mode: replicated
+        APP: gigety
+        traefik.enable: "true"
+        traefik.http.middlewares.redirect-to-https.redirectscheme.scheme: https
+        traefik.http.routers.http-catchall.entrypoints: web
+        traefik.http.routers.http-catchall.middlewares: redirect-to-https@docker
+        traefik.http.routers.http-catchall.rule: hostregexp(`{host:.+}`)
+      mode: global
       placement:
         constraints:
         - node.role==manager
-      replicas: 1
-    image: traefik:1.7.3
+    image: traefik:v2.2
     networks:
       gigety: {}
     ports:
-    - published: 80
+    - mode: host
+      published: 80
       target: 80
-    - published: 8080
+    - mode: host
+      published: 443
+      target: 443
+    - mode: host
+      published: 8080
       target: 8080
     volumes:
-    - /dev/null:/traefik.toml:rw
+    - traefik-certificates:/letsencrypt:rw
     - /var/run/docker.sock:/var/run/docker.sock:rw
   gigety-reactjs:
     container_name: gigety-reactjs
@@ -54,8 +72,10 @@ services:
         APP: gigety-reactjs
         traefik.docker.network: gigety
         traefik.enable: "true"
-        traefik.frontend.rule: Host:gigety.com
-        traefik.port: '3000'
+        traefik.http.routers.gigety-reactjs.entrypoints: websecure
+        traefik.http.routers.gigety-reactjs.rule: Host(`gigety.com`)
+        traefik.http.routers.gigety-reactjs.tls.certresolver: letsencryptresolve
+        traefik.http.services.gigety-reactjs.loadbalancer.server.port: '3000'
       mode: replicated
       replicas: 1
     image: samuelsegal/gigety-reactjs
@@ -104,8 +124,11 @@ services:
         APP: gigety-user-registration
         traefik.docker.network: gigety
         traefik.enable: "true"
-        traefik.frontend.rule: Host:gigety.com/ur
-        traefik.port: '8080'
+        traefik.http.routers.gigety-user-registration.entrypoints: websecure
+        traefik.http.routers.gigety-user-registration.rule: (Host(`gigety.com`) &&
+          PathPrefix(`/ur`))
+        traefik.http.routers.gigety-user-registration.tls.certresolver: letsencryptresolver
+        traefik.http.services.gigety-user-registration.loadbalancer.server.port: '8084'
       mode: replicated
       replicas: 1
       restart_policy:
@@ -135,8 +158,10 @@ services:
         APP: gigety-web-api
         traefik.docker.network: gigety
         traefik.enable: "true"
-        traefik.frontend.rule: Host:gigety.com/api
-        traefik.port: '8080'
+        traefik.http.routers.gigety-web-api.entrypoints: websecure
+        traefik.http.routers.gigety-web-api.rule: (Host(`gigety.com`) && PathPrefix(`/api`))
+        traefik.http.routers.gigety-web-api.tls.certresolver: letsencryptresolve
+        traefik.http.services.gigety-web-api.loadbalancer.server.port: '8080'
       mode: replicated
       replicas: 1
       restart_policy:
@@ -185,5 +210,6 @@ volumes:
   api-mysql: {}
   gigety-user-registration: {}
   gigety-web-api: {}
+  traefik-certificates: {}
   ur-mysql: {}
 
