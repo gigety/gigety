@@ -4,9 +4,9 @@ import { Dropdown, Image, Icon } from 'semantic-ui-react';
 import { logout } from '../../redux/actions/auth';
 import { useGigUser } from 'redux/hooks/useGigUser';
 
-const ProfileDropdown = props => {
+const ProfileDropdown = (props) => {
 	const { giguser } = useGigUser();
-
+	console.log('giguser:', giguser);
 	let profileMenu;
 	if (giguser) {
 		const imageIcon = giguser.imageUrl ? (
@@ -27,9 +27,9 @@ const ProfileDropdown = props => {
 				icon={null}
 			>
 				<Dropdown.Menu>
-					<Dropdown.Item key="user" text="Account" icon="user" />
-					<Dropdown.Item key="settings" text="Settings" icon="settings" />
-					<Dropdown.Item key="sign-out" text="Logout" icon="sign out" onClick={props.logout} />
+					<Dropdown.Item text="Account" icon="user" />
+					<Dropdown.Item text="Settings" icon="settings" />
+					<Dropdown.Item text="Logout" icon="sign out" onClick={props.logout} />
 				</Dropdown.Menu>
 			</Dropdown>
 		);
@@ -37,10 +37,7 @@ const ProfileDropdown = props => {
 		profileMenu = <Dropdown item simple />;
 	}
 
-	return [profileMenu];
+	return profileMenu;
 };
 
-export default connect(
-	null,
-	{ logout }
-)(ProfileDropdown);
+export default connect(null, { logout })(ProfileDropdown);

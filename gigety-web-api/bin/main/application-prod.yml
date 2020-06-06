@@ -55,11 +55,11 @@ spring:
                 provider:
                     samo:
                         token-uri:
-                            http://gigety.com/ur/oauth/token
+                            https://gigety.com/ur/oauth/token
                         authorization-uri:
-                            http://gigety.com/ur/oauth/authorize
+                            https://gigety.com/ur/oauth/authorize
                         user-info-uri:
-                            http://gigety.com/ur/users/info
+                            https://gigety.com/ur/users/info
                         user-name-attribute: user_name
 
                     facebook:
@@ -105,7 +105,7 @@ gig:
             - http://localhost
             - http://gigety-nginx
             - http://gigety
-            - http://gigety.com
+            - https://gigety.com
             - http://gigety-web-api
             - http://gigety-user-registration
             - http://localhost/oauth2/redirect

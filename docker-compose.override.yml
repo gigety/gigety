@@ -1,6 +1,18 @@
 version: '3.7'
 
 services:
+    gigety-nginx:
+        restart: always
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./gigety-nginx
+        networks:
+            - gigety
+        ports:
+            - '80:80'
+        depends_on:
+            - gigety-user-registration
+            - gigety-web-api
     gigety-ur-mysql:
         environment:
             MYSQL_ROOT_PASSWORD: ${DEV_GIGETY_PW}
@@ -54,6 +66,8 @@ services:
         command: java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:8000 -jar build/libs/gigety-web-api-0.0.1-SNAPSHOT.jar
         volumes:
             - gigety-web-api:/data/gigety-web-api
+        ports:
+            - 8000:8000
         environment:
             DEV_GIGETY_USR: ${DEV_GIGETY_USR}
             DEV_GIGETY_PW: ${DEV_GIGETY_PW}
@@ -67,6 +81,8 @@ services:
             - gigety-web-api-mysql
 
     gigety-reactjs:
+        environment:
+            REACT_APP_GIGETY_URL: ${REACT_APP_GIGETY_URL}
         build:
             context: ./gigety-reactjs/react-gigety
             dockerfile: Dockerfile.dev

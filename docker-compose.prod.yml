@@ -72,6 +72,8 @@ services:
 
     gigety-reactjs:
         image: samuelsegal/gigety-reactjs
+        environment:
+            REACT_APP_GIGETY_URL: 'https://gigety.com'
         networks:
             - gigety
 networks:
