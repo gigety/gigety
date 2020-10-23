@@ -37,21 +37,10 @@ function FileDropzone({ disabled, onFilesAdded }) {
 		if (onFilesAdded) {
 			onFilesAdded(files);
 		}
-		const reader = new FileReader();
-		reader.onload = function (event) {
-			document.querySelector('#imageRef').src = reader.result;
-		};
-		reader.readAsDataURL(files[0]);
+		updateImageRef(files);
 		setHighlight(false);
 	};
 
-	const fileListToArray = (list) => {
-		const arr = [];
-		for (let i = 0; i < list.length; i++) {
-			arr.push(list.item(i));
-		}
-		return arr;
-	};
 	const addFiles = (e) => {
 		if (disabled) {
 			return;
@@ -62,6 +51,10 @@ function FileDropzone({ disabled, onFilesAdded }) {
 		if (onFilesAdded) {
 			onFilesAdded(files);
 		}
+		updateImageRef(files);
+	};
+
+	const updateImageRef = (files) => {
 		const reader = new FileReader();
 		reader.onload = function (event) {
 			document.querySelector('#imageRef').src = reader.result;
