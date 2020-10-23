@@ -22,63 +22,50 @@ const CreateProfile = () => {
 	useEffect(() => {
 		setUserProfile((userProfile) => ({ ...userProfile, userImageUrl: giguser.imageUrl }));
 	}, [giguser.imageUrl]);
-	const showMap = useCallback(
-		(includeLocation) => {
-			setIncludeLocation(!includeLocation);
-		},
-		[setIncludeLocation]
-	);
-	const onSubmit = useCallback(
-		(e, userProfile, images) => {
-			reduxDispatch(postGigProfile(JSON.stringify(userProfile), images, history));
-		},
-		[reduxDispatch, history]
-	);
-	const onAddLocation = useCallback(
-		(location, miles) => {
-			if (location) {
-				const loc = {
-					ref_id: _.random(11, 12, true),
-					address: location.formatted_address,
-					location: { lat: location.geometry.location.lat(), lng: location.geometry.location.lng() },
-					radius: miles,
-				};
-				setLocations([...locations, loc]);
-				setUserProfile({
-					...userProfile,
-					profileLocations: [...locations, loc],
-				});
-				return loc;
+	const showMap = (includeLocation) => {
+		setIncludeLocation(!includeLocation);
+	};
+	const onSubmit = (e, userProfile, images) => {
+		reduxDispatch(postGigProfile(JSON.stringify(userProfile), images, history));
+	};
+	const onAddLocation = (location, miles) => {
+		if (location) {
+			const loc = {
+				ref_id: _.random(11, 12, true),
+				address: location.formatted_address,
+				location: { lat: location.geometry.location.lat(), lng: location.geometry.location.lng() },
+				radius: miles,
+			};
+			setLocations([...locations, loc]);
+			setUserProfile({
+				...userProfile,
+				profileLocations: [...locations, loc],
+			});
+			return loc;
+		}
+	};
+	const onRemoveLocation = (locations, markers, circles) => (ref_id) => {
+		const locs = locations.filter((location) => {
+			return location.ref_id !== ref_id;
+		});
+		setLocations(locs);
+		setUserProfile({ ...userProfile, profileLocations: locs });
+		markers.map((marker) => {
+			if (marker.ref_id === ref_id) {
+				marker.setMap(null);
 			}
-		},
-		[locations, userProfile]
-	);
-	const onRemoveLocation = useCallback(
-		(locations, markers, circles) => (ref_id) => {
-			const locs = locations.filter((location) => {
-				return location.ref_id !== ref_id;
-			});
-			setLocations(locs);
-			setUserProfile({ ...userProfile, profileLocations: locs });
-			markers.map((marker) => {
-				if (marker.ref_id === ref_id) {
-					marker.setMap(null);
-				}
-				return marker;
-			});
-			circles.map((circle) => {
-				if (circle.ref_id === ref_id) {
-					circle.setMap(null);
-				}
-				return circle;
-			});
-		},
-		[userProfile]
-	);
-	const onFilesAdded = useCallback((files) => {
-		console.log('files::: ' + files);
+			return marker;
+		});
+		circles.map((circle) => {
+			if (circle.ref_id === ref_id) {
+				circle.setMap(null);
+			}
+			return circle;
+		});
+	};
+	const onFilesAdded = (files) => {
 		setImages(files);
-	}, []);
+	};
 	return (
 		<Container fluid>
 			<Form encType="multipart/form-data">

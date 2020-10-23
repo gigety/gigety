@@ -9,7 +9,6 @@ function FileDropzone({ disabled, onFilesAdded }) {
 	const { giguser } = useSelector((state) => state.giguser);
 
 	const onDragOver = (e) => {
-		console.log('rendering OnDrop');
 		e.preventDefault();
 		if (disabled) {
 			return;
@@ -17,20 +16,17 @@ function FileDropzone({ disabled, onFilesAdded }) {
 		setHighlight(true);
 	};
 	const openFileDialog = (e) => {
-		console.log('rendering openFileDialog');
 		if (disabled) {
 			return;
 		}
 		fileInputRef.current.click();
 	};
 	const onDrop = (e) => {
-		console.log('rendering OnDrop');
 		e.preventDefault();
 		if (disabled) {
 			return;
 		}
 		const files = e.dataTransfer.files;
-		console.log(files);
 		if (onFilesAdded) {
 			onFilesAdded(files);
 		}
@@ -39,13 +35,11 @@ function FileDropzone({ disabled, onFilesAdded }) {
 	};
 
 	const addFiles = (e) => {
-		console.log('rendering addFiles');
 		if (disabled) {
 			return;
 		}
 		const files = e.target.files;
 
-		console.log(files);
 		if (onFilesAdded) {
 			onFilesAdded(files);
 		}
@@ -59,6 +53,7 @@ function FileDropzone({ disabled, onFilesAdded }) {
 		};
 		reader.readAsDataURL(files[0]);
 	};
+
 	const onDragLeave = (e) => {
 		e.preventDefault();
 		if (disabled) {
@@ -66,6 +61,7 @@ function FileDropzone({ disabled, onFilesAdded }) {
 		}
 		setHighlight(false);
 	};
+
 	return (
 		<Card centered>
 			<CardContent>
