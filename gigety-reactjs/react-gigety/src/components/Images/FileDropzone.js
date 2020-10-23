@@ -8,26 +8,23 @@ function FileDropzone({ disabled, onFilesAdded }) {
 	const fileInputRef = React.createRef();
 	const { giguser } = useSelector((state) => state.giguser);
 
-	const onDragOver = useCallback(
-		(e) => {
-			e.preventDefault();
-			if (disabled) {
-				return;
-			}
-			setHighlight(true);
-		},
-		[setHighlight, disabled]
-	);
-	const openFileDialog = useCallback(
-		(e) => {
-			if (disabled) {
-				return;
-			}
-			fileInputRef.current.click();
-		},
-		[fileInputRef, disabled]
-	);
+	const onDragOver = (e) => {
+		console.log('rendering OnDrop');
+		e.preventDefault();
+		if (disabled) {
+			return;
+		}
+		setHighlight(true);
+	};
+	const openFileDialog = (e) => {
+		console.log('rendering openFileDialog');
+		if (disabled) {
+			return;
+		}
+		fileInputRef.current.click();
+	};
 	const onDrop = (e) => {
+		console.log('rendering OnDrop');
 		e.preventDefault();
 		if (disabled) {
 			return;
@@ -42,6 +39,7 @@ function FileDropzone({ disabled, onFilesAdded }) {
 	};
 
 	const addFiles = (e) => {
+		console.log('rendering addFiles');
 		if (disabled) {
 			return;
 		}
