@@ -3,7 +3,6 @@ import gigety from 'apis/gigety';
 import { setJwtTokenHeader } from 'utils/jwtUtil';
 export const getCurrentUser = () => async (dispatch) => {
 	try {
-		console.log('GETTING USER');
 		const response = await gigety.get('/user/me');
 		dispatch({
 			type: GET_CURRENT_USR,
@@ -21,7 +20,6 @@ export const getCurrentUser = () => async (dispatch) => {
 };
 export const getUserAccount = () => async (dispatch) => {
 	try {
-		console.log('GETTING USER ACCOUNT');
 		const response = await gigety.get('/userAccount');
 		dispatch({
 			type: GET_CURRENT_USR_ACCOUNT,

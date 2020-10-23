@@ -6,9 +6,7 @@ import PlaceAutoComplete from './Search/PlaceAutoComplete';
 function AddressRadiusSelector({ panTo, location, onSearchLocationSelected, onAddLocation, defaultMiles }) {
 	const [miles, setMiles] = useState(defaultMiles);
 	const onUpdateMiles = (e) => {
-		console.log(e.target.value);
 		setMiles(e.target.value);
-		console.log(miles);
 	};
 	return (
 		<div>

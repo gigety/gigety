@@ -27,7 +27,6 @@ export const useGigUserAccount = () => {
 export const useGigUserProfile = (id) => {
 	const content = useSelector((state) => state.giguserProfile);
 	const dispatch = useDispatch();
-	console.log(`shit ${content}`, content);
 	useEffect(() => {
 		dispatch(getUserProfile(id));
 	}, [dispatch]);

@@ -18,8 +18,4 @@ EOF
 # Very strange because the user is created in mongo via env variable.
 # But web app is simply failing authentication if created via variable.
 # Spent too much time looking at this. I am going to upload a sample file
-# called init-mongo-sample.sh for reference
-# Very strange because the user is created in mongo via env variable.
-# But web app is simply failing authentication if created via variable.
-# Spent too much time looking at this. I am going to upload a sample file
-# called init-mongo-sample.sh for reference..
+# called init-mongo-template.sh for reference

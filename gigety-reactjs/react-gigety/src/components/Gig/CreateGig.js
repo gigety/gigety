@@ -31,7 +31,6 @@ const CreateGig = () => {
 
 	const onSubmit = useCallback(
 		(e, gig) => {
-			console.log(JSON.stringify(gig));
 			reduxDispatch(postGig(JSON.stringify(gig), history));
 		},
 		[reduxDispatch, history]

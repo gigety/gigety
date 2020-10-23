@@ -11,7 +11,6 @@ const jwtToken = localStorage.getItem('jwtToken');
 if (jwtToken) {
 	setJwtTokenHeader(jwtToken);
 	const decodedToken = jwt_decode(jwtToken);
-	console.log(`decoded jwt: ${decodedToken}`);
 	store.dispatch({
 		type: SET_CURRENT_USR,
 		payload: decodedToken,
@@ -24,11 +23,8 @@ if (jwtToken) {
 } else {
 	const uri = window.location.search;
 
-	console.log(`uri: ${uri}`);
 	const token = getUrlParameter('t', uri);
-	console.log(`token: ${token}`);
 	const error = getUrlParameter('error', uri);
-	console.log(`error: ${error}`);
 	if (token) {
 		store.dispatch(loginAction(token));
 		window.location.href = '/';

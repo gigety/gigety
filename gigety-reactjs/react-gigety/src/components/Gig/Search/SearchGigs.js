@@ -5,7 +5,6 @@ import GigList from '../GigList';
 import SearchGigsInput from './SearchGigsInput';
 const SearchGigs = () => {
 	const { gig } = useSelector((state) => state);
-	console.log(gig);
 	return (
 		<>
 			<Grid>

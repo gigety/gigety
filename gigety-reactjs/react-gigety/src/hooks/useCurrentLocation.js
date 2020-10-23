@@ -26,7 +26,7 @@ export const useCurrentLocation = (options = {}) => {
 			navigator.geolocation.getCurrentPosition(handleSuccess, handleError, options);
 			return function cleanup() {
 				console.log(
-					'Just demonstrating where any clean would happpen for an effect in react. This function will run after each rerender '
+					'Just demonstrating where any clean would happen for an effect in react. This function will run after each rerender '
 				);
 			};
 		} else {

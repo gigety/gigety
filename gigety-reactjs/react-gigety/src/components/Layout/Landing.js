@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import SearchProfiles from '../Profile/Search/SearchProfiles';
 const Landing = (props) => {
-	console.log('props', props);
 	const landingPage =
 		props.authentication && props.authentication.validToken ? (
 			<div>

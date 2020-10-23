@@ -1,13 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Button, Container, Divider, Grid, GridColumn, GridRow } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Container, Grid, GridColumn } from 'semantic-ui-react';
 import SearchGigs from './Search/SearchGigs';
 
 const GigPage = (props) => {
-	const onClickMyGigs = (e) => {
-		console.log('Search for gigs created by logged in user from mongo');
-	};
+	const onClickMyGigs = (e) => {};
 	return (
 		<Container fluid>
 			<Grid celled>

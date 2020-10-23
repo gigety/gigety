@@ -2,17 +2,6 @@ import { GET_CURRENT_ADDRESS } from './types';
 import { ProfileLocation } from '../../models/ProfileLocation';
 
 export const getCurrentAddress = () => async (dispatch) => {
-	//const location = JSON.parse(localStorage.getItem('currentLocation'));
-	/* 	const storedLocation = localStorage.getItem('currentAddress');
-	if (storedLocation) {
-		console.log('Store Location: ', storedLocation);
-		dispatch({
-			type: GET_CURRENT_ADDRESS,
-			payload: storedLocation,
-		});
-		return;
-	} */
-	console.log('DOES NOT GET HERE IF IN LOCAL STORAGE');
 	const location = await getCurrentPosition();
 	const { latitude, longitude } = location.coords;
 	try {
@@ -20,8 +9,8 @@ export const getCurrentAddress = () => async (dispatch) => {
 		geocoder.geocode({ location: { lat: latitude, lng: longitude } }, (results, status) => {
 			const address = results[0];
 			if (address) {
-				console.log(address);
 				//const { formatted_address } = address;
+				//TODO: revisit and maybe finish what you started with profileLocation
 				const profileLocation = new ProfileLocation({
 					address: address.formatted_address,
 					location: { lat: address.geometry.location.lat(), lng: address.geometry.location.lng() },

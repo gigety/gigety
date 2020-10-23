@@ -7,7 +7,6 @@ export const searchAllGigs = (searchTerm) => async (dispatch) => {
 		const response = await gigety.post(`/pnode/gigs/100/0`, {
 			searchTerm,
 		});
-		console.log('Found gigs: ', response);
 		dispatch({ type: FOUND_GIG_SEARCH_RESULTS, payload: response.data });
 	} catch (error) {
 		console.error(error);
@@ -17,7 +16,6 @@ export const searchAllGigs = (searchTerm) => async (dispatch) => {
 
 export const getGigForGuest = (id) => async (dispatch, getState) => {
 	try {
-		console.log('sdfbsdfbsdfbsadfbsdfb');
 		const response = await gigety.get(`/pnode/gigs/${id}`);
 		dispatch({ type: GET_GIG, payload: response.data });
 	} catch (error) {

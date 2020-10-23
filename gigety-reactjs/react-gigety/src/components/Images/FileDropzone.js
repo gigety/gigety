@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Button, ButtonContent, Icon, CardHeader, CardContent } from 'semantic-ui-react';
+import { Card, Icon, CardHeader, CardContent } from 'semantic-ui-react';
 import '../Styles/ImageStyles.css';
 import { useSelector } from 'react-redux';
-function FileDropzone(props) {
+function FileDropzone({ disabled, onFilesAdded }) {
 	const [highlight, setHighlight] = useState(true);
 	const fileInputRef = React.createRef();
 	const { giguser } = useSelector((state) => state.giguser);
@@ -11,43 +11,39 @@ function FileDropzone(props) {
 	const onDragOver = useCallback(
 		(e) => {
 			e.preventDefault();
-			if (props.disabled) {
+			if (disabled) {
 				return;
 			}
 			setHighlight(true);
 		},
-		[highlight]
+		[setHighlight, disabled]
 	);
 	const openFileDialog = useCallback(
 		(e) => {
-			if (props.disabled) {
+			if (disabled) {
 				return;
 			}
 			fileInputRef.current.click();
 		},
-		[fileInputRef]
+		[fileInputRef, disabled]
 	);
-	const onDrop = useCallback(
-		(e) => {
-			e.preventDefault();
-			if (props.disabled) {
-				return;
-			}
-			const files = e.dataTransfer.files;
-			console.log('files: ', files);
-			if (props.onFilesAdded) {
-				props.onFilesAdded(files[0]);
-			}
-			const reader = new FileReader();
-			reader.onload = function (event) {
-				console.log(fileInputRef);
-				document.querySelector('#imageRef').src = reader.result;
-			};
-			reader.readAsDataURL(files[0]);
-			setHighlight(false);
-		},
-		[highlight]
-	);
+	const onDrop = (e) => {
+		e.preventDefault();
+		if (disabled) {
+			return;
+		}
+		const files = e.dataTransfer.files;
+		console.log(files);
+		if (onFilesAdded) {
+			onFilesAdded(files);
+		}
+		const reader = new FileReader();
+		reader.onload = function (event) {
+			document.querySelector('#imageRef').src = reader.result;
+		};
+		reader.readAsDataURL(files[0]);
+		setHighlight(false);
+	};
 
 	const fileListToArray = (list) => {
 		const arr = [];
@@ -56,14 +52,15 @@ function FileDropzone(props) {
 		}
 		return arr;
 	};
-	const onFilesAdded = (e) => {
-		if (props.disabled) {
+	const addFiles = (e) => {
+		if (disabled) {
 			return;
 		}
 		const files = e.target.files;
-		if (props.onFilesAdded) {
-			console.log(files[0]);
-			props.onFilesAdded(files);
+
+		console.log(files);
+		if (onFilesAdded) {
+			onFilesAdded(files);
 		}
 		const reader = new FileReader();
 		reader.onload = function (event) {
@@ -73,7 +70,7 @@ function FileDropzone(props) {
 	};
 	const onDragLeave = (e) => {
 		e.preventDefault();
-		if (props.disabled) {
+		if (disabled) {
 			return;
 		}
 		setHighlight(false);
@@ -93,16 +90,19 @@ function FileDropzone(props) {
 					onDragLeave={onDragLeave}
 					onDrop={onDrop}
 					onClick={openFileDialog}
-					style={{ cursor: props.disabled ? 'default' : 'pointer' }}
+					style={{ cursor: disabled ? 'default' : 'pointer' }}
 				>
-					<img id="imageRef" alt="Profile Image" src={giguser ? giguser.imageUrl : '/frog.png'} />
-					<input ref={fileInputRef} className="FileInput" type="file" multiple onChange={onFilesAdded} />
+					<img id="imageRef" alt="Profile Avatar" src={giguser ? giguser.imageUrl : '/frog.png'} />
+					<input ref={fileInputRef} className="FileInput" type="file" multiple onChange={addFiles} />
 				</div>
 			</CardContent>
 		</Card>
 	);
 }
 
-FileDropzone.propTypes = {};
+FileDropzone.propTypes = {
+	disabled: PropTypes.bool,
+	onFilesAdded: PropTypes.func,
+};
 
 export default FileDropzone;

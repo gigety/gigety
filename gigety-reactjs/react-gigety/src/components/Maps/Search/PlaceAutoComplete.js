@@ -28,11 +28,11 @@ function PlaceAutoComplete({ panTo, location, onSearchLocationSelected }) {
 	data.map((d) => {
 		//adding required title property for search and key for list to avoid
 		//console error logs
+		//TODO: use a better suited id. using random defeats ther purpose
 		d.key = _.random(98, 99, true);
 		d.title = d.description;
 		return d;
 	});
-	console.log('status: ', status);
 	return ready && data ? (
 		<Search
 			className="input segment-ctl"
@@ -47,7 +47,7 @@ function PlaceAutoComplete({ panTo, location, onSearchLocationSelected }) {
 					panTo({ lat, lng });
 					onSearchLocationSelected(results[0]);
 				} catch (error) {
-					console.log('error searching places for autocomplete: ', error);
+					console.error('error searching places for autocomplete: ', error);
 				}
 			}}
 			onSearchChange={(e) => {

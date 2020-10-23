@@ -5,7 +5,6 @@ import LoginDropdown from '../Auth/LoginDropdown';
 import ProfileDropdown from '../Auth/ProfileDropdown';
 import { Icon } from 'semantic-ui-react';
 const Header = (props) => {
-	console.log(`auth:: ${props.isAuthenticated}`);
 	const signinSignout = props.isAuthenticated ? <ProfileDropdown /> : <LoginDropdown />;
 	const header = props.isAuthenticated ? (
 		<>

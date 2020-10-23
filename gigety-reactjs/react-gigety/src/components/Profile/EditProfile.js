@@ -30,7 +30,6 @@ const EditProfile = ({ profile }) => {
 	);
 	const onSubmit = useCallback(
 		(e, userProfile, images) => {
-			console.log(JSON.stringify(userProfile));
 			reduxDispatch(postGigProfile(JSON.stringify(userProfile), images, history));
 		},
 		[reduxDispatch, history]
@@ -152,7 +151,6 @@ const EditProfile = ({ profile }) => {
 									primary
 									fluid
 									onClick={(e) => {
-										console.log(userProfile);
 										onSubmit(e, userProfile, images);
 									}}
 								>

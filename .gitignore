@@ -1,5 +1,6 @@
 # Compiled class file
 *.class
+# secrets contain passwords, api secrets / api client ids ...
 /secrets
 # docker yamls created via docker-compose.
 # docker-compose -f docker-compose.yml -f  docker-compose.prod.stack.yml -f docker-compose.prod.yml config > prod.yml
@@ -12,12 +13,8 @@ dev.yml
 # Very strange because the user is created in mongo via env variable.
 # But web app is simply failing authentication if created via variable.
 # Spent too much time looking at this. I am going to upload a sample file
-# called init-mongo-sample.sh for reference
-# Very strange because the user is created in mongo via env variable.
-# But web app is simply failing authentication if created via variable.
-# Spent too much time looking at this. I am going to upload a sample file
-# called init-mongo-sample.sh for reference. However to avoid checking in
-# real creadentials, am hiding orginial file.
+# called init-mongo-template.sh for reference
+
 init-mongo.sh
 
 .vscode/

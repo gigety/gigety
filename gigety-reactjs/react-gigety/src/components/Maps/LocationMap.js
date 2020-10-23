@@ -45,38 +45,14 @@ function LocationMap({
 	const onSearchLocationSelected = useCallback((location) => {
 		setSelectedLocation(location);
 	}, []);
-	/* 	const onMapClick = useCallback(
-		(e) => {
-			console.log(e.latLng.lat());
-			const marker = new window.google.maps.Marker({
-				position: { lat: e.latLng.lat(), lng: e.latLng.lng() },
-				map: mapRef.current,
-				click: () => console.log('wtf'),
-			});
-			const infoWindow = new window.google.maps.InfoWindow({
-				content: '<div><Input type="button"/></div>',
-			});
 
-			marker.setMap(mapRef.current);
-			window.google.maps.event.addListener(marker, 'click', function () {
-				infoWindow.open(mapRef.current, marker);
-			});
-			setMarkers([...markers, marker]);
-			return marker;
-		},
-		[setMarkers, markers]
-	);
- */
 	const addMarker = useCallback(
 		(circles, markers) => (loc, miles, ref_id) => {
-			console.log(loc);
-			console.log('REF_ID: ', ref_id);
 			const coords = { lat: loc.geometry.location.lat(), lng: loc.geometry.location.lng() };
 			const marker = new window.google.maps.Marker({
 				ref_id,
 				position: coords,
 				map: mapRef.current,
-				click: () => console.log('wtf'),
 			});
 			const infoWindow = new window.google.maps.InfoWindow({
 				content: '<div><Input type="button"/></div>',
@@ -112,7 +88,6 @@ function LocationMap({
 	if (error) {
 		return <div>Error Finding Current Location: {error}</div>;
 	}
-	console.log(location);
 	return location ? (
 		<Segment.Group>
 			<LoadScript googleMapsApiKey={googleAPIKey} libraries={GOOGLE_MAP_LIBRARIES}>
@@ -125,8 +100,6 @@ function LocationMap({
 									location={location}
 									onSearchLocationSelected={onSearchLocationSelected}
 									onAddLocation={(location, miles) => {
-										console.log('SL: ', selectedLocation);
-										console.log('LO: ', location);
 										const loc = onAddLocation(selectedLocation, miles);
 										if (loc) {
 											addMarker(circles, markers)(selectedLocation, miles, loc.ref_id);

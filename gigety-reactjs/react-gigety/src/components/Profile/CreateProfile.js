@@ -30,7 +30,6 @@ const CreateProfile = () => {
 	);
 	const onSubmit = useCallback(
 		(e, userProfile, images) => {
-			console.log(JSON.stringify(userProfile));
 			reduxDispatch(postGigProfile(JSON.stringify(userProfile), images, history));
 		},
 		[reduxDispatch, history]
@@ -77,6 +76,7 @@ const CreateProfile = () => {
 		[userProfile]
 	);
 	const onFilesAdded = useCallback((files) => {
+		console.log('files::: ' + files);
 		setImages(files);
 	}, []);
 	return (
@@ -150,7 +150,6 @@ const CreateProfile = () => {
 									primary
 									fluid
 									onClick={(e) => {
-										console.log(userProfile);
 										onSubmit(e, userProfile, images);
 									}}
 								>

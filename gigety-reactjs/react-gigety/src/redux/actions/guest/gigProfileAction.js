@@ -20,7 +20,6 @@ export const searchAllProfiles = (searchTerm) => async (dispatch) => {
 		const response = await gigety.post(`/pnode/profiles/100/0`, {
 			searchTerm,
 		});
-		console.log('Found Profiles: ', response);
 		dispatch({ type: FOUND_PROFILE_SEARCH_RESULTS, payload: response.data });
 	} catch (error) {
 		console.error(error);
