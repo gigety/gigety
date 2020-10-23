@@ -1,8 +1,7 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Segment, Header, Icon, Button, Form, TextArea, Grid, Input, GridColumn } from 'semantic-ui-react';
 import _ from 'lodash';
 import LocationMap from '../Maps/LocationMap';
-import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useHistory } from 'react-router-dom';
@@ -22,62 +21,50 @@ const CreateGig = () => {
 		setGig((gig) => ({ ...gig, userImageUrl: giguser.imageUrl }));
 	}, [giguser.imageUrl]);
 
-	const showMap = useCallback(
-		(includeLocation) => {
-			setIncludeLocation(!includeLocation);
-		},
-		[setIncludeLocation]
-	);
+	const showMap = (includeLocation) => {
+		setIncludeLocation(!includeLocation);
+	};
 
-	const onSubmit = useCallback(
-		(e, gig) => {
-			reduxDispatch(postGig(JSON.stringify(gig), history));
-		},
-		[reduxDispatch, history]
-	);
+	const onSubmit = (e, gig) => {
+		reduxDispatch(postGig(JSON.stringify(gig), history));
+	};
 
-	const onAddLocation = useCallback(
-		(location, miles) => {
-			if (location) {
-				const loc = {
-					ref_id: _.random(11, 12, true),
-					address: location.formatted_address,
-					location: { lat: location.geometry.location.lat(), lng: location.geometry.location.lng() },
-					radius: miles,
-				};
-				setLocations([...locations, loc]);
-				setGig({
-					...gig,
-					gigLocations: [...locations, loc],
-				});
-				return loc;
+	const onAddLocation = (location, miles) => {
+		if (location) {
+			const loc = {
+				ref_id: _.random(11, 12, true),
+				address: location.formatted_address,
+				location: { lat: location.geometry.location.lat(), lng: location.geometry.location.lng() },
+				radius: miles,
+			};
+			setLocations([...locations, loc]);
+			setGig({
+				...gig,
+				gigLocations: [...locations, loc],
+			});
+			return loc;
+		}
+	};
+
+	const onRemoveLocation = (locations, markers, circles) => (ref_id) => {
+		const locs = locations.filter((location) => {
+			return location.ref_id !== ref_id;
+		});
+		setLocations(locs);
+		setGig({ ...gig, gigLocations: locs });
+		markers.map((marker) => {
+			if (marker.ref_id === ref_id) {
+				marker.setMap(null);
 			}
-		},
-		[locations, gig]
-	);
-
-	const onRemoveLocation = useCallback(
-		(locations, markers, circles) => (ref_id) => {
-			const locs = locations.filter((location) => {
-				return location.ref_id !== ref_id;
-			});
-			setLocations(locs);
-			setGig({ ...gig, gigLocations: locs });
-			markers.map((marker) => {
-				if (marker.ref_id === ref_id) {
-					marker.setMap(null);
-				}
-				return marker;
-			});
-			circles.map((circle) => {
-				if (circle.ref_id === ref_id) {
-					circle.setMap(null);
-				}
-				return circle;
-			});
-		},
-		[gig]
-	);
+			return marker;
+		});
+		circles.map((circle) => {
+			if (circle.ref_id === ref_id) {
+				circle.setMap(null);
+			}
+			return circle;
+		});
+	};
 
 	return (
 		<Container fluid>
@@ -177,7 +164,5 @@ const CreateGig = () => {
 		</Container>
 	);
 };
-
-CreateGig.propTypes = {};
 
 export default CreateGig;

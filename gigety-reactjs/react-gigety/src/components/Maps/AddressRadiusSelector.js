@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Input, Button } from 'semantic-ui-react';
 import PlaceAutoComplete from './Search/PlaceAutoComplete';

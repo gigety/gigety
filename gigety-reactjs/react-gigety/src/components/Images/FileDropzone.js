@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Icon, CardHeader, CardContent } from 'semantic-ui-react';
 import '../Styles/ImageStyles.css';

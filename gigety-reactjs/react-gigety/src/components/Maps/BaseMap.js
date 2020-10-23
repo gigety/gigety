@@ -1,13 +1,13 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
-import { GoogleMap, Marker, useLoadScript } from '@react-google-maps/api';
-import { GOOGLE_GEOCODE_API_KEY, GOOGLE_MAP_LIBRARIES, METERS_PER_MILE } from '../../constants';
+import { GoogleMap, useLoadScript } from '@react-google-maps/api';
+import { GOOGLE_GEOCODE_API_KEY } from '../../constants';
 import { Dimmer, Loader } from 'semantic-ui-react';
 
 function BaseMap({ googleMapsApiKey, containerStyle, zoom, children, center }) {
-	const onMapLoad = useCallback((map) => {
+	const onMapLoad = (map) => {
 		mapRef.current = map;
-	}, []);
+	};
 	const { isLoaded, loadError } = useLoadScript({
 		googleMapsApiKey: googleMapsApiKey,
 	});

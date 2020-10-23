@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, memo, useState } from 'react';
+import React, { useRef, memo, useState } from 'react';
 import { GoogleMap, LoadScript, DrawingManager } from '@react-google-maps/api';
 import PropTypes from 'prop-types';
 import Locate from './Locate';
@@ -6,7 +6,7 @@ import mapStyles from '../Styles/mapStyles';
 import '../Styles/MapHeaderStyle.css';
 import Logo from '../Logos/Logo';
 import { GOOGLE_GEOCODE_API_KEY, GOOGLE_MAP_LIBRARIES, METERS_PER_MILE } from '../../constants';
-import { Segment, Loader, Dimmer, Button } from 'semantic-ui-react';
+import { Segment, Loader, Dimmer } from 'semantic-ui-react';
 import { useCurrentLocation } from '../../hooks/useCurrentLocation';
 import AddressRadiusSelector from './AddressRadiusSelector';
 /**
@@ -42,49 +42,45 @@ function LocationMap({
 	const { location, error } = useCurrentLocation(null);
 	const [selectedLocation, setSelectedLocation] = useState(location);
 
-	const onSearchLocationSelected = useCallback((location) => {
+	const onSearchLocationSelected = (location) => {
 		setSelectedLocation(location);
-	}, []);
+	};
+	const addMarker = (circles, markers) => (loc, miles, ref_id) => {
+		const coords = { lat: loc.geometry.location.lat(), lng: loc.geometry.location.lng() };
+		const marker = new window.google.maps.Marker({
+			ref_id,
+			position: coords,
+			map: mapRef.current,
+		});
+		const infoWindow = new window.google.maps.InfoWindow({
+			content: '<div><Input type="button"/></div>',
+		});
 
-	const addMarker = useCallback(
-		(circles, markers) => (loc, miles, ref_id) => {
-			const coords = { lat: loc.geometry.location.lat(), lng: loc.geometry.location.lng() };
-			const marker = new window.google.maps.Marker({
-				ref_id,
-				position: coords,
-				map: mapRef.current,
-			});
-			const infoWindow = new window.google.maps.InfoWindow({
-				content: '<div><Input type="button"/></div>',
-			});
-
-			window.google.maps.event.addListener(marker, 'click', function () {
-				infoWindow.open(mapRef.current, marker);
-			});
-			const milesRadius = new window.google.maps.Circle({
-				ref_id,
-				strokeColor: '#FF0000',
-				strokeOpacity: 0.8,
-				strokeWeight: 2,
-				fillColor: '#FF0000',
-				fillOpacity: 0.35,
-				map: mapRef.current,
-				center: coords,
-				radius: METERS_PER_MILE * miles,
-			});
-			setCircles([...circles, milesRadius]);
-			setMarkers([...markers, marker]);
-			return marker;
-		},
-		[setMarkers, setCircles]
-	);
-	const onMapLoad = useCallback((map) => {
+		window.google.maps.event.addListener(marker, 'click', function () {
+			infoWindow.open(mapRef.current, marker);
+		});
+		const milesRadius = new window.google.maps.Circle({
+			ref_id,
+			strokeColor: '#FF0000',
+			strokeOpacity: 0.8,
+			strokeWeight: 2,
+			fillColor: '#FF0000',
+			fillOpacity: 0.35,
+			map: mapRef.current,
+			center: coords,
+			radius: METERS_PER_MILE * miles,
+		});
+		setCircles([...circles, milesRadius]);
+		setMarkers([...markers, marker]);
+		return marker;
+	};
+	const onMapLoad = (map) => {
 		mapRef.current = map;
-	}, []);
+	};
 
-	const panTo = useCallback(({ lat, lng }) => {
+	const panTo = ({ lat, lng }) => {
 		mapRef.current.panTo({ lat, lng });
-	}, []);
+	};
 	if (error) {
 		return <div>Error Finding Current Location: {error}</div>;
 	}
