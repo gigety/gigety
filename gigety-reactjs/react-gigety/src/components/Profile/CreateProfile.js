@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Segment, Header, Icon, Button, Form, TextArea, Grid, Input, GridColumn } from 'semantic-ui-react';
 import _ from 'lodash';
 import LocationMap from '../Maps/LocationMap';

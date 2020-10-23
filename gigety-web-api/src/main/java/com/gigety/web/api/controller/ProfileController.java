@@ -9,6 +9,7 @@ import org.bson.types.Binary;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -75,6 +76,18 @@ public class ProfileController {
 		return ResponseEntity.ok().body(userProfile);
 	}
 
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<String> removeProfileById(@CurrentUser UserPrincipal principal, @PathVariable String id){
+		
+		try {			
+			userProfileService.removeUserProfile(id);
+			log.debug("Profile with id {} has been removed with success", id);
+		}catch(Exception e) {
+			throw new GigetyException("An error occurred removing profile with id " + id);
+		}
+		return ResponseEntity.ok().body("Gig Removed");
+	}
+	
 	private UserProfile mapUserProfile(String user, List<MultipartFile> file) {
 
 		UserProfile userProfile = new UserProfile();

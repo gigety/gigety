@@ -2,20 +2,21 @@ package com.gigety.web.api.controller;
 
 import java.io.IOException;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gigety.web.api.db.model.User;
 import com.gigety.web.api.db.mongo.entity.Gig;
 import com.gigety.web.api.exception.GigetyException;
 import com.gigety.web.api.security.CurrentUser;
 import com.gigety.web.api.security.UserPrincipal;
 import com.gigety.web.api.service.GigService;
-import com.gigety.web.api.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,11 @@ public class GigController {
 			throw new GigetyException(e.getMessage());
 		}
 
+	}
+	
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<String> removeGig(@CurrentUser UserPrincipal principal, @PathVariable String id){
+		return ResponseEntity.ok().body("Gig Removed");
 	}
 
 	private Gig mapGig(String gigJSON) {

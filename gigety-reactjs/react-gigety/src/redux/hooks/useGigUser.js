@@ -29,6 +29,6 @@ export const useGigUserProfile = (id) => {
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(getUserProfile(id));
-	}, [dispatch]);
+	}, [dispatch, id]);
 	return content.giguserProfile;
 };

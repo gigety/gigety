@@ -13,4 +13,5 @@ public interface UserProfileService {
 	UserProfile findById(String id);
 	Page<UserProfile> findAll(Pageable pageable);
 	Page<UserProfile> searchProfiles(String searchTerm, Pageable pageable);
+	void removeUserProfile(String id) throws GigetyException;
 }

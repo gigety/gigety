@@ -81,4 +81,14 @@ public class UserProfileServiceImpl implements UserProfileService {
 		return results;
 	}
 
+	@Override
+	public void removeUserProfile(String id) throws GigetyException {
+		try {
+			userProfileRepository.deleteById(id);
+		}catch(Exception e) {
+			log.error("Error removing user with id {}", id, e);
+			throw new GigetyException("An error occurred removing user with id " + id);
+		}
+	}
+
 }

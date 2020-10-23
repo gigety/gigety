@@ -3,6 +3,7 @@ import {
 	SET_PROFILE_CREATED_ERROR,
 	SET_PROFILE_CREATED_WAITING,
 	GET_USER_PROFILE,
+	REMOVE_PROFILE_SUCCESS,
 } from './types';
 import gigety from 'apis/gigety';
 
@@ -37,6 +38,19 @@ export const getUserProfile = (id) => async (dispatch, getState) => {
 		const response = await gigety.get(`/pnode/profiles/${id}`);
 		dispatch({ type: GET_USER_PROFILE, payload: response.data });
 	} catch (error) {
+		console.error(`Error getting user profile for id ${id}`, error);
+		throw error;
+	}
+};
+
+export const removeGigProfile = (id, history) => async (dispatch) => {
+	try {
+		const response = await gigety.delete(`/profiles/${id}`);
+		console.log(response.data);
+		dispatch({ type: REMOVE_PROFILE_SUCCESS, payload: response.data });
+		history.push('/user/account');
+	} catch (error) {
+		console.error(`Error  user profile for id ${id}`, error);
 		throw error;
 	}
 };
