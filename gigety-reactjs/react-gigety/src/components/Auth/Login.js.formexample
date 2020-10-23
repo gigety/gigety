@@ -1,0 +1,54 @@
+// import React from 'react';
+// import { connect } from 'react-redux';
+// import * as yup from 'yup';
+// import { loginAction } from 'actions/auth';
+// import { Formik, Form, Field, ErrorMessage } from 'formik';
+// const login = props => {
+// 	return (
+// 		<div>
+// 			<Formik
+// 				initialValues={{ email: '', password: '' }}
+// 				onSubmit={(values, { setSubmitting }) => {
+// 					const loginRequest = {
+// 						username: values.email,
+// 						password: values.password,
+// 					};
+// 					props.loginAction(loginRequest);
+// 				}}
+// 				validatationSchema={yup.object().shape({
+// 					email: yup
+// 						.string()
+// 						.email()
+// 						.required(),
+// 					password: yup
+// 						.string()
+// 						.min(4)
+// 						.max(16)
+// 						.matches('^(?=.*[a-z])(?=.*[A-Z])(?=.*d)[a-zA-Zd]$')
+// 						.required(),
+// 				})}
+// 			>
+// 				{({ handleSubmit, isSubmitting }) => (
+// 					<Form onSubmit={handleSubmit}>
+// 						<Field type="email" name="email" />
+// 						<ErrorMessage name="email" component="div" />
+// 						<Field type="password" name="password" />
+// 						<ErrorMessage name="password" component="div" />
+// 						<button type="submit" disabled={isSubmitting}>
+// 							Submit
+// 						</button>
+// 					</Form>
+// 				)}
+// 			</Formik>
+// 		</div>
+// 	);
+// };
+
+// const mapStateToProps = state => ({
+// 	authentication: state.authentication,
+// });
+
+// export default connect(
+// 	mapStateToProps,
+// 	{ loginAction }
+// )(login);

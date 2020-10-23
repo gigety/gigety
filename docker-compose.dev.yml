@@ -1,0 +1,95 @@
+version: '3.7'
+
+services:
+    gigety-nginx:
+        restart: always
+        networks:
+            - gigety
+        volumes:
+            - ./gigety-nginx/dev:/etc/nginx/conf.d
+        ports:
+            - '80:80'
+    gigety-mysql:
+        secrets:
+            - DEV_GIGETY_PW
+            - DEV_GIGETY_USR
+        environment:
+            MYSQL_ROOT_PASSWORD_FILE: /run/secrets/DEV_GIGETY_PW
+            MYSQL_USER_FILE: /run/secrets/DEV_GIGETY_USR
+            MYSQL_PASSWORD_FILE: /run/secrets/DEV_GIGETY_PW
+            MYSQL_DATABASE: gigety_um
+            MYSQL_ROOT_HOST: '%'
+        volumes:
+            - gigety-mysql:/var/lib/mysql
+        networks:
+            - gigety-mysql
+
+    gigety-redis:
+        secrets:
+            - DEV_GIGETY_PW
+        command: redis-server --requirepass ${DEV_GIGETY_PW}
+        networks:
+            - gigety
+
+    gigety-user-registration:
+        image: samuelsegal/gigety-user-registration
+        secrets:
+            - DEV_GIGETY_PW
+            - DEV_GIGETY_USR
+        environment:
+            DEV_GIGETY_USR_FILE: /run/secrets/DEV_GIGETY_USR
+            DEV_GIGETY_PW_FILE: /run/secrets/DEV_GIGETY_PW
+            SMS_GMAIL_PW: ${SMS_GMAIL_PW}
+            SMS_GMAIL_NAME: ${SMS_GMAIL_NAME}
+        restart: always
+        networks:
+            - gigety-mysql
+            - gigety
+
+    gigety-web-api:
+        image: samuelsegal/gigety-web-api
+        secrets:
+            - DEV_GIGETY_PW
+            - DEV_GIGETY_USR
+        environment:
+            DEV_GIGETY_USR_FILE: ${RUN_SECRETS}/DEV_GIGETY_USR
+            DEV_GIGETY_PW_FILE: ${RUN_SECRETS}/DEV_GIGETY_PW
+            GIGETY_GOOGLE_CLIENT_ID: ${GIGETY_GOOGLE_CLIENT_ID}
+            GIGETY_GOOGLE_CLIENT_SECRET: ${GIGETY_GOOGLE_CLIENT_SECRET}
+            GIGETY_FACEBOOK_APP_ID: ${GIGETY_FACEBOOK_APP_ID}
+            GIGETY_FACEBOOK_APP_SECRET: ${GIGETY_FACEBOOK_APP_SECRET}
+        restart: always
+        networks:
+            - gigety
+            - gigety-mysql
+        ports:
+            - 8080:8080
+            - 8000:8000
+
+    gigety-reactjs:
+        image: samuelsegal/gigety-reactjs
+        networks:
+            - gigety
+networks:
+    gigety:
+        driver: overlay
+        attachable: true
+        external: true
+    gigety-mysql:
+        driver: overlay
+        attachable: true
+        #ipam:
+        #    driver: default
+        #    config:
+        #        - subnet: '192.168.99.0/24'
+
+secrets:
+    DEV_GIGETY_PW:
+        file: ./secrets/DEV_GIGETY_PW.txt
+    DEV_GIGETY_USR:
+        file: ./secrets/DEV_GIGETY_USR.txt
+
+volumes:
+    gigety-mysql:
+    gigety-web-api:
+    gigety-user-registration:

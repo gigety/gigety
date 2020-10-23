@@ -1,0 +1,129 @@
+server:
+    servlet:
+        context-path: /api
+    forward-headers-strategy: framework
+
+# Docker Secrets used to set secret environment variables
+docker-secret:
+    bind-path: /run/secrets
+
+spring:
+    data:
+        mongodb:
+            uri: mongodb://${GIGETY_MONGO_USR_NAME}:${GIGETY_MONGO_USR_PW}@gigety-web-api-mongo:27017/${MONGO_INITDB_DATABASE}
+            database: ${MONGO_INITDB_DATABASE}
+            authentication-database: admin
+    datasource:
+        url: jdbc:mysql://gigety-mysql:3306/gigety_users?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+        username: ${DEV_GIGETY_USR}
+        password: ${DEV_GIGETY_PW}
+    jpa:
+        database-platform: org.hibernate.dialect.MySQL8Dialect
+        show-sql: true
+        hibernate:
+            ddl-auto: create
+            #naming:
+            #  implicit-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+            #  physical-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect
+    security:
+        oauth2:
+            client:
+                registration:
+                    samo:
+                        client-id: samo
+                        client-secret: samo
+                        client-name: samo
+                        scope: read
+                        provider: samo
+                        redirect-uri: '{baseUrl}/oauth2/callback/{registrationId}'
+                        authorization-grant-type: authorization_code
+                    google:
+                        client-id: ${GIGETY_GOOGLE_CLIENT_ID}
+                        client-secret: ${GIGETY_GOOGLE_CLIENT_SECRET}
+                        redirect-uri: '{baseUrl}/oauth2/callback/{registrationId}'
+                        scope:
+                            - email
+                            - profile
+                    facebook:
+                        client-id: ${GIGETY_FACEBOOK_APP_ID}
+                        client-secret: ${GIGETY_FACEBOOK_APP_SECRET}
+                        redirect-uri: '{baseUrl}/oauth2/callback/{registrationId}'
+                        scope:
+                            - email
+                            - public_profile
+                provider:
+                    samo:
+                        token-uri: https://gigety.com/ur/oauth/token
+                        authorization-uri: https://gigety.com/ur/oauth/authorize
+                        user-info-uri: https://gigety.com/ur/users/info
+                        user-name-attribute: user_name
+
+                    facebook:
+                        authorization-uri: https://www.facebook.com/v3.0/dialog/oauth
+                        token-uri: https://graph.facebook.com/v3.0/oauth/access_token
+                        user-info-uri: https://graph.facebook.com/v3.0/me?fields=id,first_name,middle_name,last_name,name,email,verified,is_verified,picture.width(250).height(250)
+    redis:
+        #host: localhost
+        host: gigety-redis
+        port: 6379
+        #password:
+        password: ${DEV_GIGETY_PW}
+        jedis:
+            pool:
+                max-active: 7
+                max-idle: 7
+                min-idle: 2
+                max-wait: -1ms
+    cache:
+        redis:
+            cache-null-values: false
+            time-to-live: 600000
+            use-key-prefix: true
+        type: redis
+        cache-names:
+            - oauthProviderCache
+    profiles:
+        active:
+            - default
+        #- local
+gig:
+    auth:
+        token-secret: gigety-token-secret
+        token-expiration-msec: 864000000
+    oauth2:
+        authorized-redirect-uris:
+            # After authenticating with OAuth2 Provider
+            # We generate an auth token for the user.
+            # redirect to the uri mentioned by front end in /oauth2/authorize
+            # we do not use cookies as they will not work for mobile
+            - http://localhost:3000
+            - http://localhost:3000/oauth2/redirect
+            - http://localhost
+            - http://gigety-nginx
+            - http://gigety
+            - https://gigety.com
+            - http://gigety-web-api
+            - http://gigety-user-registration
+            - http://localhost/oauth2/redirect
+            - androidapp://oauth2/redirect
+            - iosapp://oauth2/redirect
+    endpoints:
+        web:
+            cors:
+                allowed-origins:
+                    - '*'
+                    #- http://localhost
+                    #- http://localhost:3000
+                    #- http://gigety.com
+                allowed-methods:
+                    - '*'
+logging:
+    level:
+        com.gigety.web.api: debug
+        org.hibernate.sql: debug
+        org.hibernate.type: trace
+        org.springframework.security: debug
+        org.apache.coyote.http11.Http11InputBuffer: debug
