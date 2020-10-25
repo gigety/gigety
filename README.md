@@ -1,6 +1,7 @@
 ## 🐸 Gigety 🐸
 Gigety is a personal project for practice and proof of concept for scalable solutions for a variet of needs.  
 It will forever be growing in ideas / solutions / features.  
+
 Currently the end product is a place for users to share information in a secure fashion.  
 The user created information is searchable with geolocation properties available if desired.
 Gigety is currently in development mode - The web browser application in dev mode is available @ [https://gigety](https://gigety.com)
