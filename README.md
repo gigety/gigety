@@ -1,6 +1,4 @@
-# Gigety  
-
-# Ecology  
+## Gigety Ecology  
 
 ### [DevOps](DevOps)
   - Docker - platform as a service (PaaS). 
