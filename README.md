@@ -5,7 +5,7 @@ The end product is a place for users to share information in a secure fashion.
 The user created information is searchable with geolocation properties available if desired.
 Gigety is currently in development mode - The web browser application in dev mode is available @ [https://gigety](https://gigety.com)
 
-Documentation will be updated as devlopment of new features continue.
+Documentation will be updated as devlopment of new features continue.  
 [Wiki for Detailed Documentation](https://github.com/gigety/gigety/wiki).  
 
 ### Technologies
@@ -24,6 +24,4 @@ Documentation will be updated as devlopment of new features continue.
 * Redis Cache Server
 * ReactJS
 * React Native
-
-[https://gigety](https://gigety.com)   
-
+ 
