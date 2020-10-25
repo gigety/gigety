@@ -1,4 +1,4 @@
-## 🐸 Gigety 🐸
+# 💥 🍄 🐸 Gigety 🐸 😱 👀
 Gigety is a personal project / playground for the practice and proof of concept of scalable solutions for a variety of needs.  
 It will forever be growing in ideas / solutions / features. 
 
