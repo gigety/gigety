@@ -7,7 +7,7 @@
   - Digital Ocean - Droplets
   - [Traefik](Traefik) - Reverse Proxy or Edge Router used in production cluster
   - [NGINX](https://github.com/samuelsegal/docs/wiki/nginx) - Reverse Proxy for local deployment as well as local docker-compose deployment
-  - Docker Swarm - Orchestration for containers. we use docker stack for declarative approach in docker-compose yaml's.
+  - Docker Swarm - Orchestration for containers. Docker Stack is used for declarative approach in docker-compose yaml's.
 
 ### [OAuth2 Flow Explained](OAuth2_Flow_Explained)
 
