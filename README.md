@@ -1,8 +1,17 @@
-## Gigety 
-Gigety is a project for practice and demonstration purposes of many technologies.  
+## 🐸 Gigety 🐸
+Gigety is a project for practice and demonstration purposes of many technologies. 
+
+The end product is a place for users to share information in a secure fashion.  
+The user created information is searchable with geolocation properties available if desired.
+Gigety is currently in development mode - The web browser application in dev mode is available @ [https://gigety](https://gigety.com)
+
+Documentation will be updated as devlopment of new features continue.
+[Wiki for Detailed Documentation](https://github.com/gigety/gigety/wiki).  
 
 ### Technologies
 * Docker / Docker Swarm
+* Traefik / Lets Encrypt / Digital Ocean
+* Nginx (used in local environment in place of Traefik for refernce purposes)
 * Spring Boot
 * Spring Security
 * Spring Data
@@ -16,7 +25,5 @@ Gigety is a project for practice and demonstration purposes of many technologies
 * ReactJS
 * React Native
 
-
-
 [https://gigety](https://gigety.com)   
-[Wiki for Detailed Documentation](https://github.com/gigety/gigety/wiki).  
+
