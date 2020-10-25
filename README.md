@@ -13,7 +13,7 @@ Documentation will be updated as devlopment of new features continue.
 ### Technologies
 * Docker / Docker Swarm
 * Traefik / Lets Encrypt / Digital Ocean
-* Nginx (used in local environment in place of Traefik for refernce purposes)
+* Nginx (used in local environment in place of Traefik for reference purposes)
 * Spring Boot
 * Spring Security
 * Spring Data
@@ -26,4 +26,4 @@ Documentation will be updated as devlopment of new features continue.
 * Redis Cache Server
 * ReactJS
 * React Native
- 
+* Jenkins
