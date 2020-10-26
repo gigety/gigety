@@ -1,4 +1,4 @@
-import React, { useRef, memo, useState } from 'react';
+import React, { useRef, memo, useState, useCallback } from 'react';
 import { GoogleMap, LoadScript, DrawingManager } from '@react-google-maps/api';
 import PropTypes from 'prop-types';
 import Locate from './Locate';
@@ -42,9 +42,12 @@ function LocationMap({
 	const { location, error } = useCurrentLocation(null);
 	const [selectedLocation, setSelectedLocation] = useState(location);
 
-	const onSearchLocationSelected = (location) => {
-		setSelectedLocation(location);
-	};
+	const onSearchLocationSelected = useCallback(
+		(location) => {
+			setSelectedLocation(location);
+		},
+		[location]
+	);
 	const addMarker = (circles, markers) => (loc, miles, ref_id) => {
 		const coords = { lat: loc.geometry.location.lat(), lng: loc.geometry.location.lng() };
 		const marker = new window.google.maps.Marker({
