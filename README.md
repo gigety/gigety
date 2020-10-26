@@ -3,7 +3,7 @@ Gigety is a personal project / playground to practice and prove scalable solutio
 It will forever be growing in ideas / solutions / features. 
 
 Currently the end product is a place for users to share information in a secure fashion.  
-The user created information is searchable with geolocation properties available if desired.  
+The "user generated" information is searchable with geolocation properties available if desired.  
 
 Gigety is currently in development mode - The web browser application in dev mode is available @ [https://gigety](https://gigety.com)
 
