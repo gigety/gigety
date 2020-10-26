@@ -1,5 +1,5 @@
 # 💥 🍄 🐸 Gigety 🐸 😱 👀
-Gigety is a personal project / playground to pracice and proove scalable solutions for a variety of requirements.  
+Gigety is a personal project / playground to practice and prove scalable solutions for a variety of requirements.  
 It will forever be growing in ideas / solutions / features. 
 
 Currently the end product is a place for users to share information in a secure fashion.  
