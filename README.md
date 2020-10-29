@@ -18,12 +18,14 @@ Documentation will be updated as devlopment of new features continue.
 * Spring Security
 * Spring Data
 * Spring Web / Rest
-* NodeJS
-* Socket.io
 * Oauth2 / JWT
 * MongoDB
 * MySQL
 * Redis Cache Server
 * ReactJS
+
+
+### Up and coming features
+* Message capabilities via Websocket
 * React Native
 * Jenkins
