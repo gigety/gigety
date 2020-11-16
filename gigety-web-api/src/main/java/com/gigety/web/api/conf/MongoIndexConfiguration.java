@@ -19,13 +19,14 @@ import com.gigety.web.api.db.mongo.entity.Gig;
 import com.gigety.web.api.db.mongo.entity.UserProfile;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MongoIndexConfiguration {
 
-	private MongoTemplate mongoTemplate;
-	private MongoMappingContext mongoMappingContext;
+	private final MongoTemplate mongoTemplate;
+	private final MongoMappingContext mongoMappingContext;
 	
 	@EventListener(ApplicationReadyEvent.class)
 	public void initIndicesAfterStartup() {

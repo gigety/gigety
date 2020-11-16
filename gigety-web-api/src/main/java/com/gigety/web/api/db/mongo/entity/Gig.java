@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -24,8 +25,11 @@ import lombok.Data;
 public class Gig {
 	@Id
 	private String id;
+	@Indexed
 	private String title;
+	@Indexed
 	private String description;
+	@Indexed
 	private String email;
 	private String userImageUrl;
 	private List<GigLocation> gigLocation;
