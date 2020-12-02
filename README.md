@@ -7,7 +7,7 @@ The "user generated" information is searchable with geolocation properties avail
 
 Gigety is currently in development mode - The web browser application in dev mode is available @ [https://gigety.com](https://gigety.com)
 
-Documentation will be updated as devlopment of new features continue.  
+Documentation will be updated as development of new features continue.  
 [Wiki for Detailed Documentation](https://github.com/gigety/gigety/wiki).  
 
 ### Technologies
