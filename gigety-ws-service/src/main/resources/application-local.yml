@@ -1,0 +1,15 @@
+server:
+  port: 7070
+  servlet:
+    context-path: /messenger
+  forward-headers-strategy: framework
+  
+spring:
+  data:
+    mongodb: 
+      database: gigety
+      uri: mongodb://${DEV_GIGETY_USR}:${DEV_GIGETY_PW}@localhost:27017/gigety
+      auto-index-creation: true
+
+gig:
+  message-pageable-size: 5
