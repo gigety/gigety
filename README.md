@@ -27,7 +27,6 @@ Documentation will be updated as development of new features continue.
 
 ### Up and coming features
 * Reactive API using webflux
-* Message capabilities via Websocket, perhaps via RSocket
 * React Native
 * Jenkins
 
