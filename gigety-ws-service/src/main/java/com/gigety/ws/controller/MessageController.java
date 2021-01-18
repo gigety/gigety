@@ -13,14 +13,16 @@ import com.gigety.ws.service.ChatRoomService;
 import com.gigety.ws.service.MessageService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class MessageController {
 
 	private final ChatRoomService chatRoomService;
 	private final MessageService messageService;
-	private final SimpMessagingTemplate simMessagingTemplate;
+	private final SimpMessagingTemplate simpleMessagingTemplate;
 	
 	@MessageMapping("/chat")
 	public void handleMessage(@Payload Message message) {
@@ -28,7 +30,8 @@ public class MessageController {
 		Optional<String> msgId = chatRoomService.getChatId(message.getSenderId(), message.getRecipientId(), true);
 		message.setMsgId(msgId.get());
 		Message savedMessage = messageService.saveMessage(message);
-		simMessagingTemplate.convertAndSendToUser(
+		log.info("Sending Message :: {}", savedMessage);
+		simpleMessagingTemplate.convertAndSendToUser(
 				message.getRecipientId(), 
 				"/queue/messages", 
 				MessageNotification.builder()
@@ -37,5 +40,6 @@ public class MessageController {
 					.senderName(savedMessage.getSenderName())
 					.build()
 				);
+		log.info("Message Sent to queue {}", message.getRecipientId());
 	}
 }

@@ -9,9 +9,7 @@ import { Button, Card, Input } from 'semantic-ui-react';
 import './Chat.css';
 let stompClient = null;
 const Chat = ({ profile }) => {
-	console.log(profile);
 	const { giguser } = useSelector((state) => state.giguser);
-
 	const [messages, setMessages] = useState([]);
 	const [text, setText] = useState('');
 	useEffect(() => {
@@ -22,41 +20,35 @@ const Chat = ({ profile }) => {
 		let SockJS = require('sockjs-client');
 		SockJS = new SockJS(GIGETY_MESSENGER_URL + '/ws');
 		//SockJS = new SockJS('http://localhost:7070/messenger/ws', null, {});
-		console.log('sockjs::::');
-		console.log(SockJS);
 		stompClient = stomp.over(SockJS);
-		console.log('stomClient::: ');
-		console.log(stompClient);
 		stompClient.connect({}, onConnected, onError);
-		console.log('client after connect');
-		console.log(stompClient);
 	};
 	const onConnected = () => {
 		console.log('SockJS COnnected to STOMP protocol');
-		console.log(giguser);
-		stompClient.subscribe(`/messenger/user/${giguser.id}/queue/messages`, onMessageRecieved);
+		stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
+		//stompClient.subscribe(`/messenger/user`, onMessageRecieved);
 	};
 	const onMessageRecieved = (msg) => {
-		console.log('received');
-		//const notification = JSON.parse(msg.body);
-		//console.log(`Notification :: ${notification}`);
+		console.log('received :::::');
+		const notification = JSON.parse(msg.body);
+		console.log(`Notification :: ${notification}`);
 	};
 	const onError = (error) => {
 		console.error(error);
 	};
 	const sendMessage = (msg) => {
 		if (msg.trim() !== '') {
-			console.log('stompClient::::');
-			console.log(stompClient);
 			const message = {
 				senderId: giguser.id,
-				recipientId: 1,
+				recipientId: profile.id,
 				senderName: giguser.name,
 				recipientName: profile.email,
 				content: msg,
 				timestamp: new Date(),
 			};
-			stompClient.send('/messenger/msg/chat', {}, JSON.stringify(message));
+			console.log('sending msg: ', msg);
+			stompClient.send('/msg/chat', {}, JSON.stringify(message));
+			console.log('msg sent', message);
 		}
 	};
 	const messageSent = () => {};
