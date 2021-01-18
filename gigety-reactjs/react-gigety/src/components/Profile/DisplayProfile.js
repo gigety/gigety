@@ -5,7 +5,7 @@ import '../Styles/TextStyles.css';
 import ProfileCard from './ProfileCard';
 import ProfileMap from '../Maps/ProfileMap';
 import { useHistory } from 'react-router-dom';
-import Chat from '../Messenger/Chat/Chat';
+import ChatModal from '../Messenger/ChatModal/ChatModal';
 const DisplayProfile = ({ profile }) => {
 	const history = useHistory();
 	const onClickBack = (e) => {
@@ -20,7 +20,7 @@ const DisplayProfile = ({ profile }) => {
 						Back to results
 					</Icon.Group>
 					<ProfileCard profile={profile} />
-					<Chat profile={profile} />
+					<ChatModal profile={profile} />
 				</GridColumn>
 				<GridColumn width="11">
 					<Segment>

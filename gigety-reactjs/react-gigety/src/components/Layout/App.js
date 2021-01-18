@@ -17,31 +17,34 @@ import ProfilePage from '../Profile/ProfilePage';
 import AboutGigety from '../About/AboutGigety';
 import DisplayGig from '../Gig/DisplayGig';
 import ProfilePageSecure from '../Profile/ProfilePageSecure';
+import StompClientContext from '../../contexts/StompClientContext';
 const app = () => {
 	return (
 		<div className="ui container">
 			<AuthProvider>
-				<BrowserRouter>
-					<div>
-						<Header />
-						<Route exact path="/" component={Landing} />
-						<Route exact path="/login" component={Login} />
-						<Route exact path="/profiles" component={ProfilesPage} />
-						<Route exact path="/guest/profile/detail/:id" component={ProfilePage} />
-						<Route exact path="/gigs" component={GigPage} />
-						<Route exact path="/guest/gig/detail/:id" component={DisplayGig} />
-						<Route exact path="/about/gigety" component={AboutGigety} />
-						<Switch>
-							<SecuredRoute path="/user/account" component={withRouter(Account)} />
-							<SecuredRoute path="/user/settings/userSettings" component={UserSettings} />
-							<SecuredRoute path="/user/profile/create" component={CreateProfile} />
-							<SecuredRoute path="/user/profile/detail/:id" component={ProfilePageSecure} />
-							<SecuredRoute path="/user/gig/create" component={CreateGig} />
-							<SecuredRoute path="/user/gig/detail/:id" component={GigPageSecure} />
-							<SecuredRoute path="/user/gigs" component={GigPageSecure} />
-						</Switch>
-					</div>
-				</BrowserRouter>
+				<StompClientContext>
+					<BrowserRouter>
+						<div>
+							<Header />
+							<Route exact path="/" component={Landing} />
+							<Route exact path="/login" component={Login} />
+							<Route exact path="/profiles" component={ProfilesPage} />
+							<Route exact path="/guest/profile/detail/:id" component={ProfilePage} />
+							<Route exact path="/gigs" component={GigPage} />
+							<Route exact path="/guest/gig/detail/:id" component={DisplayGig} />
+							<Route exact path="/about/gigety" component={AboutGigety} />
+							<Switch>
+								<SecuredRoute path="/user/account" component={withRouter(Account)} />
+								<SecuredRoute path="/user/settings/userSettings" component={UserSettings} />
+								<SecuredRoute path="/user/profile/create" component={CreateProfile} />
+								<SecuredRoute path="/user/profile/detail/:id" component={ProfilePageSecure} />
+								<SecuredRoute path="/user/gig/create" component={CreateGig} />
+								<SecuredRoute path="/user/gig/detail/:id" component={GigPageSecure} />
+								<SecuredRoute path="/user/gigs" component={GigPageSecure} />
+							</Switch>
+						</div>
+					</BrowserRouter>
+				</StompClientContext>
 			</AuthProvider>
 		</div>
 	);

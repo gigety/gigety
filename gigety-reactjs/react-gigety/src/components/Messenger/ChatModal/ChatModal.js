@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
@@ -6,37 +6,29 @@ import UserLabel from '../../User/UserLabel';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { GIGETY_MESSENGER_URL } from '../../../constants';
 import { Button, Card, Input } from 'semantic-ui-react';
-import './Chat.css';
+import './ChatModal.css';
+import { StompClientContext } from '../../../contexts/StompClientContext';
 let stompClient = null;
-const Chat = ({ profile }) => {
+const ChatModal = ({ profile }) => {
+	console.log(profile);
 	const { giguser } = useSelector((state) => state.giguser);
 	const [messages, setMessages] = useState([]);
 	const [text, setText] = useState('');
+	const { stompClient, sendChatMessage } = useContext(StompClientContext);
 	useEffect(() => {
-		connect();
+		const id = stompClient.subscribe(`/user/${profile.id}/queue/messages`, onMessageRecieved);
+		console.log(id);
+		return () => {
+			console.log(`here we unsubscibe to id ${id}, you best check this is proper way to unsubscribe`);
+			stompClient.unsubscribe(id);
+		};
 	}, []);
-	const connect = () => {
-		const stomp = require('stompjs');
-		let SockJS = require('sockjs-client');
-		SockJS = new SockJS(GIGETY_MESSENGER_URL + '/ws');
-		//SockJS = new SockJS('http://localhost:7070/messenger/ws', null, {});
-		stompClient = stomp.over(SockJS);
-		stompClient.connect({}, onConnected, onError);
-	};
-	const onConnected = () => {
-		console.log('SockJS COnnected to STOMP protocol');
-		stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
-		//stompClient.subscribe(`/messenger/user`, onMessageRecieved);
-	};
 	const onMessageRecieved = (msg) => {
-		console.log('received :::::');
+		console.log(`received ::::: msg ${msg}`);
 		const notification = JSON.parse(msg.body);
 		console.log(`Notification :: ${notification}`);
 	};
-	const onError = (error) => {
-		console.error(error);
-	};
-	const sendMessage = (msg) => {
+	const sendTheMessage = (msg) => {
 		if (msg.trim() !== '') {
 			const message = {
 				senderId: giguser.id,
@@ -47,7 +39,8 @@ const Chat = ({ profile }) => {
 				timestamp: new Date(),
 			};
 			console.log('sending msg: ', msg);
-			stompClient.send('/msg/chat', {}, JSON.stringify(message));
+			//stompClient.send('/msg/chat', {}, JSON.stringify(message));
+			sendChatMessage(message);
 			console.log('msg sent', message);
 		}
 	};
@@ -73,7 +66,7 @@ const Chat = ({ profile }) => {
 							<input value={text} onChange={(e) => setText(e.target.value)} />
 							<Button
 								onClick={() => {
-									sendMessage(text);
+									sendTheMessage(text);
 									setText('');
 								}}
 							>
@@ -82,16 +75,16 @@ const Chat = ({ profile }) => {
 						</Input>
 					</div>
 					<div className="actions">
-						<button className="button"> Go to Messages </button>
-						<button
+						<Button className="button"> Go to Messages </Button>
+						<Button
 							className="button"
 							onClick={() => {
 								console.log('modal closed ');
 								close();
 							}}
 						>
-							close modal
-						</button>
+							Close
+						</Button>
 					</div>
 				</div>
 			)}
@@ -99,4 +92,4 @@ const Chat = ({ profile }) => {
 	);
 };
 
-export default Chat;
+export default ChatModal;

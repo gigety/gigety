@@ -7,7 +7,7 @@ import { logout, loginAction } from 'redux/actions/auth';
 import { store } from 'redux/store';
 
 const jwtToken = localStorage.getItem('jwtToken');
-
+console.log(`jwt-token ${jwtToken}`);
 if (jwtToken) {
 	try {
 		setJwtTokenHeader(jwtToken);
