@@ -73,7 +73,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         String token = tokenProvider.createToken(authentication);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("t", token)
+                .queryParam("gigatoke", token)
                 .build().toUriString();
     }
 

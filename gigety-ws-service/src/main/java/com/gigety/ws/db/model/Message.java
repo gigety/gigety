@@ -1,5 +1,7 @@
 package com.gigety.ws.db.model;
 
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -20,7 +22,8 @@ public class Message {
 	private String senderId;
 	private String recipientName;
 	private String senderName;
-	private String Message;
+	private String content;
+	private Date timestamp;
 	private Status status;
 }
 

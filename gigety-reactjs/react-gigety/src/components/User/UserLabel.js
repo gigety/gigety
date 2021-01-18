@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Label, Image, Card } from 'semantic-ui-react';
+import { Label, Image, Card, CardHeader } from 'semantic-ui-react';
 function UserLabel({ email, userImageUrl }) {
 	return (
 		<Card>

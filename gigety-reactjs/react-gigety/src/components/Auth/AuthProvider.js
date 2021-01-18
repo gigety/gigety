@@ -9,25 +9,34 @@ import { store } from 'redux/store';
 const jwtToken = localStorage.getItem('jwtToken');
 
 if (jwtToken) {
-	setJwtTokenHeader(jwtToken);
-	const decodedToken = jwt_decode(jwtToken);
-	store.dispatch({
-		type: SET_CURRENT_USR,
-		payload: decodedToken,
-	});
-	const now = Date.now() / 1000;
-	if (decodedToken.exp < now) {
-		store.dispatch(logout());
-		window.location.href = '/';
+	try {
+		setJwtTokenHeader(jwtToken);
+		const decodedToken = jwt_decode(jwtToken);
+		store.dispatch({
+			type: SET_CURRENT_USR,
+			payload: decodedToken,
+		});
+		const now = Date.now() / 1000;
+		if (decodedToken.exp < now) {
+			store.dispatch(logout());
+			window.location.href = '/';
+		}
+	} catch (error) {
+		console.error('ERROR decode / setting  JWT to local storage :: ');
+		console.error(error);
 	}
 } else {
 	const uri = window.location.search;
 
-	const token = getUrlParameter('t', uri);
-	const error = getUrlParameter('error', uri);
+	const token = getUrlParameter('gigatoke', uri);
+
 	if (token) {
 		store.dispatch(loginAction(token));
 		window.location.href = '/';
+	}
+	const error = getUrlParameter('error', uri);
+	if (error) {
+		console.error(error);
 	}
 }
 

@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketConf implements WebSocketMessageBrokerConfigurer {
+public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
 	/**
 	 * Register STOMP endpoint so clients can connect to STOMP. Enable SockJS for fallback options
@@ -25,7 +25,8 @@ public class WebSocketConf implements WebSocketMessageBrokerConfigurer {
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry
 			.addEndpoint("/ws")
-			.setAllowedOrigins("*")
+			.setAllowedOrigins("https://localhost.com")
+			//.setAllowedOrigins("*")
 			.withSockJS();
 	}
 
@@ -51,7 +52,7 @@ public class WebSocketConf implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
 		registry.enableSimpleBroker("/user");
-		registry.setApplicationDestinationPrefixes("/msg");
+		registry.setApplicationDestinationPrefixes("/msg", "/messenger/msg");
 		registry.setUserDestinationPrefix("/user");
 	}
 
