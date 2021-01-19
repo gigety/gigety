@@ -8,11 +8,13 @@ import { GIGETY_MESSENGER_URL } from '../../../constants';
 import { Button, Card, Input } from 'semantic-ui-react';
 import './ChatModal.css';
 import { StompClientContext } from '../../../contexts/StompClientContext';
+import { use121ChatMessages } from 'redux/hooks/useMessages';
 let stompClient = null;
 const ChatModal = ({ profile }) => {
 	console.log(profile);
 	const { giguser } = useSelector((state) => state.giguser);
-	const [messages, setMessages] = useState([]);
+	console.log(`giguser :: `, giguser);
+	const messages = use121ChatMessages(giguser.id, profile.id);
 	const [text, setText] = useState('');
 	const { stompClient, sendChatMessage } = useContext(StompClientContext);
 	useEffect(() => {
@@ -23,10 +25,11 @@ const ChatModal = ({ profile }) => {
 			stompClient.unsubscribe(id);
 		};
 	}, []);
+
 	const onMessageRecieved = (msg) => {
-		console.log(`received ::::: msg ${msg}`);
+		console.log(`received ::::: msg ${msg}`, msg);
 		const notification = JSON.parse(msg.body);
-		console.log(`Notification :: ${notification}`);
+		console.log('Notification :: ', notification);
 	};
 	const sendTheMessage = (msg) => {
 		if (msg.trim() !== '') {
@@ -39,7 +42,6 @@ const ChatModal = ({ profile }) => {
 				timestamp: new Date(),
 			};
 			console.log('sending msg: ', msg);
-			//stompClient.send('/msg/chat', {}, JSON.stringify(message));
 			sendChatMessage(message);
 			console.log('msg sent', message);
 		}

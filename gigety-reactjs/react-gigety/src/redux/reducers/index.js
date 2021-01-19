@@ -5,6 +5,7 @@ import giguserAccount from './gigUserAccountReducer';
 import giguserProfile from './gigProfileReducer';
 import gig from './gigReducer';
 import location from './locationReducer';
+import messagesReducer from './messegesReducer';
 export default combineReducers({
 	authentication: authentication,
 	giguser: giguser,
@@ -12,4 +13,5 @@ export default combineReducers({
 	giguserProfile: giguserProfile,
 	gig: gig,
 	currentAddress: location,
+	messages: messagesReducer,
 });
