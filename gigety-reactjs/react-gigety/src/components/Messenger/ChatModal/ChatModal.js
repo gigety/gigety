@@ -19,6 +19,7 @@ const ChatModal = ({ profile }) => {
 	const { stompClient, sendChatMessage } = useContext(StompClientContext);
 	useEffect(() => {
 		const id = stompClient.subscribe(`/user/${profile.id}/queue/messages`, onMessageRecieved);
+		//const id = stompClient.subscribe(`/queue/messages/${profile.id}`, onMessageRecieved);
 		console.log(id);
 		return () => {
 			console.log(`here we unsubscibe to id ${id}, you best check this is proper way to unsubscribe`);

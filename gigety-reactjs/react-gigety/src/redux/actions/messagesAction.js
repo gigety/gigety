@@ -15,7 +15,7 @@ export function sendMessage(msg_id, msg) {
 
 export const findMessagesFor121Chat = (currentUserId, profileId) => async (dispatch) => {
 	try {
-		console.log('OFFFFF TO FIOND SOME MESSAGES');
+		console.log('OFFFFF TO FIND SOME MESSAGES');
 		const response = await gigetyMessenger.get(`/messages/${currentUserId}/${profileId}`);
 		console.log('FOUND MESSSAGES ::');
 		console.log(response.data);
