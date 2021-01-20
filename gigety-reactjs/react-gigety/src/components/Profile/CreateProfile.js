@@ -19,15 +19,19 @@ const CreateProfile = () => {
 	const reduxDispatch = useDispatch();
 	const history = useHistory();
 	const { giguser } = useSelector((state) => state.giguser);
+
 	useEffect(() => {
 		setUserProfile((userProfile) => ({ ...userProfile, userImageUrl: giguser.imageUrl }));
 	}, [giguser.imageUrl]);
+
 	const showMap = (includeLocation) => {
 		setIncludeLocation(!includeLocation);
 	};
+
 	const onSubmit = (e, userProfile, images) => {
 		reduxDispatch(postGigProfile(JSON.stringify(userProfile), images, history));
 	};
+
 	const onAddLocation = (location, miles) => {
 		if (location) {
 			const loc = {
@@ -44,6 +48,7 @@ const CreateProfile = () => {
 			return loc;
 		}
 	};
+
 	const onRemoveLocation = (locations, markers, circles) => (ref_id) => {
 		const locs = locations.filter((location) => {
 			return location.ref_id !== ref_id;
@@ -63,9 +68,11 @@ const CreateProfile = () => {
 			return circle;
 		});
 	};
+
 	const onFilesAdded = (files) => {
 		setImages(files);
 	};
+
 	return (
 		<Container fluid>
 			<Form encType="multipart/form-data">

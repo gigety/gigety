@@ -15,7 +15,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * UserProfile: Mongo Collection to store user profiles.
@@ -31,6 +34,9 @@ import lombok.Data;
 @JsonInclude(Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @TypeAlias("UserProfile")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UserProfile {
 
 	@Id
@@ -42,6 +48,8 @@ public class UserProfile {
 	@Indexed
 	private String email;
 	private String userImageUrl;
+	//private String userName;
+	
 	private List<ProfileLocation> profileLocations;
 	private ProfileImage profileImage;
 	@CreatedDate 

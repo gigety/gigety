@@ -5,8 +5,7 @@ import { updateChatMessages } from '../redux/actions/messagesAction';
 
 const StompClientContext = createContext(null);
 export { StompClientContext };
-
-export default ({ children }) => {
+const MessageContext = ({ children }) => {
 	let stompClient = null;
 	let wrappedStompClient = null;
 
@@ -43,6 +42,8 @@ export default ({ children }) => {
 		sendChatMessage,
 	};
 
-	console.log(`CONFIGURATION:::: WS = {ws}`);
+	console.log(`CONFIGURATION:::: wrappedStompClient = ${wrappedStompClient}`);
 	return <StompClientContext.Provider value={wrappedStompClient}>{children}</StompClientContext.Provider>;
 };
+
+export default MessageContext;

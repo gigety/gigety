@@ -8,5 +8,6 @@ export const use121ChatMessages = (senderId, recipientId) => {
 	useEffect(() => {
 		dispatch(findMessagesFor121Chat(senderId, recipientId));
 	}, [dispatch, senderId, recipientId]);
+	console.log('content.messages :::: ', content.messages);
 	return content.messages;
 };

@@ -20,12 +20,13 @@ import lombok.Data;
 @TypeAlias("UserAccount")
 public class UserAccount {
 
-
 	@Indexed(unique = true)
 	private String mysqlUserId;
 	
 	@Indexed(background = true)
 	private String email;
+	
+	private String userName;
 	
 	private UserProfile activeProfile;
 	

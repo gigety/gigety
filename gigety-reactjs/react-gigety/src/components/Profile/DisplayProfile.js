@@ -1,6 +1,5 @@
 import React from 'react';
-import { Container, Grid, GridRow, GridColumn, Segment, SegmentGroup, Icon, Button } from 'semantic-ui-react';
-import { useGigUserProfile } from '../../redux/hooks/useGigUser';
+import { Grid, GridRow, GridColumn, Segment, Icon, Button } from 'semantic-ui-react';
 import '../Styles/TextStyles.css';
 import ProfileCard from './ProfileCard';
 import ProfileMap from '../Maps/ProfileMap';

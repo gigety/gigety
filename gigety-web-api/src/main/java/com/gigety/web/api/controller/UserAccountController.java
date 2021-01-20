@@ -1,6 +1,5 @@
 package com.gigety.web.api.controller;
 
-import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,9 +51,10 @@ public class UserAccountController {
 		}
 		catch(ResourceNotFoundException e) {
 			UserAccount userAccount = new UserAccount();
-			log.warn("No user Account for user {}", userPrincipal.getEmail());
+			log.warn("No user Account for user {}, Creating a new account for {}", userPrincipal.getEmail(), userPrincipal.getUsername());
 			userAccount.setMysqlUserId(String.valueOf(userPrincipal.getId()));
 			userAccount.setEmail(userPrincipal.getEmail());
+			userAccount.setUserName(userPrincipal.getUsername());
 			ua = userAccountService.createUserAccount(userAccount);
 			log.debug("Created UserAccount {}", userAccount);
 			return ua;

@@ -3,13 +3,13 @@ import { useSelector } from 'react-redux';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import UserLabel from '../../User/UserLabel';
+import ProfileUserImage from '../../Profile/ProfileUserImage';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import { GIGETY_MESSENGER_URL } from '../../../constants';
-import { Button, Card, Input } from 'semantic-ui-react';
+import { Button, Image, Input, List } from 'semantic-ui-react';
 import './ChatModal.css';
-import { StompClientContext } from '../../../contexts/StompClientContext';
+import { StompClientContext } from 'contexts/StompClientContext';
 import { use121ChatMessages } from 'redux/hooks/useMessages';
-let stompClient = null;
+
 const ChatModal = ({ profile }) => {
 	console.log(profile);
 	const { giguser } = useSelector((state) => state.giguser);
@@ -25,7 +25,7 @@ const ChatModal = ({ profile }) => {
 			console.log(`here we unsubscibe to id ${id}, you best check this is proper way to unsubscribe`);
 			stompClient.unsubscribe(id);
 		};
-	}, []);
+	}, [profile, stompClient]);
 
 	const onMessageRecieved = (msg) => {
 		console.log(`received ::::: msg ${msg}`, msg);
@@ -48,7 +48,8 @@ const ChatModal = ({ profile }) => {
 		}
 	};
 	const messageSent = () => {};
-
+	console.log(profile);
+	console.log('messages :::: ', messages);
 	return (
 		<Popup
 			trigger={
@@ -63,7 +64,21 @@ const ChatModal = ({ profile }) => {
 				<div className="modal">
 					<div className="header">Send Direct Message to {profile.email} </div>
 					<div className="content">
-						<ScrollToBottom className="messages"></ScrollToBottom>
+						<ScrollToBottom className="messages">
+							<List>
+								{messages
+									? messages.map((msg) => (
+											<List.Item>
+												<ProfileUserImage size="mini" profile={profile} />
+												<List.Content>
+													<List.Header as="a">{profile.profileName}</List.Header>
+													<List.Description>{msg.content}</List.Description>
+												</List.Content>
+											</List.Item>
+									  ))
+									: ''}
+							</List>
+						</ScrollToBottom>
 
 						<Input placeholder="Enter Message" action fluid>
 							<input value={text} onChange={(e) => setText(e.target.value)} />
