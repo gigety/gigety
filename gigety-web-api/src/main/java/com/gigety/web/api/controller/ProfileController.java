@@ -83,6 +83,7 @@ public class ProfileController {
 		}
 
 	}
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<UserProfile> getProfileById(@PathVariable(value = "id") String id) {
 		UserProfile userProfile = userProfileService.findById(id);

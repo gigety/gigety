@@ -75,4 +75,15 @@ public class MessageServiceImpl implements MessageService {
 		mongoOperations.updateMulti(query, update, Message.class);
 	}
 
+	@Override
+	public Message findByRecipientId(String recipientId) {
+		
+		return null;
+//		List<Message> messages = messageRepository.findByR
+//		if(messages.size() > 0) {
+//			updateStatus(senderId, recipientId, Status.DELIVERED);
+//		}
+//		return messages;
+	}
+
 }

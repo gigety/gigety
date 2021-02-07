@@ -1,21 +1,21 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import UserLabel from '../../User/UserLabel';
 import ProfileUserImage from '../../Profile/ProfileUserImage';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import { Button, Image, Input, List } from 'semantic-ui-react';
+import { Button, Input, List } from 'semantic-ui-react';
 import './ChatModal.css';
 import { StompClientContext } from 'contexts/StompClientContext';
 import { use121ChatMessages } from 'redux/hooks/useMessages';
+import { findMessagesFor121Chat } from 'redux/actions/messagesAction';
 
 const ChatModal = ({ profile }) => {
-	console.log(profile);
 	const { giguser } = useSelector((state) => state.giguser);
-	console.log(`giguser :: `, giguser);
 	const messages = use121ChatMessages(giguser.id, profile.id);
 	const [text, setText] = useState('');
+	const dispatch = useDispatch();
 	const { stompClient, sendChatMessage } = useContext(StompClientContext);
 	useEffect(() => {
 		const id = stompClient.subscribe(`/user/${profile.id}/queue/messages`, onMessageRecieved);
@@ -28,9 +28,8 @@ const ChatModal = ({ profile }) => {
 	}, [profile, stompClient]);
 
 	const onMessageRecieved = (msg) => {
-		console.log(`received ::::: msg ${msg}`, msg);
 		const notification = JSON.parse(msg.body);
-		console.log('Notification :: ', notification);
+		dispatch(findMessagesFor121Chat(notification.senderId, profile.id));
 	};
 	const sendTheMessage = (msg) => {
 		if (msg.trim() !== '') {
@@ -48,8 +47,6 @@ const ChatModal = ({ profile }) => {
 		}
 	};
 	const messageSent = () => {};
-	console.log(profile);
-	console.log('messages :::: ', messages);
 	return (
 		<Popup
 			trigger={

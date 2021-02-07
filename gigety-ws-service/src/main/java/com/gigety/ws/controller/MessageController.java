@@ -59,5 +59,13 @@ public class MessageController {
 		return response;
 	}
 	
+	@GetMapping("/messages/{recipientId}")
+	public ResponseEntity<?> findUserMessages(@PathVariable String userId){
+		return null;
+//		var response = ResponseEntity.ok(messageService.findMessages(senderId, recipientId));
+//		log.info("Found Message :: {}", response.getBody());
+//		return response;		
+	}
+	
 	
 }

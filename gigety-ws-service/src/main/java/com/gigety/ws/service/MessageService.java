@@ -15,5 +15,7 @@ public interface MessageService {
 	
 	Message findById(String id);
 	 
+	Message findByRecipientId(String recipientId);
+	
 	void updateStatus(String senderId, String recipientId, Status status);
 }
