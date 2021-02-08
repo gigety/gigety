@@ -15,6 +15,9 @@ const Account = () => {
 				<Grid.Row>
 					<Grid.Column width={4}>
 						<UserCard giguser={giguser} />
+						<Button as={Link} to="/user/messenger/page" primary>
+							View Messages
+						</Button>
 					</Grid.Column>
 					<Grid.Column width={6}>
 						<Grid.Row>

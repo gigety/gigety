@@ -18,36 +18,36 @@ import com.gigety.ws.service.ChatRoomService;
 import com.gigety.ws.service.MessageService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MessageServiceImpl implements MessageService {
 
 	private final MessageRepository messageRepository;
 	private final ChatRoomService chatRoomService;
 	private final MongoOperations mongoOperations;
-	
+
 	@Override
 	public Message saveMessage(Message message) {
 		message.setStatus(Status.RECIEVED);
 		return messageRepository.save(message);
-		
+
 	}
 
 	@Override
 	public Long countNewMessages(String senderId, String recipientId) {
-		return messageRepository.countBySenderIdAndRecipientIdAndStatus(
-				senderId, recipientId, Status.RECIEVED);
+		return messageRepository.countBySenderIdAndRecipientIdAndStatus(senderId, recipientId, Status.RECIEVED);
 	}
 
 	@Override
 	public List<Message> findMessages(String senderId, String recipientId) {
 		Optional<String> chatRoomId = chatRoomService.getChatId(senderId, recipientId, false);
-	
-		List<Message> messages = chatRoomId
-				.map(msgId -> messageRepository.findByMsgId(msgId))
+
+		List<Message> messages = chatRoomId.map(msgId -> messageRepository.findByMsgId(msgId))
 				.orElse(new ArrayList<>());
-		if(messages.size() > 0) {
+		if (messages.size() > 0) {
 			updateStatus(senderId, recipientId, Status.DELIVERED);
 		}
 		return messages;
@@ -55,35 +55,41 @@ public class MessageServiceImpl implements MessageService {
 
 	@Override
 	public Message findById(String id) {
-		return messageRepository
-				.findById(id)
-				.map(message -> {
-					message.setStatus(Status.DELIVERED);
-					return messageRepository.save(message);
-				}).orElseThrow(()-> new ResourceNotFoundException(
-						String.format("No messages Found for id {}", id)));
-				
+		return messageRepository.findById(id).map(message -> {
+			message.setStatus(Status.DELIVERED);
+			return messageRepository.save(message);
+		}).orElseThrow(() -> new ResourceNotFoundException(String.format("No messages Found for id {}", id)));
+
 	}
 
 	@Override
 	public void updateStatus(String senderId, String recipientId, Status status) {
-		Query query = new Query(
-				Criteria
-					.where("senderId").is(senderId)
-					.and("recipientId").is(recipientId));
+		Query query = new Query(Criteria.where("senderId").is(senderId).and("recipientId").is(recipientId));
 		Update update = Update.update("status", status);
 		mongoOperations.updateMulti(query, update, Message.class);
 	}
 
 	@Override
 	public Message findByRecipientId(String recipientId) {
-		
+
 		return null;
 //		List<Message> messages = messageRepository.findByR
 //		if(messages.size() > 0) {
 //			updateStatus(senderId, recipientId, Status.DELIVERED);
 //		}
 //		return messages;
+	}
+
+	@Override
+	public Long countNewMessages(String userId) {
+		return messageRepository.countByRecipientIdAndStatus(userId, Status.DELIVERED);
+	}
+
+	@Override
+	public List<Message> findForUserByStatus(String userId, Status status) {
+		List<Message> unreadMessages = messageRepository.findByRecipientIdAndStatus(userId, status);
+		log.info("");
+		return unreadMessages;
 	}
 
 }

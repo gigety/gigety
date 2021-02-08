@@ -54,7 +54,7 @@ public class UserAccountController {
 			log.warn("No user Account for user {}, Creating a new account for {}", userPrincipal.getEmail(), userPrincipal.getUsername());
 			userAccount.setMysqlUserId(String.valueOf(userPrincipal.getId()));
 			userAccount.setEmail(userPrincipal.getEmail());
-			userAccount.setUserName(userPrincipal.getUsername());
+			userAccount.setUserName(userPrincipal.getName());
 			ua = userAccountService.createUserAccount(userAccount);
 			log.debug("Created UserAccount {}", userAccount);
 			return ua;

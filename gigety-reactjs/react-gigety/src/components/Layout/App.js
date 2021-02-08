@@ -18,6 +18,7 @@ import AboutGigety from '../About/AboutGigety';
 import DisplayGig from '../Gig/DisplayGig';
 import ProfilePageSecure from '../Profile/ProfilePageSecure';
 import StompClientContext from '../../contexts/StompClientContext';
+import MessengerPage from 'components/Messenger/MessengerPage/MessengerPage';
 const app = () => {
 	return (
 		<div className="ui container">
@@ -41,6 +42,7 @@ const app = () => {
 								<SecuredRoute path="/user/gig/create" component={CreateGig} />
 								<SecuredRoute path="/user/gig/detail/:id" component={GigPageSecure} />
 								<SecuredRoute path="/user/gigs" component={GigPageSecure} />
+								<SecuredRoute path="/user/messenger/page" component={MessengerPage} />
 							</Switch>
 						</div>
 					</BrowserRouter>

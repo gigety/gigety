@@ -11,4 +11,5 @@ public interface UserAccountRepository extends MongoRepository<UserAccount, Stri
 	
 	UserAccount findByEmail(@Param("email") String email);
 	Optional<UserAccount> findByMysqlUserId(@Param("mysqlUserId") String mysqlUserId);
+	
 }

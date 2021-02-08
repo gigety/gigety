@@ -48,6 +48,7 @@ public class UserProfile {
 	@Indexed
 	private String email;
 	private String userImageUrl;
+	private String userId;
 	//private String userName;
 	
 	private List<ProfileLocation> profileLocations;

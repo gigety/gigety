@@ -1,31 +1,34 @@
 package com.gigety.web.api.db.mongo.entity;
 
-import java.util.List;
+import javax.persistence.Id;
 
 import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Document
 @JsonInclude(Include.NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@TypeAlias("UserAccount")
-public class UserAccount {
+@TypeAlias("Contact")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Contact {
 
-	@Indexed(unique = true)
-	private String mysqlUserId;
-	@Indexed(background = true)
-	private String email;
-	private String userName;
-	private UserProfile activeProfile;
-	// @Transient
-	private List<UserProfile> allProfiles;
-	private List<Contact> allContacts;
+	@Id
+	private String id;
+	private String userId;
+	private String contactId;
+	private String contactName;
+	private String contactImageUrl;
+	
 }

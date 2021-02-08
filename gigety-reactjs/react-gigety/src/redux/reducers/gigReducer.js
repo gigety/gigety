@@ -1,7 +1,7 @@
 import { GET_GIG, SEARCH_ALL_GIGS, FOUND_GIG_SEARCH_RESULTS } from '../actions/types';
 
 const initialState = {};
-export default function (state = initialState, action) {
+export default function gigReducer(state = initialState, action) {
 	switch (action.type) {
 		case GET_GIG:
 			return {

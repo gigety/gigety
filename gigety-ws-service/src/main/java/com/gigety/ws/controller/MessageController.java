@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.gigety.ws.db.model.Message;
 import com.gigety.ws.db.model.MessageNotification;
+import com.gigety.ws.db.model.Status;
 import com.gigety.ws.service.ChatRoomService;
 import com.gigety.ws.service.MessageService;
 
@@ -67,5 +68,9 @@ public class MessageController {
 //		return response;		
 	}
 	
+	@GetMapping("/messages/status/{status}/{userId}")
+	public ResponseEntity<?> findByUserMessagesByStatus(@PathVariable("status") Status status, @PathVariable("userId") String userId){
+		return ResponseEntity.ok(messageService.findForUserByStatus(userId, status));
+	}
 	
 }

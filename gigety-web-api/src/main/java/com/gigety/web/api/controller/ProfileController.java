@@ -47,6 +47,7 @@ public class ProfileController {
 			log.debug("User Profile to create :: {}", userProfile);
 			UserProfile up = mapUserProfile(userProfile);
 			up.setEmail(userPrincipal.getEmail());
+			up.setUserId(String.valueOf(userPrincipal.getId()));
 			if (file != null && !file.isEmpty()) {
 				InputStream is = file.get(0).getInputStream();
 				byte[] buffer = new byte[is.available()];
@@ -72,10 +73,11 @@ public class ProfileController {
 			log.debug("User Profile to create :: {}", userProfile);
 			UserProfile up = mapUserProfile(userProfile);
 			up.setEmail(userPrincipal.getEmail());
+			up.setUserId(String.valueOf(userPrincipal.getId()));
 
-				Binary binary = new Binary(BsonBinarySubType.BINARY, ImageUtils.copyURLToByteArray(up.getUserImageUrl()));
-				ProfileImage profileImage = new ProfileImage(userPrincipal.getEmail(), binary);
-				up.setProfileImage(profileImage);
+			Binary binary = new Binary(BsonBinarySubType.BINARY, ImageUtils.copyURLToByteArray(up.getUserImageUrl()));
+			ProfileImage profileImage = new ProfileImage(userPrincipal.getEmail(), binary);
+			up.setProfileImage(profileImage);
 
 			return userProfileService.createUserProfile(up);
 		} catch (Exception e) {

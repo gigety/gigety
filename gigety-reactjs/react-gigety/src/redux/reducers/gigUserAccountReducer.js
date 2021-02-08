@@ -2,7 +2,7 @@ import { GET_CURRENT_USR_ACCOUNT, GET_ERRORS } from 'redux/actions/types';
 
 const initialState = {};
 
-export default function (state = initialState, action) {
+export default function gigUserAccountReducer(state = initialState, action) {
 	switch (action.type) {
 		case GET_CURRENT_USR_ACCOUNT:
 			return {

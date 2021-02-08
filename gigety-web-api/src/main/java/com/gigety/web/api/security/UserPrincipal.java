@@ -18,20 +18,24 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 	private Long id;
 	private String email;
 	private String password;
+	private String name;
+
+
 	private Collection<? extends GrantedAuthority> authorities;
 	private Map<String, Object> attributes;
 
-	public UserPrincipal(Long id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+	public UserPrincipal(Long id, String email, String name, String password, Collection<? extends GrantedAuthority> authorities) {
 		super();
 		this.id = id;
 		this.email = email;
+		this.name = name;
 		this.password = password;
 		this.authorities = authorities;
 	}
 
 	public static UserPrincipal create(User user) {
 		List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-		return new UserPrincipal(user.getId(), user.getEmail(), user.getPassword(), authorities);
+		return new UserPrincipal(user.getId(), user.getEmail(), user.getName(),user.getPassword(), authorities);
 	}
 
 	public static UserPrincipal create(User user, Map<String, Object> attributes) {
@@ -42,7 +46,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
 	@Override
 	public String getName() {
-		return String.valueOf(id);
+		return name;
 	}
 
 	@Override
@@ -96,5 +100,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 	public String getEmail() {
 		return email;
 	}
+
+
 
 }
