@@ -20,6 +20,8 @@ public class Message {
 	private String recipientId;
 	@Indexed
 	private String senderId;
+	//TODO: consider extracting senderId and senderName to contact field or add a contact field 
+	//private Contact contact;
 	private String recipientName;
 	private String senderName;
 	private String content;

@@ -13,6 +13,7 @@ spring:
             uri: mongodb://${GIGETY_MONGO_USR_NAME}:${GIGETY_MONGO_USR_PW}@gigety-web-api-mongo:27017/${MONGO_INITDB_DATABASE}
             database: ${MONGO_INITDB_DATABASE}
             authentication-database: admin
+            auto-index-creation: true
     datasource:
         url: jdbc:mysql://gigety-mysql:3306/gigety_users?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
         username: ${DEV_GIGETY_USR}

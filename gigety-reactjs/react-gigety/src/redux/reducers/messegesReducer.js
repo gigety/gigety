@@ -1,4 +1,4 @@
-import { UPDATE_CHAT_MESSAGES, UPDATE_NEW_USER_MESSAGES } from '../actions/types';
+import { UPDATE_CHAT_MESSAGES, UPDATE_MESSAGE_NOTIFICATIONS, UPDATE_NEW_USER_MESSAGES } from '../actions/types';
 const initialState = {};
 
 export default function messagesReducer(state = initialState, action) {
@@ -11,6 +11,9 @@ export default function messagesReducer(state = initialState, action) {
 		}
 		case UPDATE_NEW_USER_MESSAGES: {
 			return { ...state, newMessages: action.payload };
+		}
+		case UPDATE_MESSAGE_NOTIFICATIONS: {
+			return { ...state, messageNotifications: action.payload };
 		}
 		default:
 			return state;

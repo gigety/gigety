@@ -31,15 +31,11 @@ public class MessageServiceImpl implements MessageService {
 
 	@Override
 	public Message saveMessage(Message message) {
-		message.setStatus(Status.RECIEVED);
 		return messageRepository.save(message);
 
 	}
 
-	@Override
-	public Long countNewMessages(String senderId, String recipientId) {
-		return messageRepository.countBySenderIdAndRecipientIdAndStatus(senderId, recipientId, Status.RECIEVED);
-	}
+
 
 	@Override
 	public List<Message> findMessages(String senderId, String recipientId) {
@@ -70,25 +66,25 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public Message findByRecipientId(String recipientId) {
-
-		return null;
-//		List<Message> messages = messageRepository.findByR
-//		if(messages.size() > 0) {
-//			updateStatus(senderId, recipientId, Status.DELIVERED);
-//		}
-//		return messages;
+	public List<Message> findByRecipientId(String recipientId) {
+		
+		return messageRepository.findByRecipientId(recipientId);
 	}
 
 	@Override
 	public Long countNewMessages(String userId) {
-		return messageRepository.countByRecipientIdAndStatus(userId, Status.DELIVERED);
+		return messageRepository.countByRecipientIdAndStatus(userId, Status.RECEIVED);
 	}
-
+	
+	@Override
+	public Long countNewMessages(String senderId, String recipientId) {
+		return messageRepository.countBySenderIdAndRecipientIdAndStatus(senderId, recipientId, Status.RECEIVED);
+	}
+	
 	@Override
 	public List<Message> findForUserByStatus(String userId, Status status) {
 		List<Message> unreadMessages = messageRepository.findByRecipientIdAndStatus(userId, status);
-		log.info("");
+		log.info("Found {} unread messages", unreadMessages.size());
 		return unreadMessages;
 	}
 

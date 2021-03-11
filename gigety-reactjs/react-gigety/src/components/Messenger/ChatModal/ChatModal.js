@@ -1,29 +1,31 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Popup from 'reactjs-popup';
+import ScrollToBottom from 'react-scroll-to-bottom';
+import { Button, Input, List } from 'semantic-ui-react';
 import 'reactjs-popup/dist/index.css';
 import UserLabel from '../../User/UserLabel';
 import ProfileUserImage from '../../Profile/ProfileUserImage';
-import ScrollToBottom from 'react-scroll-to-bottom';
-import { Button, Input, List } from 'semantic-ui-react';
 import './ChatModal.css';
 import { StompClientContext } from 'contexts/StompClientContext';
 import { use121ChatMessages } from 'redux/hooks/useMessages';
 import { findMessagesFor121Chat } from 'redux/actions/messagesAction';
 
 const ChatModal = ({ profile }) => {
-	console.log(profile);
+	console.log('profile :: ', profile);
 	const { giguser } = useSelector((state) => state.giguser);
-	const messages = use121ChatMessages(giguser.id, profile.id);
+	const messages = use121ChatMessages(giguser.id, profile.userId);
 	const [text, setText] = useState('');
 	const dispatch = useDispatch();
 	const { stompClient, sendChatMessage } = useContext(StompClientContext);
 	useEffect(() => {
 		const onMessageRecieved = (msg) => {
 			const notification = JSON.parse(msg.body);
-			dispatch(findMessagesFor121Chat(notification.senderId, profile.id));
+			if (profile.userId === notification.senderId) {
+				dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
+			}
 		};
-		const id = stompClient.subscribe(`/user/${profile.id}/queue/messages`, onMessageRecieved);
+		const id = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
 		//const id = stompClient.subscribe(`/queue/messages/${profile.id}`, onMessageRecieved);
 		console.log(id);
 
@@ -31,13 +33,13 @@ const ChatModal = ({ profile }) => {
 			console.log(`here we unsubscibe to id ${id}, you best check this is proper way to unsubscribe`);
 			stompClient.unsubscribe(id);
 		};
-	}, [profile, stompClient, dispatch]);
+	}, [giguser, profile, stompClient, dispatch]);
 
 	const sendTheMessage = (msg) => {
 		if (msg.trim() !== '') {
 			const message = {
 				senderId: giguser.id,
-				recipientId: profile.id,
+				recipientId: profile.userId,
 				senderName: giguser.name,
 				recipientName: profile.email,
 				content: msg,

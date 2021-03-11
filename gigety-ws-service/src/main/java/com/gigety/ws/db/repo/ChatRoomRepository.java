@@ -9,8 +9,6 @@ import com.gigety.ws.db.model.ChatRoom;
 
 public interface ChatRoomRepository extends MongoRepository<ChatRoom, String> {
 
-	@Query(value = 
-			"{senderId: ?0, recipientId: ?1}, " // Query
-			+ "{chatId: 1, _id: 0, senderId: 0, recipientId: 0}") //Projection
-	Optional<String> getChatIdForSenderReciever(String senderId, String recipientId);
+	@Query(value = "{senderId: ?0, recipientId: ?1}, ", fields= "{chatId: 1}") //Projection
+	Optional<ChatRoom> getChatIdForSenderReciever(String senderId, String recipientId);
 }

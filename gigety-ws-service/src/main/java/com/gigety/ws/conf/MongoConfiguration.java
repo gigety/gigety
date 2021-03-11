@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.convert.DefaultMongoTypeMapper;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 
 import com.mongodb.client.MongoClient;
@@ -22,9 +23,9 @@ public class MongoConfiguration extends AbstractMongoClientConfiguration {
 	public MongoTemplate mongoTemplate(MongoDatabaseFactory databaseFactory, MappingMongoConverter converter) {
 
 		// remove __class field from mongo
-		// converter.setTypeMapper(new DefaultMongoTypeMapper(null));
-		// return super.mongoTemplate(databaseFactory, converter);
-		return new MongoTemplate(mongoClient(), database);
+		 converter.setTypeMapper(new DefaultMongoTypeMapper(null));
+		 return super.mongoTemplate(databaseFactory, converter);
+		//return new MongoTemplate(mongoClient(), database);
 
 	}
 

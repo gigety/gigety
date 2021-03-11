@@ -1,7 +1,8 @@
 import React, { createContext } from 'react';
 import { useDispatch } from 'react-redux';
+import { useGigUser } from 'redux/hooks/useGigUser';
 import { GIGETY_MESSENGER_URL } from '../constants';
-import { updateChatMessages } from '../redux/actions/messagesAction';
+import { updateChatMessages, updateUserMessageNotifications } from '../redux/actions/messagesAction';
 
 const StompClientContext = createContext(null);
 export { StompClientContext };
@@ -9,10 +10,19 @@ const MessageContext = ({ children }) => {
 	let stompClient = null;
 	let wrappedStompClient = null;
 
+	const giguser = useGigUser();
 	const onConnected = () => {
 		console.log('SockJS iiiiiiissssss COnnected to STOMP protocol');
 		console.log('may be a good place to subscribe to user specific messages so they can be notified');
-		//stompClient.subscribe(`/user/${profile.id}/queue/messages`, onMessageRecieved);
+		const onMessageRecieved = (msg) => {
+			const notification = JSON.parse(msg.body);
+			console.log('FOUNDDDDDDDDDDD NOTIFICATION ::', notification);
+			dispatch(updateUserMessageNotifications(notification));
+		};
+		console.log('PPPPPPPPPPPP :: ', giguser);
+		if (giguser) {
+			stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
+		}
 		//stompClient.subscribe(`/messenger/user`, onMessageRecieved);
 	};
 

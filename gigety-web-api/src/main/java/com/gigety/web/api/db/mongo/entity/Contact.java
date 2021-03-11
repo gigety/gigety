@@ -3,6 +3,7 @@ package com.gigety.web.api.db.mongo.entity;
 import javax.persistence.Id;
 
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -22,6 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@CompoundIndex(def = "{'userId': 1, 'contactId': 1}", unique = true)
 public class Contact {
 
 	@Id
@@ -30,5 +32,5 @@ public class Contact {
 	private String contactId;
 	private String contactName;
 	private String contactImageUrl;
-	
+
 }

@@ -1,4 +1,4 @@
-import { GET_ERRORS, UPDATE_CHAT_MESSAGES, UPDATE_NEW_USER_MESSAGES } from './types';
+import { GET_ERRORS, UPDATE_CHAT_MESSAGES, UPDATE_MESSAGE_NOTIFICATIONS, UPDATE_NEW_USER_MESSAGES } from './types';
 import gigetyMessenger from 'apis/gigetyMessenger';
 
 export const updateChatMessages = (message) => (dispatch, getState) => {
@@ -30,11 +30,19 @@ export const findMessagesFor121Chat = (currentUserId, profileId) => async (dispa
 	}
 };
 
+export const updateUserMessageNotifications = (notification) => (dispatch) => {
+	dispatch({
+		type: UPDATE_MESSAGE_NOTIFICATIONS,
+		payload: notification,
+	});
+};
+
 export const findUserMessageNotifications = (userId) => async (dispatch) => {
 	try {
-		const response = await gigetyMessenger.get(`/messages/${userId}`);
+		const response = await gigetyMessenger.get(`/user/${userId}/queue/messages`);
+		console.log('RESPONSEEEE :: ', response);
 		dispatch({
-			type: UPDATE_CHAT_MESSAGES,
+			type: UPDATE_MESSAGE_NOTIFICATIONS,
 			payload: response.data,
 		});
 	} catch (error) {
@@ -48,7 +56,7 @@ export const findUserMessageNotifications = (userId) => async (dispatch) => {
 
 export const findNewUserMessages = (userId) => async (dispatch) => {
 	try {
-		const response = await gigetyMessenger.get(`/messages/status/DELIVERED/${userId}`);
+		const response = await gigetyMessenger.get(`/messages/status/RECEIVED/${userId}`);
 		console.log('Found new user messages: ', response.data);
 		dispatch({
 			type: UPDATE_NEW_USER_MESSAGES,

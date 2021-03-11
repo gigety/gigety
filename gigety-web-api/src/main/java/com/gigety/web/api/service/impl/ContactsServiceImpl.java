@@ -20,6 +20,13 @@ public class ContactsServiceImpl implements ContactsService{
 	public List<Contact> findContactsForUser(String userId) {
 		return contactsRepository.findByUserId(userId);
 	}
+
+	@Override
+	public Contact addContact(Contact contact) {
+		return contactsRepository.save(contact);
+		
+	}
 	
 	
 }
+

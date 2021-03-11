@@ -12,7 +12,7 @@ export const use121ChatMessages = (senderId, recipientId) => {
 };
 
 export const useAllUserMessageNotifications = (userId) => {
-	const content = useSelector((state) => state.messageNotifications);
+	const content = useSelector((state) => state.messages);
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(findUserMessageNotifications(userId));

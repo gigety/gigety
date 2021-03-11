@@ -1,8 +1,8 @@
 import { SET_GIG_CREATED_SUCCESS, SET_GIG_CREATED_ERROR, SET_GIG_CREATED_WAITING } from './types';
 import gigety from 'apis/gigety';
 export const postGig = (gig, history) => async (dispatch) => {
-	const data = new FormData();
-	data.append('gig', gig);
+	//const data = new FormData();
+	//data.append('gig', gig);
 	try {
 		const postedGig = await gigety.post('/gigs/create', JSON.parse(gig));
 		//TODO: Still needs to handle slow posts. I am thinking maybe have a spinner in a

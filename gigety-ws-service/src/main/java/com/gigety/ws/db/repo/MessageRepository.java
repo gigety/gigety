@@ -11,6 +11,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 
 	Long countBySenderIdAndRecipientIdAndStatus(String senderId, String recipientId, Status status);
 	List<Message> findByMsgId(String msgId);
+	List<Message> findByRecipientId(String recipientId);
 	List<Message> findByRecipientIdAndStatus(String recipientId, Status status);
-	Long countByRecipientIdAndStatus(String recipientId, Status status);
+ 	Long countByRecipientIdAndStatus(String recipientId, Status status);
 }

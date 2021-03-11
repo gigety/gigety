@@ -37,7 +37,9 @@ public class MessageController {
 	public void handleMessage(@Payload Message message) {
 		
 		Optional<String> msgId = chatRoomService.getChatId(message.getSenderId(), message.getRecipientId(), true);
+		log.info("MsgId ::::::::: {}", msgId.get());
 		message.setMsgId(msgId.get());
+		message.setStatus(Status.RECEIVED);
 		Message savedMessage = messageService.saveMessage(message);
 		log.info("Sending Message :: {}", savedMessage);
 		simpleMessagingTemplate.convertAndSendToUser(
@@ -56,16 +58,15 @@ public class MessageController {
 	public ResponseEntity<?> find121ChatMessages( @PathVariable String senderId, @PathVariable String recipientId){
 		log.info(String.format("Finding chat message for sender %1$s and recipient %2$s",senderId, recipientId));
 		var response = ResponseEntity.ok(messageService.findMessages(senderId, recipientId));
-		log.info("Found Message :: {}", response.getBody());
+		log.info("Found Messages :: {}", response.getBody());
 		return response;
 	}
 	
-	@GetMapping("/messages/{recipientId}")
+	@GetMapping("/messages/{userId}")
 	public ResponseEntity<?> findUserMessages(@PathVariable String userId){
-		return null;
-//		var response = ResponseEntity.ok(messageService.findMessages(senderId, recipientId));
-//		log.info("Found Message :: {}", response.getBody());
-//		return response;		
+		var response = ResponseEntity.ok(messageService.findByRecipientId(userId));
+		log.info("Found Message :: {}", response.getBody());
+		return response;		
 	}
 	
 	@GetMapping("/messages/status/{status}/{userId}")

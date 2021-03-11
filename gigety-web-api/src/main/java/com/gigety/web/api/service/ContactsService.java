@@ -7,4 +7,6 @@ import com.gigety.web.api.db.mongo.entity.Contact;
 public interface ContactsService {
 
 	List<Contact> findContactsForUser(String userId);
+
+	Contact addContact(Contact contact);
 }

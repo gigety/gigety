@@ -7,6 +7,7 @@ spring:
     data:
       mongodb:
         host: gigety-web-api-mongo
+        auto-index-creation: true
     devtools:
       remote:
         secret: samo

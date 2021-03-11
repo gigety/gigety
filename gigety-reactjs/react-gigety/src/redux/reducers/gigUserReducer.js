@@ -11,6 +11,7 @@ export default function gigUserReducer(state = initialState, action) {
 
 		case GET_ERRORS:
 			return {
+				...state,
 				errors: action.payload,
 			};
 		default:
