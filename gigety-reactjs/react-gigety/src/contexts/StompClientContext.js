@@ -16,14 +16,12 @@ const MessageContext = ({ children }) => {
 		console.log('may be a good place to subscribe to user specific messages so they can be notified');
 		const onMessageRecieved = (msg) => {
 			const notification = JSON.parse(msg.body);
-			console.log('FOUNDDDDDDDDDDD NOTIFICATION ::', notification);
+			console.log('ALERT NOTIFICATION ::', notification);
 			dispatch(updateUserMessageNotifications(notification));
 		};
-		console.log('PPPPPPPPPPPP :: ', giguser);
 		if (giguser) {
 			stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
 		}
-		//stompClient.subscribe(`/messenger/user`, onMessageRecieved);
 	};
 
 	const onError = (error) => {

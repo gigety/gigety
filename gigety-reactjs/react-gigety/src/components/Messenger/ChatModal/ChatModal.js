@@ -8,33 +8,17 @@ import UserLabel from '../../User/UserLabel';
 import ProfileUserImage from '../../Profile/ProfileUserImage';
 import './ChatModal.css';
 import { StompClientContext } from 'contexts/StompClientContext';
-import { use121ChatMessages } from 'redux/hooks/useMessages';
-import { findMessagesFor121Chat } from 'redux/actions/messagesAction';
+import { use121ChatMessages, useMessenger } from 'redux/hooks/useMessages';
+import { mapProfileToContact } from 'utils/objectMapper';
 
 const ChatModal = ({ profile }) => {
 	console.log('profile :: ', profile);
 	const { giguser } = useSelector((state) => state.giguser);
 	const messages = use121ChatMessages(giguser.id, profile.userId);
 	const [text, setText] = useState('');
-	const dispatch = useDispatch();
-	const { stompClient, sendChatMessage } = useContext(StompClientContext);
-	useEffect(() => {
-		const onMessageRecieved = (msg) => {
-			const notification = JSON.parse(msg.body);
-			if (profile.userId === notification.senderId) {
-				dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
-			}
-		};
-		const id = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
-		//const id = stompClient.subscribe(`/queue/messages/${profile.id}`, onMessageRecieved);
-		console.log(id);
-
-		return () => {
-			console.log(`here we unsubscibe to id ${id}, you best check this is proper way to unsubscribe`);
-			stompClient.unsubscribe(id);
-		};
-	}, [giguser, profile, stompClient, dispatch]);
-
+	const { sendChatMessage } = useContext(StompClientContext);
+	const contact = mapProfileToContact(profile, giguser);
+	useMessenger(giguser, contact);
 	const sendTheMessage = (msg) => {
 		if (msg.trim() !== '') {
 			const message = {
@@ -50,7 +34,6 @@ const ChatModal = ({ profile }) => {
 			console.log('msg sent', message);
 		}
 	};
-	const messageSent = () => {};
 	return (
 		<Popup
 			trigger={

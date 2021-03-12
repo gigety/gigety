@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useGigUser } from 'redux/hooks/useGigUser';
 import { useAllNewUserMessages } from 'redux/hooks/useMessages';
-import { Container, Grid, GridColumn } from 'semantic-ui-react';
+import { Container, Divider, Grid, GridColumn } from 'semantic-ui-react';
 import ChatMessenger from '../ChatMessenger/ChatMessenger';
 import ContactList from '../ContactList/ContactList';
 import MessageInput from '../MessageInput/MessageInput';
@@ -13,11 +13,7 @@ const MessengerPage = () => {
 	//const { giguser } = useSelector((state) => state.giguser);
 	const giguser = useGigUser();
 	console.log(giguser);
-	const messages = useAllNewUserMessages(giguser.id);
-	console.log('messages :: ', messages);
-	const [text, setText] = useState('');
-	console.log('Founcd some messages :: ', messages);
-	const dispatch = useDispatch();
+
 	const contacts = useContacts(giguser.id);
 	const activeContact = useActiveContact();
 	const { stompClient, sendChatMessage } = useContext(StompClientContext);
@@ -42,19 +38,23 @@ const MessengerPage = () => {
 			<Grid celled>
 				<Grid.Row>
 					<GridColumn width={4}>
-						<NotificationsScrollable giguser={giguser} messages={messages} />
+						<Grid.Row>
+							<NotificationsScrollable giguser={giguser} />
+						</Grid.Row>
+						<Divider />
+						<Grid.Row>
+							<ContactList contacts={contacts}></ContactList>
+						</Grid.Row>
 					</GridColumn>
 					<GridColumn width={6}>
-						<ChatMessenger activeContact={activeContact}></ChatMessenger>
+						<Grid.Row>
+							<ChatMessenger activeContact={activeContact}></ChatMessenger>
+						</Grid.Row>
+						<Grid.Row></Grid.Row>
 					</GridColumn>
 				</Grid.Row>
 				<Grid.Row>
-					<Grid.Column width={4}>
-						<ContactList contacts={contacts}></ContactList>
-					</Grid.Column>
-					<Grid.Column width={6}>
-						<MessageInput text={text} setText={setText}></MessageInput>
-					</Grid.Column>
+					<Grid.Column width={4}></Grid.Column>
 				</Grid.Row>
 			</Grid>
 		</Container>

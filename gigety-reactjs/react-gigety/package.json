@@ -24,6 +24,7 @@
 		"react-router-dom": "^5.2.0",
 		"react-scripts": "4.0.1",
 		"react-scroll-to-bottom": "^4.0.0",
+		"react-split-pane": "^0.1.92",
 		"react-stomp": "^5.0.0",
 		"reactjs-popup": "^2.0.4",
 		"redux": "^4.0.5",

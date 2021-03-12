@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { StompClientContext } from 'contexts/StompClientContext';
+import { useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { findMessagesFor121Chat, findNewUserMessages, findUserMessageNotifications } from '../actions/messagesAction';
 
@@ -28,4 +29,27 @@ export const useAllNewUserMessages = (userId) => {
 		dispatch(findNewUserMessages(userId));
 	}, [dispatch, userId]);
 	return content.newMessages;
+};
+export const useMessenger = (giguser, contact) => {
+	const { stompClient } = useContext(StompClientContext);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		if (stompClient.connected) {
+			const onMessageRecieved = (msg) => {
+				console.log('RECEIVED MESSAGE +++++++++++++++++++', contact);
+				const notification = JSON.parse(msg.body);
+				if (contact.contactId === notification.senderId) {
+					console.log('WE FOUND A MATCH');
+					dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
+				}
+			};
+			const id = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
+
+			return () => {
+				console.log(`here we unsubscibe to id ${id}, you best check this is proper way to unsubscribe`);
+				stompClient.unsubscribe(id);
+			};
+		}
+	}, [giguser, contact, stompClient, dispatch]);
 };

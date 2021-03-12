@@ -1,18 +1,18 @@
 import React from 'react';
 import { useGigUser } from 'redux/hooks/useGigUser';
 import _ from 'lodash';
-import { useAllNewUserMessages } from 'redux/hooks/useMessages';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { List, ListItem } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { findMessagesFor121Chat } from 'redux/actions/messagesAction';
 import { updateActiveContact } from 'redux/actions/contactsAction';
-const NotificationsScrollable = ({ messages }) => {
-	const giguser = useGigUser();
+import { useAllNewUserMessages } from 'redux/hooks/useMessages';
+const NotificationsScrollable = ({ giguser }) => {
+	const allNewUserMessages = useAllNewUserMessages(giguser.id);
 	//const messages = useAllNewUserMessages(giguser.id);
-	console.log('ALL Messages ', messages);
-	const messageNotifications = _.uniqBy(messages, (message) => 'senderName');
+	console.log('ALL Messages ', allNewUserMessages);
+	const messageNotifications = _.uniqBy(allNewUserMessages, (message) => 'senderName');
 	console.log(' Message Notifications ', messageNotifications);
 	const dispatch = useDispatch();
 	const getConversationMessages = ({ senderName, senderId }, event) => {

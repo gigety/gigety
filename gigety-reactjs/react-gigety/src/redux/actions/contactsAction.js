@@ -21,12 +21,13 @@ export const updateActiveContact = (contact) => async (dispatch, getState) => {
 	try {
 		const { contacts } = getState().contacts;
 		contact = JSON.parse(contact);
-		let activeContact = contacts.filter((c) => {
+		let activeContact = contacts.find((c) => {
 			console.log(c.contactId);
 			console.log(contact['contactId']);
 			console.log(c.contactId === contact.contactId);
 			return c.contactId === contact.contactId;
 		});
+		console.log('AcCCCCCCCCC ', activeContact);
 		console.log('found active contact :: ', activeContact);
 		if (!activeContact || activeContact.length === 0) {
 			try {
