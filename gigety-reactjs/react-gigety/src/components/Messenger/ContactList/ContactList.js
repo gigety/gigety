@@ -11,7 +11,6 @@ const ContactList = ({ contacts }) => {
 							as={Link}
 							to={'/'}
 							onClick={(e) => {
-								console.log('CCCCCCCCCCLLLLLLLIIIIICCKKKKKEEEEEEDDDD');
 								e.preventDefault();
 							}}
 						>

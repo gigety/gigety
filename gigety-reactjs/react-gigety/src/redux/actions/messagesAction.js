@@ -31,6 +31,7 @@ export const findMessagesFor121Chat = (currentUserId, profileId) => async (dispa
 };
 
 export const updateUserMessageNotifications = (notification) => (dispatch) => {
+	console.log('UPDATING NOTIFICATION ----- ', notification);
 	dispatch({
 		type: UPDATE_MESSAGE_NOTIFICATIONS,
 		payload: notification,

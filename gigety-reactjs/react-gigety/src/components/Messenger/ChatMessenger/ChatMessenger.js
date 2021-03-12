@@ -10,8 +10,8 @@ const ChatMessenger = ({ activeContact }) => {
 	const { giguser } = useSelector((state) => state.giguser);
 	activeContact = activeContact ? activeContact : {};
 	const messages = use121ChatMessages(giguser.id, activeContact.contactId);
-
 	useMessenger(giguser, activeContact);
+
 	return (
 		<>
 			<ScrollToBottom className="messages">
@@ -21,7 +21,6 @@ const ChatMessenger = ({ activeContact }) => {
 								<List.Item>
 									<ContactAvatar size="med" contact={activeContact} />
 									<List.Content>
-										<List.Header as="a">{activeContact.contactName}</List.Header>
 										<List.Description>{msg.content}</List.Description>
 									</List.Content>
 								</List.Item>

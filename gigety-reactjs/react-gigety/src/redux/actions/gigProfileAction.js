@@ -8,19 +8,16 @@ import {
 import gigety from 'apis/gigety';
 
 export const postGigProfile = (userProfile, images, history) => async (dispatch) => {
-	console.log('profile ::::::::::', userProfile);
 	const data = new FormData();
 	data.append('userProfile', userProfile);
 	let uri = '/profiles/createProfileNoImage';
-	console.log(images);
-	console.log(uri);
+
 	if (images.length > 0) {
 		data.append('file', images[0]);
 		uri = '/profiles/createProfile';
 	}
 
 	try {
-		console.log('gigety :: ', data);
 		const postedProfile = await gigety.post(uri, data, {
 			headers: { 'content-type': 'multipart/form-data' },
 		});
@@ -55,7 +52,6 @@ export const getUserProfile = (id) => async (dispatch, getState) => {
 export const removeGigProfile = (id, history) => async (dispatch) => {
 	try {
 		const response = await gigety.delete(`/profiles/${id}`);
-		console.log(response.data);
 		dispatch({ type: REMOVE_PROFILE_SUCCESS, payload: response.data });
 		history.push('/user/account');
 	} catch (error) {

@@ -12,7 +12,6 @@ import { use121ChatMessages, useMessenger } from 'redux/hooks/useMessages';
 import { mapProfileToContact } from 'utils/objectMapper';
 
 const ChatModal = ({ profile }) => {
-	console.log('profile :: ', profile);
 	const { giguser } = useSelector((state) => state.giguser);
 	const messages = use121ChatMessages(giguser.id, profile.userId);
 	const [text, setText] = useState('');
@@ -29,9 +28,7 @@ const ChatModal = ({ profile }) => {
 				content: msg,
 				timestamp: new Date(),
 			};
-			console.log('sending msg: ', msg);
 			sendChatMessage(message);
-			console.log('msg sent', message);
 		}
 	};
 	return (

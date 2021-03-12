@@ -1,4 +1,5 @@
 import gigety from 'apis/gigety';
+import { updateUserMessageNotifications } from './messagesAction';
 import { GET_ERRORS, UPDATE_ACTIVE_CONTACT, UPDATE_CONTACT_LIST } from './types';
 
 export const findUserContacts = (userId) => async (dispatch) => {
@@ -22,12 +23,8 @@ export const updateActiveContact = (contact) => async (dispatch, getState) => {
 		const { contacts } = getState().contacts;
 		contact = JSON.parse(contact);
 		let activeContact = contacts.find((c) => {
-			console.log(c.contactId);
-			console.log(contact['contactId']);
-			console.log(c.contactId === contact.contactId);
 			return c.contactId === contact.contactId;
 		});
-		console.log('AcCCCCCCCCC ', activeContact);
 		console.log('found active contact :: ', activeContact);
 		if (!activeContact || activeContact.length === 0) {
 			try {
@@ -41,6 +38,7 @@ export const updateActiveContact = (contact) => async (dispatch, getState) => {
 			type: UPDATE_ACTIVE_CONTACT,
 			payload: activeContact,
 		});
+		dispatch(updateUserMessageNotifications())
 	} catch (error) {
 		console.error('ERROR :: ', error);
 		dispatch({
