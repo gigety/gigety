@@ -19,9 +19,9 @@ repositories {
 }
 
 dependencies {
-//compile group: 'io.projectreactor.netty', name: 'reactor-netty', version: '1.0.3'
-//compile group: 'io.projectreactor', name: 'reactor-net', version: '2.0.8.RELEASE'
-//compile group: 'io.projectreactor', name: 'reactor-core', version: '3.4.2'
+compile group: 'io.projectreactor.netty', name: 'reactor-netty', version: '1.0.3'
+compile group: 'io.projectreactor', name: 'reactor-net', version: '2.0.8.RELEASE'
+compile group: 'io.projectreactor', name: 'reactor-core', version: '3.4.2'
 implementation 'org.springframework.boot:spring-boot-starter-amqp'
 //compile 'org.springframework.amqp:spring-rabbit:2.3.5'	
 	implementation 'org.springframework.boot:spring-boot-starter-web'

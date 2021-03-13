@@ -21,13 +21,24 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 	
 	@Value("${spring.rabbitmq.host}")
 	private String host;
+	
 	@Value("${spring.rabbitmq.port}")
 	private int port;
+
 	@Value("${spring.rabbitmq.username}")
 	private String username;
+
 	@Value("${spring.rabbitmq.password}")
 	private String password;
 	
+	@Value("${stomp.broker.relay}")
+	private String stompBrokerRelay;
+
+	@Value("${stomp.broker.app.destination.prefixes}")
+	private String [] appDestinationPrefixes;
+
+	@Value("${stomp.broker.user.destination.prefix}")
+	private String userDestinationPrefix;
 
 	/**
 	 * Register STOMP endpoint so clients can connect to STOMP. Enable SockJS for fallback options
@@ -62,9 +73,14 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 	 */
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
-		registry.enableSimpleBroker("/user");
-		registry.setApplicationDestinationPrefixes("/msg");
-		registry.setUserDestinationPrefix("/user");
+		//registry.enableSimpleBroker("/user");
+		registry.enableStompBrokerRelay(stompBrokerRelay)
+				.setRelayHost(host)
+				.setRelayPort(port)
+				.setSystemLogin(username)
+				.setSystemPasscode(password);
+		registry.setApplicationDestinationPrefixes(appDestinationPrefixes);
+		registry.setUserDestinationPrefix(userDestinationPrefix);
 	}
 
 	

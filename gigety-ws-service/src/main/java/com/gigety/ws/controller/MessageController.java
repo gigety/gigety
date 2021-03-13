@@ -2,6 +2,7 @@ package com.gigety.ws.controller;
 
 import java.util.Optional;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -26,7 +27,7 @@ public class MessageController {
 
 	private final ChatRoomService chatRoomService;
 	private final MessageService messageService;
-	private final SimpMessagingTemplate simpleMessagingTemplate;
+	private final RabbitTemplate simpleMessagingTemplate;
 	
 	/**
 	 * Process a one to one message that is sent. Saves the message to Mongo. 
@@ -42,15 +43,16 @@ public class MessageController {
 		message.setStatus(Status.RECEIVED);
 		Message savedMessage = messageService.saveMessage(message);
 		log.info("Sending Message :: {}", savedMessage);
-		simpleMessagingTemplate.convertAndSendToUser(
-				message.getRecipientId(), 
-				"/topic/messages", 
-				MessageNotification.builder()
-					.id(savedMessage.getId())
-					.senderId(savedMessage.getSenderId())
-					.senderName(savedMessage.getSenderName())
-					.build()
-				);
+//		simpleMessagingTemplate.convertAndSend(
+//				message.getRecipientId(), 
+//				"/topic/messages", 
+//				MessageNotification.builder()
+//					.id(savedMessage.getId())
+//					.senderId(savedMessage.getSenderId())
+//					.senderName(savedMessage.getSenderName())
+//					.build()
+//				);
+		simpleMessagingTemplate.convertAndSend("user_message_exchange", message.getRecipientId(), savedMessage);
 		log.info("Message Sent to queue {}", message.getRecipientId());
 	}
 	

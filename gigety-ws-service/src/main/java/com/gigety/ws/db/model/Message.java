@@ -1,5 +1,6 @@
 package com.gigety.ws.db.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -10,8 +11,10 @@ import lombok.Data;
 
 @Data
 @Document
-public class Message {
+public class Message implements Serializable{
 
+	private static final long serialVersionUID = -1084754918635396101L;
+	
 	@Id
 	private String id;
 	@Indexed

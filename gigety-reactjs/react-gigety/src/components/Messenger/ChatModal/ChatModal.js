@@ -32,10 +32,10 @@ const ChatModal = ({ profile }) => {
 				}
 			};
 			const id = stompClient.subscribe(`/user/${giguser.id}/topic/messages`, onMessageRecieved);
-
+			console.log('SUBSCRIPTION ID -- ', id);
 			return () => {
 				console.log(`here we unsubscibe to id ${id}, you best check this is proper way to unsubscribe`);
-				stompClient.unsubscribe(id);
+				stompClient.unsubscribe(id.id);
 			};
 		}
 	}, [giguser, contact, stompClient, dispatch]);
