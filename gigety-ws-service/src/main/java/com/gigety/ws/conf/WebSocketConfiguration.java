@@ -2,6 +2,7 @@ package com.gigety.ws.conf;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.DefaultContentTypeResolver;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -17,6 +18,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
+	
+	@Value("${spring.rabbitmq.host}")
+	private String host;
+	@Value("${spring.rabbitmq.port}")
+	private int port;
+	@Value("${spring.rabbitmq.username}")
+	private String username;
+	@Value("${spring.rabbitmq.password}")
+	private String password;
+	
 
 	/**
 	 * Register STOMP endpoint so clients can connect to STOMP. Enable SockJS for fallback options

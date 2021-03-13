@@ -16,6 +16,7 @@ export function sendMessage(msg_id, msg) {
 
 export const findMessagesFor121Chat = (currentUserId, profileId) => async (dispatch) => {
 	try {
+		console.log('SSSSSSIUKHBSKJBSKUBSKBJSKUBSKUBSKUB');
 		const response = await gigetyMessenger.get(`/messages/${currentUserId}/${profileId}`);
 		dispatch({
 			type: UPDATE_CHAT_MESSAGES,

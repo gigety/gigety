@@ -9,7 +9,7 @@ export { StompClientContext };
 const MessageContext = ({ children }) => {
 	let stompClient = null;
 	let wrappedStompClient = null;
-
+	console.log('WHHHHHHHHHHYYYYYYYYYYYYYYYY');
 	const giguser = useGigUser();
 	const onConnected = () => {
 		console.log('SockJS iiiiiiissssss COnnected to STOMP protocol');

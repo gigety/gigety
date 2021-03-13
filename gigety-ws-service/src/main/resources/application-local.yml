@@ -11,5 +11,16 @@ spring:
       uri: mongodb://${DEV_GIGETY_USR}:${DEV_GIGETY_PW}@localhost:27017/gigety
       auto-index-creation: true
 
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    
+logging:
+  level: 
+    com.gigety.ws: debug
+    org.springframework.messaging: debug
+    
 gig:
   message-pageable-size: 5
