@@ -27,7 +27,7 @@ const ChatMessenger = ({ activeContact }) => {
 					dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
 				}
 			};
-			const id = stompClient.subscribe(`/user/${giguser.id}/topic/messages`, onMessageRecieved);
+			const { id } = stompClient.subscribe(`/user/${giguser.id}/topic/messages`, onMessageRecieved);
 
 			return () => {
 				console.log(`here we unsubscibe to id ${id}, you best check this is proper way to unsubscribe`);

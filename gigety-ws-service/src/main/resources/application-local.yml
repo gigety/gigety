@@ -10,12 +10,18 @@ spring:
       database: gigety
       uri: mongodb://${DEV_GIGETY_USR}:${DEV_GIGETY_PW}@localhost:27017/gigety
       auto-index-creation: true
-
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
+  activemq:
+    broker-url: stomp://localhost:61613
+    user: admin
+    password: admin
+    in-memory: false
+     
+active-mq-url: stomp://localhost:61613
+#  rabbitmq:
+#    host: localhost
+#    port: 5672
+#    username: guest
+#    password: guest
     
 logging:
   level: 
