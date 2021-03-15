@@ -5,6 +5,7 @@
 	"dependencies": {
 		"@reach/combobox": "^0.10.5",
 		"@react-google-maps/api": "^1.9.7",
+		"@stomp/stompjs": "^6.1.0",
 		"@testing-library/jest-dom": "^5.11.4",
 		"@testing-library/react": "^11.1.0",
 		"@testing-library/user-event": "^12.1.10",
@@ -33,6 +34,7 @@
 		"sockjs-client": "^1.5.0",
 		"use-places-autocomplete": "^1.3.10",
 		"web-vitals": "^0.2.4",
+		"websocket": "^1.0.33",
 		"workbox-background-sync": "^5.1.3",
 		"workbox-broadcast-update": "^5.1.3",
 		"workbox-cacheable-response": "^5.1.3",

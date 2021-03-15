@@ -3,7 +3,8 @@ import { useDispatch } from 'react-redux';
 import { useGigUser } from 'redux/hooks/useGigUser';
 import { GIGETY_MESSENGER_URL } from '../constants';
 import { updateChatMessages, updateUserMessageNotifications } from '../redux/actions/messagesAction';
-
+//import * as stomp from '@stomp/stompjs';
+//import * as SockJS from 'sockjs-client';
 const StompClientContext = createContext(null);
 export { StompClientContext };
 const MessageContext = ({ children }) => {
@@ -13,14 +14,14 @@ const MessageContext = ({ children }) => {
 	const onConnected = () => {
 		console.log('SockJS iiiiiiissssss COnnected to STOMP protocol');
 		console.log('may be a good place to subscribe to user specific messages so they can be notified');
-		const onMessageRecieved = (msg) => {
-			const notification = JSON.parse(msg.body);
-			console.log('ALERT NOTIFICATION ::', notification);
-			dispatch(updateUserMessageNotifications(notification));
-		};
-		if (giguser) {
-			stompClient.subscribe(`/user/${giguser.id}/topic/messages`, onMessageRecieved);
-		}
+		// const onMessageRecieved = (msg) => {
+		// 	const notification = JSON.parse(msg.body);
+		// 	console.log('ALERT NOTIFICATION ::', notification);
+		// 	dispatch(updateUserMessageNotifications(notification));
+		// };
+		// if (giguser) {
+		// 	stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
+		// }
 	};
 
 	const onError = (error) => {
@@ -36,15 +37,18 @@ const MessageContext = ({ children }) => {
 	stompClient = stomp.over(SockJS);
 	stompClient.connect({}, onConnected, onError);
 
-	stomp.debug = (f) => f;
+	stompClient.debug = (f) => f;
 	const dispatch = useDispatch();
 
 	const sendChatMessage = (message) => {
-		console.log(`sending Message ${message}`);
+		console.log(`sending Message ${message.body}`, message);
 		stompClient.send('/msg/chat', {}, JSON.stringify(message));
+		console.log('SSSSENNNNT');
 		dispatch(updateChatMessages(message));
 	};
 	wrappedStompClient = {
+		stomp,
+		SockJS,
 		stompClient,
 		sendChatMessage,
 	};

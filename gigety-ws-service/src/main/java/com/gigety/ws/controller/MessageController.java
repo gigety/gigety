@@ -44,7 +44,7 @@ public class MessageController {
 		log.info("Sending Message :: {}", savedMessage);
 		simpleMessagingTemplate.convertAndSendToUser(
 				message.getRecipientId(), 
-				"/topic/messages", 
+				"/queue/messages", 
 				MessageNotification.builder()
 					.id(savedMessage.getId())
 					.senderId(savedMessage.getSenderId())

@@ -12,16 +12,26 @@ import { use121ChatMessages } from 'redux/hooks/useMessages';
 import { mapProfileToContact } from 'utils/objectMapper';
 import { findMessagesFor121Chat } from 'redux/actions/messagesAction';
 import MessageInput from '../MessageInput/MessageInput';
+import { GIGETY_MESSENGER_URL } from '../../../constants/index';
 
 const ChatModal = ({ profile }) => {
 	const { giguser } = useSelector((state) => state.giguser);
 	const messages = use121ChatMessages(giguser.id, profile.userId);
 	const contact = mapProfileToContact(profile, giguser);
 	//useMessenger(giguser, contact);
-	const { stompClient } = useContext(StompClientContext);
+	//const { stomp, SockJS } = useContext(StompClientContext);
 	const dispatch = useDispatch();
+	let subId = '';
+
 	useEffect(() => {
-		if (stompClient.connected) {
+		const stomp = require('stompjs');
+		let SockJS = require('sockjs-client');
+		SockJS = new SockJS(GIGETY_MESSENGER_URL + '/ws');
+		const stompClient = stomp.over(SockJS);
+		const onError = (error) => {
+			console.log('ERRRRRRRRRRRRRRR : ', error);
+		};
+		const onConnected = () => {
 			const onMessageRecieved = (msg) => {
 				console.log('RECEIVED MESSAGE +++++++++++++++++++', contact);
 				const notification = JSON.parse(msg.body);
@@ -30,14 +40,17 @@ const ChatModal = ({ profile }) => {
 					dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
 				}
 			};
-			const { id } = stompClient.subscribe(`/user/${giguser.id}/topic/messages`, onMessageRecieved);
+			const { id } = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
+			subId = id;
+			console.log('IIIISSSS COOONN NNEEECCCCTTTTED v:: ', stompClient.connected);
+		};
+		stompClient.connect({}, onConnected, onError);
 
-			return () => {
-				console.log(`here we unsubscibe to id ${id}, you best check this is proper way to unsubscribe`);
-				stompClient.unsubscribe(id);
-			};
-		}
-	}, [giguser, contact, stompClient, dispatch]);
+		return () => {
+			console.log(`here we unsubscibe to id ${subId}, you best check this is proper way to unsubscribe`);
+			//stompClient.unsubscribe(subId);
+		};
+	}, [giguser, contact, dispatch]);
 
 	return (
 		<Popup
