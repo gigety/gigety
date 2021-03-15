@@ -10,13 +10,11 @@ import { findMessagesFor121Chat } from 'redux/actions/messagesAction';
 import { StompClientContext } from 'contexts/StompClientContext';
 const ChatMessenger = ({ activeContact }) => {
 	const { giguser } = useSelector((state) => state.giguser);
-	console.log('GGGGGGGGGGGGGGGGGGGGGGGGGGGGGLEN');
 	activeContact = activeContact ? activeContact : {};
 	const messages = use121ChatMessages(giguser.id, activeContact.contactId);
 	//useMessenger(giguser, activeContact);
 	const { stompClient } = useContext(StompClientContext);
 	const dispatch = useDispatch();
-	console.log('1111111111112222223333334344444444');
 	useEffect(() => {
 		if (stompClient.connected) {
 			const onMessageRecieved = (msg) => {

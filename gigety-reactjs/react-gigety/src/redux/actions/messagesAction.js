@@ -41,7 +41,7 @@ export const updateUserMessageNotifications = (notification) => (dispatch) => {
 
 export const findUserMessageNotifications = (userId) => async (dispatch) => {
 	try {
-		const response = await gigetyMessenger.get(`/user/${userId}/queue/messages`);
+		const response = await gigetyMessenger.get(`/user/${userId}/topic/messages`);
 		console.log('RESPONSEEEE :: ', response);
 		dispatch({
 			type: UPDATE_MESSAGE_NOTIFICATIONS,

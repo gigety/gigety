@@ -9,7 +9,6 @@ export { StompClientContext };
 const MessageContext = ({ children }) => {
 	let stompClient = null;
 	let wrappedStompClient = null;
-	console.log('WHHHHHHHHHHYYYYYYYYYYYYYYYY');
 	const giguser = useGigUser();
 	const onConnected = () => {
 		console.log('SockJS iiiiiiissssss COnnected to STOMP protocol');
@@ -20,7 +19,7 @@ const MessageContext = ({ children }) => {
 			dispatch(updateUserMessageNotifications(notification));
 		};
 		if (giguser) {
-			stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
+			stompClient.subscribe(`/user/${giguser.id}/topic/messages`, onMessageRecieved);
 		}
 	};
 
@@ -37,11 +36,11 @@ const MessageContext = ({ children }) => {
 	stompClient = stomp.over(SockJS);
 	stompClient.connect({}, onConnected, onError);
 
+	stomp.debug = (f) => f;
 	const dispatch = useDispatch();
 
 	const sendChatMessage = (message) => {
 		console.log(`sending Message ${message}`);
-
 		stompClient.send('/msg/chat', {}, JSON.stringify(message));
 		dispatch(updateChatMessages(message));
 	};

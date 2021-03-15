@@ -33,7 +33,6 @@ export const useAllNewUserMessages = (userId) => {
 export const useMessenger = (giguser, contact) => {
 	const { stompClient } = useContext(StompClientContext);
 	const dispatch = useDispatch();
-	console.log('1111111111112222223333334344444444');
 	useEffect(() => {
 		if (stompClient.connected) {
 			const onMessageRecieved = (msg) => {
@@ -44,7 +43,7 @@ export const useMessenger = (giguser, contact) => {
 					dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
 				}
 			};
-			const id = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
+			const { id } = stompClient.subscribe(`/user/${giguser.id}/topic}/messages`, onMessageRecieved);
 
 			return () => {
 				console.log(`here we unsubscibe to id ${id}, you best check this is proper way to unsubscribe`);

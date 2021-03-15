@@ -29,20 +29,17 @@ public class MongoConfiguration extends AbstractMongoClientConfiguration {
 
 	}
 
-
 	@Override
 	public MongoClient mongoClient() {
-		MongoClient mongoClient = MongoClients.create(uri);
 		
+		MongoClient mongoClient = MongoClients.create(uri);
 		return mongoClient;
-
 	}
 
 	@Override
 	protected String getDatabaseName() {
-		// TODO Auto-generated method stub
+		
 		return database;
 	}
-	
 
 }

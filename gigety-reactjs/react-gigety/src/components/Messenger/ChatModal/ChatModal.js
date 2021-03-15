@@ -20,7 +20,6 @@ const ChatModal = ({ profile }) => {
 	//useMessenger(giguser, contact);
 	const { stompClient } = useContext(StompClientContext);
 	const dispatch = useDispatch();
-	console.log('1111111111112222223333334344444444');
 	useEffect(() => {
 		if (stompClient.connected) {
 			const onMessageRecieved = (msg) => {
