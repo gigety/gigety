@@ -19,11 +19,22 @@ const ChatMessenger = () => {
 	//useMessenger(giguser, activeContact);
 	//onst { stompClient } = useContext(StompClientContext);
 	const dispatch = useDispatch();
-
+	let subId = '';
 	useEffect(() => {
 		const stomp = require('stompjs');
 		let SockJS = require('sockjs-client');
 		SockJS = new SockJS(GIGETY_MESSENGER_URL + '/ws');
+		SockJS.onopen = () => {
+			console.log('SOCKJS is CONNECTED AND OPEN FOR MESSAGING');
+		};
+		SockJS.onmessage = (message) => {
+			console.log('SOCKJS RECIEVED A MESSAGE :: ', message);
+		};
+		SockJS.onclose = () => {
+			console.log('SOCKJS is CLOSED  ');
+			console.log(`here we unsubscibe to id ${subId}, you best check this is proper way to unsubscribe`);
+			stompClient.unsubscribe(subId);
+		};
 		const stompClient = stomp.over(SockJS);
 		const onError = (error) => {
 			console.log('ERRRRRRRRRRRRRRR : ', error);
@@ -34,17 +45,15 @@ const ChatMessenger = () => {
 				const notification = JSON.parse(msg.body);
 				console.log('Active COntact where are you ??????? ', activeContact);
 				console.log('Notification :::::::::::::: ', notification);
-				if (activeContact.contactId === notification.senderId) {
-					console.log('WE FOUND A MATCH');
-					dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
-				}
+				//if (activeContact.contactId === notification.senderId) {
+				console.log('WE FOUND A MATCH');
+				dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
+				//dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
+				//}
 			};
 			const { id } = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
+			subId = id;
 			console.log('IIIISSSS COOONN NNEEECCCCTTTTED v wwwwwwaaaaayyyy:: ', stompClient.connected);
-			return () => {
-				console.log(`here we unsubscibe to id ${id}, you best check this is proper way to unsubscribe`);
-				stompClient.unsubscribe(id);
-			};
 		};
 		stompClient.connect({}, onConnected, onError);
 	}, [giguser, dispatch, activeContact]);

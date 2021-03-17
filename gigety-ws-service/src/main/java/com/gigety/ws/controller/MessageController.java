@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,6 +54,11 @@ public class MessageController {
 				);
 		log.info("Message Sent to queue {}", message.getRecipientId());
 	}
+	
+//	@SubscribeMapping("/user/{userid}/queue/messages")
+//	public void handleQueueSubscriptions(@PathVariable String userid) {
+//		log.info("User {} subscribed to queue messsages ");
+//	}
 	
 	@GetMapping("/messages/{senderId}/{recipientId}")
 	public ResponseEntity<?> find121ChatMessages( @PathVariable String senderId, @PathVariable String recipientId){

@@ -21,12 +21,15 @@ const ChatModal = ({ profile }) => {
 	//useMessenger(giguser, contact);
 	//const { stomp, SockJS } = useContext(StompClientContext);
 	const dispatch = useDispatch();
-	let subId = '';
-
+	let subId;
 	useEffect(() => {
 		const stomp = require('stompjs');
 		let SockJS = require('sockjs-client');
 		SockJS = new SockJS(GIGETY_MESSENGER_URL + '/ws');
+		SockJS.onclose = () => {
+			console.log(`here we unsubscibe to id ${subId}, you best check this is proper way to unsubscribe`);
+			stompClient.unsubscribe(subId);
+		};
 		const stompClient = stomp.over(SockJS);
 		const onError = (error) => {
 			console.log('ERRRRRRRRRRRRRRR : ', error);
@@ -41,15 +44,10 @@ const ChatModal = ({ profile }) => {
 				}
 			};
 			const { id } = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
-			subId = id;
 			console.log('IIIISSSS COOONN NNEEECCCCTTTTED v:: ', stompClient.connected);
+			subId = id;
 		};
 		stompClient.connect({}, onConnected, onError);
-
-		return () => {
-			console.log(`here we unsubscibe to id ${subId}, you best check this is proper way to unsubscribe`);
-			//stompClient.unsubscribe(subId);
-		};
 	}, [giguser, contact, dispatch]);
 
 	return (
