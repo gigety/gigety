@@ -4,14 +4,16 @@ import { Container, Divider, Grid, GridColumn } from 'semantic-ui-react';
 import ChatMessenger from '../ChatMessenger/ChatMessenger';
 import ContactList from '../ContactList/ContactList';
 import NotificationsScrollable from '../NotificationsScrollable/NotificationsScrollable';
-import { useActiveContact, useContacts } from 'redux/hooks/useContacts';
+import { useContacts } from 'redux/hooks/useContacts';
+import { useSelector } from 'react-redux';
 const MessengerPage = () => {
 	//const { giguser } = useSelector((state) => state.giguser);
 	const giguser = useGigUser();
 	console.log(giguser);
 
 	const contacts = useContacts(giguser.id);
-	const activeContact = useActiveContact();
+	const { giguserAccount } = useSelector((state) => state.giguserAccount);
+	const { activeContact } = giguserAccount;
 
 	return (
 		<Container fluid>

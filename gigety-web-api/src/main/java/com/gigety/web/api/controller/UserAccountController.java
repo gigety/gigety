@@ -5,6 +5,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gigety.web.api.db.mongo.entity.UserAccount;
@@ -14,15 +15,16 @@ import com.gigety.web.api.security.CurrentUser;
 import com.gigety.web.api.security.UserPrincipal;
 import com.gigety.web.api.service.UserAccountService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
+@RequestMapping("/userAccount")
 @Slf4j
 public class UserAccountController {
 
-	private UserAccountService userAccountService;
+	private final UserAccountService userAccountService;
 	
 	/**
 	 * Currently this method is not used, however i the future we may want user to create an account manually.
@@ -39,7 +41,7 @@ public class UserAccountController {
 		return ua;
 	}
 	
-	@GetMapping(value = "/userAccount")
+	@GetMapping()
 	@PreAuthorize("hasRole('USER')")
 	public UserAccount getUserAccount(@CurrentUser UserPrincipal userPrincipal) throws GigetyException {
 		UserAccount ua = null;
@@ -64,7 +66,7 @@ public class UserAccountController {
 		}
 	}
 	
-	@PostMapping(value = "/userAccount/update")
+	@PostMapping(value = "/update")
 	public UserAccount updateUserAccount(@CurrentUser UserPrincipal userPrincipal, UserAccount userAccount) throws GigetyException{
 		try {
 			UserAccount ua = userAccountService.updateUserAccount(userAccount);
@@ -75,6 +77,7 @@ public class UserAccountController {
 			throw new GigetyException("Error Updaitng User Account for user " + userPrincipal.getEmail()); 
 		}
 	}
+	
 	
 	
 }

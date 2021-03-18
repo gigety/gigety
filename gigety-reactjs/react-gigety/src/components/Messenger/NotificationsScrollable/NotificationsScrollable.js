@@ -1,5 +1,4 @@
 import React from 'react';
-import { useGigUser } from 'redux/hooks/useGigUser';
 import _ from 'lodash';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { List, ListItem } from 'semantic-ui-react';

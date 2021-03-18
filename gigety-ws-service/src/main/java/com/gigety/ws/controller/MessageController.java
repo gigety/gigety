@@ -3,6 +3,7 @@ package com.gigety.ws.controller;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -55,6 +56,10 @@ public class MessageController {
 		log.info("Message Sent to queue {}", message.getRecipientId());
 	}
 	
+	@MessageExceptionHandler({Exception.class})
+	public void handleMessageException(Throwable t) {
+		log.error(t.getMessage());
+	}
 //	@SubscribeMapping("/user/{userid}/queue/messages")
 //	public void handleQueueSubscriptions(@PathVariable String userid) {
 //		log.info("User {} subscribed to queue messsages ");

@@ -1,6 +1,6 @@
 import gigety from 'apis/gigety';
 import { updateUserMessageNotifications } from './messagesAction';
-import { GET_ERRORS, UPDATE_ACTIVE_CONTACT, UPDATE_CONTACT_LIST } from './types';
+import { GET_CURRENT_USR_ACCOUNT, GET_ERRORS, UPDATE_ACTIVE_CONTACT, UPDATE_CONTACT_LIST } from './types';
 
 export const findUserContacts = (userId) => async (dispatch) => {
 	try {
@@ -27,18 +27,16 @@ export const updateActiveContact = (contact) => async (dispatch, getState) => {
 		});
 		console.log('found active contact :: ', activeContact);
 		if (!activeContact || activeContact.length === 0) {
-			try {
-				const response = await gigety.post('/contacts', contact);
-				activeContact = response.data;
-			} catch (error) {
-				console.warn(error);
-			}
+			const response = await gigety.post('/contacts', contact);
+			activeContact = response.data;
 		}
+		const response2 = await gigety.post('/contacts/setActive', contact);
+		const ua = await gigety.get('/userAccount');
 		dispatch({
-			type: UPDATE_ACTIVE_CONTACT,
-			payload: activeContact,
+			type: GET_CURRENT_USR_ACCOUNT,
+			payload: ua,
 		});
-		dispatch(updateUserMessageNotifications())
+		dispatch(updateUserMessageNotifications());
 	} catch (error) {
 		console.error('ERROR :: ', error);
 		dispatch({

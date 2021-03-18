@@ -31,6 +31,7 @@ const ChatModal = ({ profile }) => {
 			stompClient.unsubscribe(subId);
 		};
 		const stompClient = stomp.over(SockJS);
+		stompClient.debug = (f) => f;
 		const onError = (error) => {
 			console.log('ERRRRRRRRRRRRRRR : ', error);
 		};

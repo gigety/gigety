@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gigety.web.api.db.mongo.entity.Contact;
+import com.gigety.web.api.db.mongo.entity.UserAccount;
 import com.gigety.web.api.security.CurrentUser;
 import com.gigety.web.api.security.UserPrincipal;
 import com.gigety.web.api.service.ContactsService;
+import com.gigety.web.api.service.UserAccountService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class ContactsController {
 
 	private final ContactsService contactsService;
-	
+	private final UserAccountService userAccountService;
 	@GetMapping("/{userId}")
 	public List<Contact> findContactsForUser(@PathVariable(value="userId") String userId){
 		
@@ -35,5 +37,10 @@ public class ContactsController {
 		return contactsService.addContact(contact);
 	}
 	
+	@PostMapping("/setActive")
+	public Contact setActive(@CurrentUser UserPrincipal principal, @RequestBody Contact contact) {
+		UserAccount ua = userAccountService.setActiveContact(String.valueOf(principal.getId()), contact);
+		return contact;
+	}
 
 }

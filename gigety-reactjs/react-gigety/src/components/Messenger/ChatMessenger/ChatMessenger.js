@@ -7,13 +7,9 @@ import { List } from 'semantic-ui-react';
 import ContactAvatar from '../ContactAvatar/ContactAvatar';
 import MessageInput from '../MessageInput/MessageInput';
 import { findMessagesFor121Chat } from 'redux/actions/messagesAction';
-import { StompClientContext } from 'contexts/StompClientContext';
 import { GIGETY_MESSENGER_URL } from '../../../constants';
-import { useActiveContact } from 'redux/hooks/useContacts';
-const ChatMessenger = () => {
+const ChatMessenger = ({ activeContact }) => {
 	const { giguser } = useSelector((state) => state.giguser);
-	let activeContact = useActiveContact();
-	activeContact = activeContact ? activeContact : {};
 	console.log('Active COntact :::: ', activeContact);
 	const messages = use121ChatMessages(giguser.id, activeContact.contactId);
 	//useMessenger(giguser, activeContact);
@@ -36,6 +32,7 @@ const ChatMessenger = () => {
 			stompClient.unsubscribe(subId);
 		};
 		const stompClient = stomp.over(SockJS);
+		stompClient.debug = (f) => f;
 		const onError = (error) => {
 			console.log('ERRRRRRRRRRRRRRR : ', error);
 		};
@@ -45,11 +42,11 @@ const ChatMessenger = () => {
 				const notification = JSON.parse(msg.body);
 				console.log('Active COntact where are you ??????? ', activeContact);
 				console.log('Notification :::::::::::::: ', notification);
-				//if (activeContact.contactId === notification.senderId) {
-				console.log('WE FOUND A MATCH');
-				dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
-				//dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
-				//}
+				if (activeContact.contactId === notification.senderId) {
+					console.log('WE FOUND A MATCH');
+					//dispatch(findMessagesFor121Chat(1, 2));
+					dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
+				}
 			};
 			const { id } = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
 			subId = id;

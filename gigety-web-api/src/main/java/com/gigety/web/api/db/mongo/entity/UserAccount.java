@@ -25,6 +25,8 @@ public class UserAccount {
 	private String email;
 	private String userName;
 	private UserProfile activeProfile;
+	private Contact activeContact;
+
 	// @Transient
 	private List<UserProfile> allProfiles;
 	private List<Contact> allContacts;
