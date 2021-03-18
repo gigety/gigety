@@ -2,11 +2,11 @@ import React, { useContext, useState } from 'react';
 import { Button, Input } from 'semantic-ui-react';
 import { StompClientContext } from 'contexts/StompClientContext';
 
-const MessageInput = ({ activeContact, giguser }) => {
+const MessageInput = ({ activeContact, giguser, sendChatMessage }) => {
 	console.log('ACCCTIVE CC :: ', activeContact);
 	console.log('GIG UUUUUUUUUSER : ', giguser);
 	const [text, setText] = useState('');
-	const { sendChatMessage } = useContext(StompClientContext);
+	//const { sendChatMessage } = useContext(StompClientContext);
 	const sendTheMessage = (msg) => {
 		if (msg.trim() !== '') {
 			const message = {

@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { PropTypes } from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import ScrollToBottom from 'react-scroll-to-bottom';
-import { use121ChatMessages, useMessenger } from 'redux/hooks/useMessages';
+import { use121ChatMessages } from 'redux/hooks/useMessages';
 import { List } from 'semantic-ui-react';
 import ContactAvatar from '../ContactAvatar/ContactAvatar';
 import MessageInput from '../MessageInput/MessageInput';
-import { findMessagesFor121Chat } from 'redux/actions/messagesAction';
+import { findMessagesFor121Chat, updateChatMessages } from 'redux/actions/messagesAction';
 import { GIGETY_MESSENGER_URL } from '../../../constants';
 const ChatMessenger = ({ activeContact }) => {
 	const { giguser } = useSelector((state) => state.giguser);
@@ -14,9 +14,10 @@ const ChatMessenger = ({ activeContact }) => {
 	const messages = use121ChatMessages(giguser.id, activeContact.contactId);
 	//useMessenger(giguser, activeContact);
 	//onst { stompClient } = useContext(StompClientContext);
+	const sendChatMessage = useRef(null);
 	const dispatch = useDispatch();
-	let subId = '';
 	useEffect(() => {
+		let subId = '';
 		const stomp = require('stompjs');
 		let SockJS = require('sockjs-client');
 		SockJS = new SockJS(GIGETY_MESSENGER_URL + '/ws');
@@ -27,8 +28,6 @@ const ChatMessenger = ({ activeContact }) => {
 			console.log('SOCKJS RECIEVED A MESSAGE :: ', message);
 		};
 		SockJS.onclose = () => {
-			console.log('SOCKJS is CLOSED  ');
-			console.log(`here we unsubscibe to id ${subId}, you best check this is proper way to unsubscribe`);
 			stompClient.unsubscribe(subId);
 		};
 		const stompClient = stomp.over(SockJS);
@@ -36,21 +35,19 @@ const ChatMessenger = ({ activeContact }) => {
 		const onError = (error) => {
 			console.log('ERRRRRRRRRRRRRRR : ', error);
 		};
-
+		sendChatMessage.current = (message) => {
+			stompClient.send('/msg/chat', {}, JSON.stringify(message));
+			dispatch(updateChatMessages(message));
+		};
 		const onConnected = () => {
 			const onMessageRecieved = (msg) => {
 				const notification = JSON.parse(msg.body);
-				console.log('Active COntact where are you ??????? ', activeContact);
-				console.log('Notification :::::::::::::: ', notification);
 				if (activeContact.contactId === notification.senderId) {
-					console.log('WE FOUND A MATCH');
-					//dispatch(findMessagesFor121Chat(1, 2));
 					dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
 				}
 			};
 			const { id } = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
 			subId = id;
-			console.log('IIIISSSS COOONN NNEEECCCCTTTTED v wwwwwwaaaaayyyy:: ', stompClient.connected);
 		};
 		stompClient.connect({}, onConnected, onError);
 	}, [giguser, dispatch, activeContact]);
@@ -70,7 +67,11 @@ const ChatMessenger = ({ activeContact }) => {
 						: ''}
 				</List>
 			</ScrollToBottom>
-			<MessageInput activeContact={activeContact} giguser={giguser}></MessageInput>
+			<MessageInput
+				activeContact={activeContact}
+				giguser={giguser}
+				sendChatMessage={sendChatMessage.current}
+			></MessageInput>
 		</>
 	);
 };
