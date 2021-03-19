@@ -28,14 +28,17 @@ const NotificationsScrollable = ({ giguser }) => {
 				<List>
 					{messageNotifications
 						? messageNotifications.map((message) => (
-								<Link>
-									<ListItem as={Link} to={'/'} onClick={(e) => getConversationMessages(message, e)}>
-										<List.Content>
-											<List.Header>{message.senderName}</List.Header>
-											<List.Description>{message.content}</List.Description>
-										</List.Content>
-									</ListItem>
-								</Link>
+								<ListItem
+									key={message.id}
+									as={Link}
+									to={'/'}
+									onClick={(e) => getConversationMessages(message, e)}
+								>
+									<List.Content>
+										<List.Header>{message.senderName}</List.Header>
+										<List.Description>{message.content}</List.Description>
+									</List.Content>
+								</ListItem>
 						  ))
 						: ''}
 				</List>

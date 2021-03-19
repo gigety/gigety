@@ -28,6 +28,7 @@ const ChatMessenger = ({ activeContact }) => {
 			console.log('SOCKJS RECIEVED A MESSAGE :: ', message);
 		};
 		SockJS.onclose = () => {
+			console.log('We are champions unsubscribing !!!!!!!!!!!!!!!!!!!!!!!!!!!!');
 			stompClient.unsubscribe(subId);
 		};
 		const stompClient = stomp.over(SockJS);
@@ -58,7 +59,7 @@ const ChatMessenger = ({ activeContact }) => {
 					{messages
 						? messages.map((msg) => (
 								<List.Item>
-									<ContactAvatar size="med" contact={activeContact} />
+									<ContactAvatar size="large" contact={activeContact} />
 									<List.Content>
 										<List.Description>{msg.content}</List.Description>
 									</List.Content>

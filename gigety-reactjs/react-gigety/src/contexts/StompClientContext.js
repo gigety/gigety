@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+/* import React, { createContext } from 'react';
 import { useDispatch } from 'react-redux';
 import { useGigUser } from 'redux/hooks/useGigUser';
 import { GIGETY_MESSENGER_URL } from '../constants';
@@ -58,3 +58,4 @@ const MessageContext = ({ children }) => {
 };
 
 export default MessageContext;
+ */
