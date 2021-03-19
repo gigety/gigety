@@ -32,7 +32,7 @@ const ChatMessenger = ({ activeContact }) => {
 			stompClient.unsubscribe(subId);
 		};
 		const stompClient = stomp.over(SockJS);
-		stompClient.debug = (f) => f;
+		stompClient.debug = (str) => console.log(str);
 		const onError = (error) => {
 			console.log('ERRRRRRRRRRRRRRR : ', error);
 		};
@@ -78,9 +78,11 @@ const ChatMessenger = ({ activeContact }) => {
 };
 
 ChatMessenger.propTypes = {
-	activeContact: {
+	activeContact: PropTypes.shape({
 		contactId: PropTypes.string,
-	},
+		contactName: PropTypes.string,
+		contactImageImgUrl: PropTypes.string,
+	}),
 };
 ChatMessenger.defaultProps = {
 	activeContact: { contactId: '0' },
