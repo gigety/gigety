@@ -1,9 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { Fragment } from 'react';
 import BaseMap from './BaseMap';
 import { Circle, Marker } from '@react-google-maps/api';
 import { METERS_PER_MILE } from '../../constants';
-import _ from 'lodash';
 const ProfilesMap = ({ profiles }) => {
 	return (
 		<BaseMap>
@@ -16,7 +14,7 @@ const ProfilesMap = ({ profiles }) => {
 										lng: profileLocation.location.lng,
 									};
 									return (
-										<>
+										<Fragment key={profileLocation.id}>
 											<Marker position={center} />
 											<Circle
 												options={{
@@ -25,7 +23,7 @@ const ProfilesMap = ({ profiles }) => {
 													radius: METERS_PER_MILE * profileLocation.radius,
 												}}
 											/>
-										</>
+										</Fragment>
 									);
 							  })
 							: null;

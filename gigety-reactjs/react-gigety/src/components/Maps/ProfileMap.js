@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Circle, Marker } from '@react-google-maps/api';
 import { useCurrentLocation } from '../../hooks/useCurrentLocation';
@@ -15,12 +15,12 @@ function ProfileMap({ profileLocations }) {
 				? profileLocations.map((profileLocation) => {
 						const center = { lat: profileLocation.location.lat, lng: profileLocation.location.lng };
 						return (
-							<>
+							<Fragment key={profileLocation.id}>
 								<Marker position={center} />
 								<Circle
 									options={{ ...options, center, radius: METERS_PER_MILE * profileLocation.radius }}
 								/>
-							</>
+							</Fragment>
 						);
 				  })
 				: null}

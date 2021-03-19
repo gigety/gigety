@@ -16,6 +16,7 @@ import com.gigety.web.api.security.CurrentUser;
 import com.gigety.web.api.security.UserPrincipal;
 import com.gigety.web.api.service.ContactsService;
 import com.gigety.web.api.service.UserAccountService;
+import com.gigety.web.api.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +27,7 @@ public class ContactsController {
 
 	private final ContactsService contactsService;
 	private final UserAccountService userAccountService;
+	private final UserService userService;
 	@GetMapping("/{userId}")
 	public List<Contact> findContactsForUser(@PathVariable(value="userId") String userId){
 		
@@ -34,13 +36,15 @@ public class ContactsController {
 	
 	@PostMapping(consumes= {MediaType.APPLICATION_JSON_VALUE})
 	public Contact addContact(@CurrentUser UserPrincipal principal, @RequestBody Contact contact) {
+		String imageUrl = userService.findUserImagerUrlById(Long.valueOf(contact.getContactId()));
+		contact.setContactImageUrl(imageUrl);
 		return contactsService.addContact(contact);
 	}
 	
 	@PostMapping("/setActive")
-	public Contact setActive(@CurrentUser UserPrincipal principal, @RequestBody Contact contact) {
+	public UserAccount setActive(@CurrentUser UserPrincipal principal, @RequestBody Contact contact) {
 		UserAccount ua = userAccountService.setActiveContact(String.valueOf(principal.getId()), contact);
-		return contact;
+		return ua;
 	}
 
 }

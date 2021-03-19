@@ -2,63 +2,67 @@ import React, { useEffect, useRef } from 'react';
 import { PropTypes } from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import ScrollToBottom from 'react-scroll-to-bottom';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
 import { use121ChatMessages } from 'redux/hooks/useMessages';
 import { List } from 'semantic-ui-react';
 import ContactAvatar from '../ContactAvatar/ContactAvatar';
 import MessageInput from '../MessageInput/MessageInput';
 import { findMessagesFor121Chat, updateChatMessages } from 'redux/actions/messagesAction';
-import { GIGETY_MESSENGER_URL } from '../../../constants';
+import { GIGETY_MESSENGER_WS_URL } from '../../../constants';
 const ChatMessenger = ({ activeContact }) => {
 	const { giguser } = useSelector((state) => state.giguser);
-	console.log('Active COntact :::: ', activeContact);
 	const messages = use121ChatMessages(giguser.id, activeContact.contactId);
 	//useMessenger(giguser, activeContact);
 	//onst { stompClient } = useContext(StompClientContext);
 	const sendChatMessage = useRef(null);
 	const dispatch = useDispatch();
+	const stompClient = useRef(null);
 	useEffect(() => {
 		let subId = '';
-		const stomp = require('stompjs');
-		let SockJS = require('sockjs-client');
-		SockJS = new SockJS(GIGETY_MESSENGER_URL + '/ws');
-		SockJS.onopen = () => {
-			console.log('SOCKJS is CONNECTED AND OPEN FOR MESSAGING');
-		};
-		SockJS.onmessage = (message) => {
-			console.log('SOCKJS RECIEVED A MESSAGE :: ', message);
-		};
-		SockJS.onclose = () => {
-			stompClient.unsubscribe(subId);
-		};
-		const stompClient = stomp.over(SockJS);
-		stompClient.debug = (f) => f;
-		const onError = (error) => {
-			console.log('ERRRRRRRRRRRRRRR : ', error);
-		};
-		sendChatMessage.current = (message) => {
-			stompClient.send('/msg/chat', {}, JSON.stringify(message));
-			dispatch(updateChatMessages(message));
-		};
-		const onConnected = () => {
+		const sockJS = new SockJS(GIGETY_MESSENGER_WS_URL);
+		stompClient.current = Stomp.over(() => sockJS);
+
+		const onConnect = () => {
 			const onMessageRecieved = (msg) => {
+				console.log('RECEIVED :::', msg);
 				const notification = JSON.parse(msg.body);
 				if (activeContact.contactId === notification.senderId) {
+					console.log('updating messages');
 					dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
 				}
 			};
-			const { id } = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
+			const { id } = stompClient.current.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
 			subId = id;
 		};
-		stompClient.connect({}, onConnected, onError);
-	}, [giguser, dispatch, activeContact]);
+		const onError = (error) => {
+			console.log('ERRRRRRRRRRRRRRR : ', error);
+		};
+		stompClient.current.reconnectDelay = 1000;
+		stompClient.current.debug = (str) => console.log(str);
+		stompClient.current.connect({}, onConnect, onError);
+		sendChatMessage.current = (message) => {
+			console.log('SENDDDDDDDDDING ', message);
+			stompClient.current.send('/msg/chat', {}, JSON.stringify(message));
+			dispatch(updateChatMessages(message));
+		};
+
+		return () => {
+			console.log('u suk');
+			if (stompClient.current) {
+				console.log('Unsubscribing :: ', subId);
+				stompClient.current.unsubscribe(subId);
+			}
+		};
+	}, [giguser, dispatch, activeContact, stompClient]);
 	return (
 		<>
 			<ScrollToBottom className="messages">
 				<List>
 					{messages
 						? messages.map((msg) => (
-								<List.Item>
-									<ContactAvatar size="med" contact={activeContact} />
+								<List.Item key={msg.id}>
+									<ContactAvatar size="large" contact={activeContact} />
 									<List.Content>
 										<List.Description>{msg.content}</List.Description>
 									</List.Content>
@@ -77,9 +81,9 @@ const ChatMessenger = ({ activeContact }) => {
 };
 
 ChatMessenger.propTypes = {
-	activeContact: {
+	activeContact: PropTypes.shape({
 		contactId: PropTypes.string,
-	},
+	}),
 };
 ChatMessenger.defaultProps = {
 	activeContact: { contactId: '0' },

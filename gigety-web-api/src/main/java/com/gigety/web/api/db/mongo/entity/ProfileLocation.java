@@ -1,5 +1,8 @@
 package com.gigety.web.api.db.mongo.entity;
 
+import javax.persistence.Id;
+
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,6 +19,8 @@ import lombok.Data;
 @TypeAlias("ProfileLocation")
 public class ProfileLocation {
 
+	@Id
+	private ObjectId id = new ObjectId();
 	private String address;
 	private Location location;
 	private String radius;

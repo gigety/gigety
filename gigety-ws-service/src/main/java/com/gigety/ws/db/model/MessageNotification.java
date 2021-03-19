@@ -1,5 +1,7 @@
 package com.gigety.ws.db.model;
 
+import org.springframework.data.annotation.TypeAlias;
+
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,6 +10,7 @@ import lombok.Data;
  */
 @Data
 @Builder
+@TypeAlias("MessageNotification")
 public class MessageNotification {
 	private String id;
 	private String senderId;

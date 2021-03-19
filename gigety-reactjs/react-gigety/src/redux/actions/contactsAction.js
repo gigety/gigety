@@ -30,11 +30,11 @@ export const updateActiveContact = (contact) => async (dispatch, getState) => {
 			const response = await gigety.post('/contacts', contact);
 			activeContact = response.data;
 		}
-		const response2 = await gigety.post('/contacts/setActive', contact);
-		const ua = await gigety.get('/userAccount');
+		const ua = await gigety.post('/contacts/setActive', contact);
+		console.log('UAAAAAASAAAAAAAAA ', ua);
 		dispatch({
 			type: GET_CURRENT_USR_ACCOUNT,
-			payload: ua,
+			payload: ua.data,
 		});
 		dispatch(updateUserMessageNotifications());
 	} catch (error) {

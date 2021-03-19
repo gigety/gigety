@@ -8,6 +8,7 @@ const ContactList = ({ contacts }) => {
 			{contacts
 				? contacts.map((contact) => (
 						<List.Item
+							key={contact.id}
 							as={Link}
 							to={'/'}
 							onClick={(e) => {
@@ -16,7 +17,7 @@ const ContactList = ({ contacts }) => {
 						>
 							<Image avatar src={contact.contactImageUrl} />
 							<List.Content>
-								<List.Header as="a">{contact.contactName}</List.Header>
+								<List.Header>{contact.contactName}</List.Header>
 								<List.Description>... online</List.Description>
 							</List.Content>
 						</List.Item>

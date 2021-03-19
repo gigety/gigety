@@ -16,7 +16,6 @@ export function sendMessage(msg_id, msg) {
 
 export const findMessagesFor121Chat = (currentUserId, profileId) => async (dispatch) => {
 	try {
-		console.log('SSSSSSIUKHBSKJBSKUBSKBJSKUBSKUBSKUB');
 		const response = await gigetyMessenger.get(`/messages/${currentUserId}/${profileId}`);
 		dispatch({
 			type: UPDATE_CHAT_MESSAGES,
@@ -32,7 +31,6 @@ export const findMessagesFor121Chat = (currentUserId, profileId) => async (dispa
 };
 
 export const updateUserMessageNotifications = (notification) => (dispatch) => {
-	console.log('UPDATING NOTIFICATION ----- ', notification);
 	dispatch({
 		type: UPDATE_MESSAGE_NOTIFICATIONS,
 		payload: notification,
@@ -42,7 +40,6 @@ export const updateUserMessageNotifications = (notification) => (dispatch) => {
 export const findUserMessageNotifications = (userId) => async (dispatch) => {
 	try {
 		const response = await gigetyMessenger.get(`/user/${userId}/queue/messages`);
-		console.log('RESPONSEEEE :: ', response);
 		dispatch({
 			type: UPDATE_MESSAGE_NOTIFICATIONS,
 			payload: response.data,

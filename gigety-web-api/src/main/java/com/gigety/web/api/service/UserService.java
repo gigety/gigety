@@ -5,4 +5,5 @@ import com.gigety.web.api.db.model.User;
 public interface UserService {
 
 	User findUserByEmail(String email);
+	String findUserImagerUrlById(Long id);
 }
