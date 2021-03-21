@@ -16,8 +16,12 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gigety.ws.exception.handler.MessageHandshakeHandler;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSocketMessageBroker
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
 
@@ -32,6 +36,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
 	@Value("${active-mq-url}")
 	private String activeMqUrl;
+	private final MessageHandshakeHandler messageHandshakeHandler;
 
 	/**
 	 * Register STOMP endpoint so clients can connect to STOMP. Enable SockJS for
@@ -41,6 +46,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
 		registry.addEndpoint("/ws")
+				.setHandshakeHandler(messageHandshakeHandler)
 				.setAllowedOrigins("https://localhost.com")
 				// .setAllowedOrigins("*")
 				.withSockJS();

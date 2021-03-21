@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { PropTypes } from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import ScrollToBottom from 'react-scroll-to-bottom';
@@ -7,51 +7,46 @@ import { List } from 'semantic-ui-react';
 import ContactAvatar from '../ContactAvatar/ContactAvatar';
 import MessageInput from '../MessageInput/MessageInput';
 import { findMessagesFor121Chat, updateChatMessages } from 'redux/actions/messagesAction';
-import { GIGETY_MESSENGER_URL } from '../../../constants';
+import { StompClientContext } from 'contexts/StompClientContext';
 const ChatMessenger = ({ activeContact }) => {
 	const { giguser } = useSelector((state) => state.giguser);
+
 	console.log('Active COntact :::: ', activeContact);
 	const messages = use121ChatMessages(giguser.id, activeContact.contactId);
 	//useMessenger(giguser, activeContact);
-	//onst { stompClient } = useContext(StompClientContext);
+	const { getStompClient, addStompEventListener, stompEventTypes } = useContext(StompClientContext);
 	const sendChatMessage = useRef(null);
 	const dispatch = useDispatch();
 	useEffect(() => {
+		const stompClient = getStompClient();
+		console.log('Got Stomp Client', stompClient);
 		let subId = '';
-		const stomp = require('stompjs');
-		let SockJS = require('sockjs-client');
-		SockJS = new SockJS(GIGETY_MESSENGER_URL + '/ws');
-		SockJS.onopen = () => {
-			console.log('SOCKJS is CONNECTED AND OPEN FOR MESSAGING');
-		};
-		SockJS.onmessage = (message) => {
-			console.log('SOCKJS RECIEVED A MESSAGE :: ', message);
-		};
-		SockJS.onclose = () => {
-			console.log('We are champions unsubscribing !!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-			stompClient.unsubscribe(subId);
-		};
-		const stompClient = stomp.over(SockJS);
-		stompClient.debug = (str) => console.log(str);
-		const onError = (error) => {
-			console.log('ERRRRRRRRRRRRRRR : ', error);
-		};
 		sendChatMessage.current = (message) => {
-			stompClient.send('/msg/chat', {}, JSON.stringify(message));
+			stompClient.publish({ destination: '/msg/chat', body: JSON.stringify(message) });
 			dispatch(updateChatMessages(message));
 		};
+
 		const onConnected = () => {
 			const onMessageRecieved = (msg) => {
+				//TODO: get the contact and user from getState() and make this a custom hook or context
+				console.log('++++++RECIEVED MSG++++++', msg);
 				const notification = JSON.parse(msg.body);
 				if (activeContact.contactId === notification.senderId) {
 					dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
 				}
 			};
+			console.log('Gigety SubScribing .......');
 			const { id } = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
 			subId = id;
 		};
-		stompClient.connect({}, onConnected, onError);
-	}, [giguser, dispatch, activeContact]);
+		addStompEventListener(stompEventTypes.Connect, onConnected);
+		return () => {
+			if (stompClient) {
+				console.log('UNSUBSCRIBING ...');
+				stompClient.unsubscribe(subId);
+			}
+		};
+	}, [giguser, dispatch, activeContact, addStompEventListener, getStompClient, stompEventTypes]);
 	return (
 		<>
 			<ScrollToBottom className="messages">

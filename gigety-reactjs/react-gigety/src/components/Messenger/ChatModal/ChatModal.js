@@ -12,44 +12,46 @@ import { mapProfileToContact } from 'utils/objectMapper';
 import { findMessagesFor121Chat, updateChatMessages } from 'redux/actions/messagesAction';
 import MessageInput from '../MessageInput/MessageInput';
 import { GIGETY_MESSENGER_URL } from '../../../constants/index';
+import { StompClientContext } from 'contexts/StompClientContext';
 
 const ChatModal = ({ profile }) => {
 	const { giguser } = useSelector((state) => state.giguser);
 	const messages = use121ChatMessages(giguser.id, profile.userId);
 	const contact = mapProfileToContact(profile, giguser);
-	const sendChatMessage = useRef(null);
 	//useMessenger(giguser, contact);
-	//const { stomp, SockJS } = useContext(StompClientContext);
+	const { getStompClient, addStompEventListener, stompEventTypes } = useContext(StompClientContext);
+	const sendChatMessage = useRef(null);
 	const dispatch = useDispatch();
 	useEffect(() => {
-		let subId;
-		const stomp = require('stompjs');
-		let SockJS = require('sockjs-client');
-		SockJS = new SockJS(GIGETY_MESSENGER_URL + '/ws');
-		SockJS.onclose = () => {
-			stompClient.unsubscribe(subId);
-		};
-		const stompClient = stomp.over(SockJS);
-		stompClient.debug = (f) => f;
-		const onError = (error) => {
-			console.log('ERRRRRRRRRRRRRRR : ', error);
-		};
+		const stompClient = getStompClient();
+		console.log('Got Stomp Client', stompClient);
+		let subId = '';
 		sendChatMessage.current = (message) => {
-			stompClient.send('/msg/chat', {}, JSON.stringify(message));
+			stompClient.publish({ destination: '/msg/chat', body: JSON.stringify(message) });
 			dispatch(updateChatMessages(message));
 		};
+
 		const onConnected = () => {
 			const onMessageRecieved = (msg) => {
+				//TODO: get the contact and user from getState() and make this a custom hook or context
+				console.log('++++++RECIEVED MSG++++++', msg);
 				const notification = JSON.parse(msg.body);
 				if (contact.contactId === notification.senderId) {
 					dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
 				}
 			};
+			console.log('Gigety SubScribing .......');
 			const { id } = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
 			subId = id;
 		};
-		stompClient.connect({}, onConnected, onError);
-	}, [giguser, contact, dispatch]);
+		addStompEventListener(stompEventTypes.Connect, onConnected);
+		return () => {
+			if (stompClient) {
+				console.log('UNSUBSCRIBING ...');
+				stompClient.unsubscribe(subId);
+			}
+		};
+	}, [giguser, dispatch, contact, addStompEventListener, getStompClient, stompEventTypes]);
 
 	return (
 		<Popup

@@ -1,61 +1,97 @@
-/* import React, { createContext } from 'react';
-import { useDispatch } from 'react-redux';
-import { useGigUser } from 'redux/hooks/useGigUser';
-import { GIGETY_MESSENGER_URL } from '../constants';
-import { updateChatMessages, updateUserMessageNotifications } from '../redux/actions/messagesAction';
-//import * as stomp from '@stomp/stompjs';
-//import * as SockJS from 'sockjs-client';
+import React, { createContext } from 'react';
+import EventEmitter from 'eventemitter3';
+import { GIGETY_MESSENGER_STOMP_URL } from '../constants';
+import { Client } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
+
 const StompClientContext = createContext(null);
 export { StompClientContext };
+
 const MessageContext = ({ children }) => {
-	let stompClient = null;
+	let _stompClient = null;
 	let wrappedStompClient = null;
-	const giguser = useGigUser();
-	const onConnected = () => {
-		console.log('SockJS iiiiiiissssss COnnected to STOMP protocol');
-		console.log('may be a good place to subscribe to user specific messages so they can be notified');
-		// const onMessageRecieved = (msg) => {
-		// 	const notification = JSON.parse(msg.body);
-		// 	console.log('ALERT NOTIFICATION ::', notification);
-		// 	dispatch(updateUserMessageNotifications(notification));
-		// };
-		// if (giguser) {
-		// 	stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
-		// }
+	const log = (str) => console.log(str);
+	const stompEvent = new EventEmitter();
+	const stompEventTypes = {
+		Connect: 0,
+		Disconnect: 1,
+		Error: 2,
+		WebSocketClose: 3,
+		WebSocketError: 4,
 	};
+	const activateStompClient = (url = GIGETY_MESSENGER_STOMP_URL, login, passcode, host) => {
+		log('Creating StompClient ...');
 
-	const onError = (error) => {
-		console.error('GIGETY ERROR in STompCLientContext');
-		console.error(error);
+		_stompClient = new Client({
+			brokerURL: url,
+			connectHeaders: { login, passcode, host },
+			debug: (str) => str,
+			reconnectDelay: 200,
+			heartbeatIncoming: 500,
+			heartbeatOutgoing: 4000,
+			logRawCommunication: false,
+			webSocketFactory: () => {
+				return SockJS(url);
+			},
+			onStompError: (frame) => {
+				log('Gigety Stomp Error', frame);
+				stompEvent.emit(stompEventTypes.Error);
+			},
+			onConnect: (frame) => {
+				log('Gigety Stomp Connect', frame);
+				stompEvent.emit(stompEventTypes.Connect);
+			},
+			onDisconnect: (frame) => {
+				log('Gigety Stomp Disconnect', frame);
+				stompEvent.emit(stompEventTypes.Disconnect);
+			},
+			onWebSocketClose: (frame) => {
+				log('Gigety WebSocket Close', frame);
+				stompEvent.emit(stompEventTypes.WebSocketClose);
+			},
+			onWebSocketError: (frame) => {
+				log('Gigety WebSocket Error', frame);
+				stompEvent.emit(stompEventTypes.WebSocketError);
+			},
+		});
+		_stompClient.activate();
+		return _stompClient;
 	};
-
-	//Connect stompClient to gigety-ws-service
-	const stomp = require('stompjs');
-	let SockJS = require('sockjs-client');
-	SockJS = new SockJS(GIGETY_MESSENGER_URL + '/ws');
-	//SockJS = new SockJS('http://localhost:7070/messenger/ws', null, {});
-	stompClient = stomp.over(SockJS);
-	stompClient.connect({}, onConnected, onError);
-
-	stompClient.debug = (f) => f;
-	const dispatch = useDispatch();
-
-	const sendChatMessage = (message) => {
-		console.log(`sending Message ${message.body}`, message);
-		stompClient.send('/msg/chat', {}, JSON.stringify(message));
-		console.log('SSSSENNNNT');
-		dispatch(updateChatMessages(message));
+	const getStompClient = () => {
+		return _stompClient;
+	};
+	const removeStompClient = () => {
+		if (_stompClient) {
+			log('Deacitvating StompClient');
+			_stompClient.deactivate();
+			_stompClient = null;
+		}
+	};
+	const addStompEventListener = (eventType, emitted, context, isOnce) => {
+		log('Adding Event Type {}', eventType);
+		if (isOnce) {
+			stompEvent.once(eventType, emitted, context);
+		} else {
+			stompEvent.on(eventType, emitted, context);
+		}
+	};
+	const removeStompEventListener = (eventType, emmited, context) => {
+		log('Removing Event Listener for {}', eventType);
+		stompEvent.removeListener(eventType, emmited, context);
 	};
 	wrappedStompClient = {
-		stomp,
-		SockJS,
-		stompClient,
-		sendChatMessage,
+		activateStompClient,
+		removeStompClient,
+		getStompClient,
+		addStompEventListener,
+		removeStompEventListener,
+		stompEventTypes,
 	};
 
-	console.log(`CONFIGURATION:::: wrappedStompClient = ${wrappedStompClient}`);
+	log(`CONFIGURATION:::: wrappedStompClient = ${wrappedStompClient}`);
+	log('Activating StompClient in StompClientContext ...');
+	activateStompClient();
 	return <StompClientContext.Provider value={wrappedStompClient}>{children}</StompClientContext.Provider>;
 };
 
 export default MessageContext;
- */

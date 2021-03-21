@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
@@ -57,13 +58,13 @@ public class MessageController {
 	}
 	
 	@MessageExceptionHandler({Exception.class})
-	public void handleMessageException(Throwable t) {
-		log.error(t.getMessage());
+	@SendTo("/queue/errors")
+	public String handleMessageException(Throwable t) {
+		String msg = String.format("An error occured in gigety-ws-service handling a message :: %s", t.getMessage());
+		log.error(msg, t);
+		return msg;
+		
 	}
-//	@SubscribeMapping("/user/{userid}/queue/messages")
-//	public void handleQueueSubscriptions(@PathVariable String userid) {
-//		log.info("User {} subscribed to queue messsages ");
-//	}
 	
 	@GetMapping("/messages/{senderId}/{recipientId}")
 	public ResponseEntity<?> find121ChatMessages( @PathVariable String senderId, @PathVariable String recipientId){
