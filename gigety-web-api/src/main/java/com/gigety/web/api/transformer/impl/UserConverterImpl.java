@@ -7,8 +7,8 @@ import java.util.function.Function;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.gigety.web.api.db.model.OauthProvider;
-import com.gigety.web.api.db.model.User;
+import com.gigety.web.api.db.sql.model.OauthProvider;
+import com.gigety.web.api.db.sql.model.User;
 import com.gigety.web.api.payload.SignupRequest;
 import com.gigety.web.api.service.cached.OauthProviderService;
 import com.gigety.web.api.transformer.UserConverter;

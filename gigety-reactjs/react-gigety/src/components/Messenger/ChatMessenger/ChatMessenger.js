@@ -13,47 +13,41 @@ const ChatMessenger = ({ activeContact }) => {
 
 	console.log('Active COntact :::: ', activeContact);
 	const messages = use121ChatMessages(giguser.id, activeContact.contactId);
-	//useMessenger(giguser, activeContact);
-	const { getStompClient, addStompEventListener, stompEventTypes } = useContext(StompClientContext);
+	const { getStompClient } = useContext(StompClientContext);
 	const sendChatMessage = useRef(null);
 	const dispatch = useDispatch();
 	useEffect(() => {
 		const stompClient = getStompClient();
 		console.log('Got Stomp Client', stompClient);
-		let subId = '';
 		sendChatMessage.current = (message) => {
 			stompClient.publish({ destination: '/msg/chat', body: JSON.stringify(message) });
 			dispatch(updateChatMessages(message));
 		};
 
-		const onConnected = () => {
-			const onMessageRecieved = (msg) => {
-				//TODO: get the contact and user from getState() and make this a custom hook or context
-				console.log('++++++RECIEVED MSG++++++', msg);
-				const notification = JSON.parse(msg.body);
-				if (activeContact.contactId === notification.senderId) {
-					dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
-				}
-			};
-			console.log('Gigety SubScribing .......');
-			const { id } = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
-			subId = id;
+		const onMessageRecieved = (msg) => {
+			//TODO: get the contact and user from getState() and make this a custom hook or context
+			console.log('++++++RECIEVED MSG++++++', msg);
+			const notification = JSON.parse(msg.body);
+			if (activeContact.contactId === notification.senderId) {
+				dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
+			}
 		};
-		addStompEventListener(stompEventTypes.Connect, onConnected);
+		console.log('Gigety SubScribing .......');
+		const { id } = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
 		return () => {
 			if (stompClient) {
 				console.log('UNSUBSCRIBING ...');
-				stompClient.unsubscribe(subId);
+				stompClient.unsubscribe(id);
 			}
 		};
-	}, [giguser, dispatch, activeContact, addStompEventListener, getStompClient, stompEventTypes]);
+	}, [giguser, dispatch, activeContact, getStompClient]);
 	return (
 		<>
 			<ScrollToBottom className="messages">
 				<List>
 					{messages
 						? messages.map((msg) => (
-								<List.Item>
+								<List.Item key={msg.id}>
 									<ContactAvatar size="large" contact={activeContact} />
 									<List.Content>
 										<List.Description>{msg.content}</List.Description>
@@ -76,7 +70,7 @@ ChatMessenger.propTypes = {
 	activeContact: PropTypes.shape({
 		contactId: PropTypes.string,
 		contactName: PropTypes.string,
-		contactImageImgUrl: PropTypes.string,
+		contactImageUrl: PropTypes.string,
 	}),
 };
 ChatMessenger.defaultProps = {

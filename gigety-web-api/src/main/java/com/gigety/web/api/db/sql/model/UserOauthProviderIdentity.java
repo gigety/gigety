@@ -1,4 +1,4 @@
-package com.gigety.web.api.db.model;
+package com.gigety.web.api.db.sql.model;
 
 import java.io.Serializable;
 

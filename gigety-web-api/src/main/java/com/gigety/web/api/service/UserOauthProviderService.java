@@ -3,7 +3,7 @@ package com.gigety.web.api.service;
 import java.util.Optional;
 import java.util.Set;
 
-import com.gigety.web.api.db.model.UserOauthProvider;
+import com.gigety.web.api.db.sql.model.UserOauthProvider;
 
 public interface UserOauthProviderService {
 	UserOauthProvider save(UserOauthProvider userOauthProvider);

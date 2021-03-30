@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.gigety.web.api.db.model.OauthProvider;
-import com.gigety.web.api.db.repo.OauthProviderRepository;
 import com.gigety.web.api.db.repo.UserRepositoryTest;
+import com.gigety.web.api.db.sql.model.OauthProvider;
+import com.gigety.web.api.db.sql.repo.OauthProviderRepository;
 
 @SpringBootTest
 public class GigetyWebApiApplicationTests {

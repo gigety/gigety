@@ -5,9 +5,9 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
-import com.gigety.web.api.db.model.UserOauthProvider;
-import com.gigety.web.api.db.model.UserOauthProviderIdentity;
-import com.gigety.web.api.db.repo.UserOauthProviderRepository;
+import com.gigety.web.api.db.sql.model.UserOauthProvider;
+import com.gigety.web.api.db.sql.model.UserOauthProviderIdentity;
+import com.gigety.web.api.db.sql.repo.UserOauthProviderRepository;
 import com.gigety.web.api.service.UserOauthProviderService;
 
 import lombok.AllArgsConstructor;

@@ -9,8 +9,8 @@ import javax.transaction.Transactional;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import com.gigety.web.api.db.model.OauthProvider;
-import com.gigety.web.api.db.repo.OauthProviderRepository;
+import com.gigety.web.api.db.sql.model.OauthProvider;
+import com.gigety.web.api.db.sql.repo.OauthProviderRepository;
 import com.gigety.web.api.service.cached.OauthProviderService;
 
 import lombok.AllArgsConstructor;

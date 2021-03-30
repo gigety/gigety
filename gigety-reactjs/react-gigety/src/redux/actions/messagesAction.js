@@ -1,7 +1,10 @@
 import { GET_ERRORS, UPDATE_CHAT_MESSAGES, UPDATE_MESSAGE_NOTIFICATIONS, UPDATE_NEW_USER_MESSAGES } from './types';
 import gigetyMessenger from 'apis/gigetyMessenger';
-
+import _ from 'lodash';
 export const updateChatMessages = (message) => (dispatch, getState) => {
+	//temp setting msg.id only to use as key for list in ChatMessenger.
+	//This id does not propagate to mongo
+	message.id = _.random(6, 12, true);
 	const messages = [...getState().messages.messages, message];
 	dispatch({
 		type: UPDATE_CHAT_MESSAGES,
@@ -16,7 +19,6 @@ export function sendMessage(msg_id, msg) {
 
 export const findMessagesFor121Chat = (currentUserId, profileId) => async (dispatch) => {
 	try {
-		console.log('SSSSSSIUKHBSKJBSKUBSKBJSKUBSKUBSKUB');
 		const response = await gigetyMessenger.get(`/messages/${currentUserId}/${profileId}`);
 		dispatch({
 			type: UPDATE_CHAT_MESSAGES,

@@ -11,7 +11,6 @@ import { use121ChatMessages } from 'redux/hooks/useMessages';
 import { mapProfileToContact } from 'utils/objectMapper';
 import { findMessagesFor121Chat, updateChatMessages } from 'redux/actions/messagesAction';
 import MessageInput from '../MessageInput/MessageInput';
-import { GIGETY_MESSENGER_URL } from '../../../constants/index';
 import { StompClientContext } from 'contexts/StompClientContext';
 
 const ChatModal = ({ profile }) => {
@@ -19,39 +18,34 @@ const ChatModal = ({ profile }) => {
 	const messages = use121ChatMessages(giguser.id, profile.userId);
 	const contact = mapProfileToContact(profile, giguser);
 	//useMessenger(giguser, contact);
-	const { getStompClient, addStompEventListener, stompEventTypes } = useContext(StompClientContext);
+	const { getStompClient } = useContext(StompClientContext);
 	const sendChatMessage = useRef(null);
 	const dispatch = useDispatch();
 	useEffect(() => {
 		const stompClient = getStompClient();
 		console.log('Got Stomp Client', stompClient);
-		let subId = '';
 		sendChatMessage.current = (message) => {
 			stompClient.publish({ destination: '/msg/chat', body: JSON.stringify(message) });
 			dispatch(updateChatMessages(message));
 		};
 
-		const onConnected = () => {
-			const onMessageRecieved = (msg) => {
-				//TODO: get the contact and user from getState() and make this a custom hook or context
-				console.log('++++++RECIEVED MSG++++++', msg);
-				const notification = JSON.parse(msg.body);
-				if (contact.contactId === notification.senderId) {
-					dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
-				}
-			};
-			console.log('Gigety SubScribing .......');
-			const { id } = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
-			subId = id;
+		const onMessageRecieved = (msg) => {
+			//TODO: get the contact and user from getState() and make this a custom hook or context
+			console.log('++++++RECIEVED MSG++++++', msg);
+			const notification = JSON.parse(msg.body);
+			if (contact.contactId === notification.senderId) {
+				dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
+			}
 		};
-		addStompEventListener(stompEventTypes.Connect, onConnected);
+		console.log('Gigety SubScribing .......');
+		const { id } = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
 		return () => {
 			if (stompClient) {
 				console.log('UNSUBSCRIBING ...');
-				stompClient.unsubscribe(subId);
+				stompClient.unsubscribe(id);
 			}
 		};
-	}, [giguser, dispatch, contact, addStompEventListener, getStompClient, stompEventTypes]);
+	}, [giguser, dispatch, contact, getStompClient]);
 
 	return (
 		<Popup
@@ -71,7 +65,7 @@ const ChatModal = ({ profile }) => {
 							<List>
 								{messages
 									? messages.map((msg) => (
-											<List.Item>
+											<List.Item key={msg.id}>
 												<ProfileUserImage size="mini" profile={profile} />
 												<List.Content>
 													<List.Header as="a">{profile.profileName}</List.Header>
@@ -90,13 +84,7 @@ const ChatModal = ({ profile }) => {
 					</div>
 					<div className="actions">
 						<Button className="button"> Go to Messages </Button>
-						<Button
-							className="button"
-							onClick={() => {
-								console.log('modal closed ');
-								close();
-							}}
-						>
+						<Button className="button" onClick={() => close()}>
 							Close
 						</Button>
 					</div>

@@ -1,6 +1,6 @@
 package com.gigety.web.api.service;
 
-import com.gigety.web.api.db.model.User;
+import com.gigety.web.api.db.sql.model.User;
 
 public interface UserService {
 

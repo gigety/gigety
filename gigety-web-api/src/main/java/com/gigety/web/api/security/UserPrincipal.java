@@ -10,7 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import com.gigety.web.api.db.model.User;
+import com.gigety.web.api.db.sql.model.User;
 
 public class UserPrincipal implements OAuth2User, UserDetails {
 

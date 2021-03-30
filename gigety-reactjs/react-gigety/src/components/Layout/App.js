@@ -8,7 +8,6 @@ import Account from '../User/Account';
 import SecuredRoute from '../../utils/SecuredRoute';
 import UserSettings from '../User/Settings/UserSettings';
 import CreateProfile from '../Profile/CreateProfile';
-import DisplayProfile from '../Profile/DisplayProfile';
 import CreateGig from '../Gig/CreateGig';
 import GigPage from '../Gig/GigPage';
 import GigPageSecure from '../Gig/GigPageSecure';

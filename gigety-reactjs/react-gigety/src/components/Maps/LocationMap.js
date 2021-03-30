@@ -42,12 +42,9 @@ function LocationMap({
 	const { location, error } = useCurrentLocation(null);
 	const [selectedLocation, setSelectedLocation] = useState(location);
 
-	const onSearchLocationSelected = useCallback(
-		(location) => {
-			setSelectedLocation(location);
-		},
-		[location]
-	);
+	const onSearchLocationSelected = useCallback((location) => {
+		setSelectedLocation(location);
+	}, []);
 	const addMarker = (circles, markers) => (loc, miles, ref_id) => {
 		const coords = { lat: loc.geometry.location.lat(), lng: loc.geometry.location.lng() };
 		const marker = new window.google.maps.Marker({

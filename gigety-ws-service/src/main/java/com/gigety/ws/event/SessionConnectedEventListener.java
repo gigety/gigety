@@ -18,7 +18,10 @@ public class SessionConnectedEventListener implements ApplicationListener<Sessio
 
     @Override
     public void onApplicationEvent(SessionConnectedEvent event) {
-    	log.info("Gigety Web Socket Session connected with messeage {0} for user {1}", event.getMessage());
+    	log.info("Gigety Web Socket Session connected with messeage {} for user ", 
+    			event.getMessage(), event.getUser() != null 
+    				? event.getUser() 
+    						: "No user detected. Maybe turn on Spring security");
     	
         //webSocketSessionService.saveSession(event);
     }

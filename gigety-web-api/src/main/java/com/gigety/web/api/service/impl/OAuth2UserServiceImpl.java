@@ -10,11 +10,11 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import com.gigety.web.api.db.model.OauthProvider;
-import com.gigety.web.api.db.model.User;
-import com.gigety.web.api.db.model.UserOauthProvider;
-import com.gigety.web.api.db.model.UserOauthProviderIdentity;
-import com.gigety.web.api.db.repo.UserRepository;
+import com.gigety.web.api.db.sql.model.OauthProvider;
+import com.gigety.web.api.db.sql.model.User;
+import com.gigety.web.api.db.sql.model.UserOauthProvider;
+import com.gigety.web.api.db.sql.model.UserOauthProviderIdentity;
+import com.gigety.web.api.db.sql.repo.UserRepository;
 import com.gigety.web.api.exception.OAuth2AuthenticationProcessException;
 import com.gigety.web.api.security.UserPrincipal;
 import com.gigety.web.api.security.oauth2.user.OAuth2UserInfo;

@@ -2,8 +2,8 @@ package com.gigety.web.api.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.gigety.web.api.db.model.User;
-import com.gigety.web.api.db.repo.UserRepository;
+import com.gigety.web.api.db.sql.model.User;
+import com.gigety.web.api.db.sql.repo.UserRepository;
 import com.gigety.web.api.exception.ResourceNotFoundException;
 import com.gigety.web.api.service.UserService;
 

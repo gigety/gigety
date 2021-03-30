@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.gigety.web.api.db.model.User;
-import com.gigety.web.api.db.repo.UserRepository;
+import com.gigety.web.api.db.sql.model.User;
+import com.gigety.web.api.db.sql.repo.UserRepository;
 import com.gigety.web.api.exception.BadRequestException;
 import com.gigety.web.api.payload.ApiResponse;
 import com.gigety.web.api.payload.AuthResponse;
