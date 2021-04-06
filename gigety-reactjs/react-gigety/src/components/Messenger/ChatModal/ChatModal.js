@@ -23,7 +23,6 @@ const ChatModal = ({ profile }) => {
 	const dispatch = useDispatch();
 	useEffect(() => {
 		const stompClient = getStompClient();
-		console.log('Got Stomp Client', stompClient);
 		sendChatMessage.current = (message) => {
 			stompClient.publish({ destination: '/msg/chat', body: JSON.stringify(message) });
 			dispatch(updateChatMessages(message));
@@ -31,7 +30,6 @@ const ChatModal = ({ profile }) => {
 
 		const onMessageRecieved = (msg) => {
 			//TODO: get the contact and user from getState() and make this a custom hook or context
-			console.log('++++++RECIEVED MSG++++++', msg);
 			const notification = JSON.parse(msg.body);
 			if (contact.contactId === notification.senderId) {
 				dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
@@ -45,7 +43,7 @@ const ChatModal = ({ profile }) => {
 				stompClient.unsubscribe(id);
 			}
 		};
-	}, [giguser, dispatch, contact, getStompClient]);
+	}, [giguser, dispatch, contact.contactId, getStompClient]);
 
 	return (
 		<Popup
