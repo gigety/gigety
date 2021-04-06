@@ -40,7 +40,7 @@ const ChatMessenger = ({ activeContact }) => {
 				stompClient.unsubscribe(id);
 			}
 		};
-	}, [giguser, dispatch, activeContact, getStompClient]);
+	}, [giguser, dispatch, activeContact.contactId, getStompClient]);
 	return (
 		<>
 			<ScrollToBottom className="messages">
