@@ -1959,7 +1959,15 @@
     prop-types "^15.7.2"
     react-is "^16.6.3"
 
-"@stomp/stompjs@^6.1.0":
+"@stomp/rx-stomp@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@stomp/rx-stomp/-/rx-stomp-1.1.0.tgz#3841602140cf9f60e716b1d03d1b7331d67fbd5b"
+  integrity sha512-pIUN5ZtatTIqV02c1C4YNtDEKgD4dMA5rFKCe0urFA6mxC3UZBg0xFgMBzPaxmZoSTeU9wXrRPZkSLkF5QFjhg==
+  dependencies:
+    "@stomp/stompjs" "^6.0.0 >=6.1.0"
+    angular2-uuid "^1.1.1"
+
+"@stomp/stompjs@^6.0.0 >=6.1.0", "@stomp/stompjs@^6.1.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@stomp/stompjs/-/stompjs-6.1.0.tgz#b77ca240775a7a34289b2c09618e256be761d142"
   integrity sha512-Bt+whL0V51rSKP35OkgM1yeVu/usunpz5l1VYuoWw8mGsDMNd3W3FpWa4/4eis6QfXO3uteNGfyE21XWn0pGAQ==
@@ -2746,6 +2754,11 @@ alphanum-sort@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
   integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
+
+angular2-uuid@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/angular2-uuid/-/angular2-uuid-1.1.1.tgz#72f03cd532b7f40032eb1ecfb9f8457384be956e"
+  integrity sha1-cvA81TK39AAy6x7PufhFc4S+lW4=
 
 ansi-colors@^3.0.0:
   version "3.2.4"
@@ -10598,6 +10611,13 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   integrity sha1-6Eg5bwV9Ij8kOGkkYY4laUFh7Ec=
   dependencies:
     aproba "^1.1.1"
+
+rxjs@^6.6.7:
+  version "6.6.7"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.7.tgz#90ac018acabf491bf65044235d5863c4dab804c9"
+  integrity sha512-hTdwr+7yYNIT5n4AMYp85KA6yw2Va0FLa3Rguvbpa4W3I5xynaBZo41cM3XM+4Q6fRMj3sBYIR1VAmZMXYJvRQ==
+  dependencies:
+    tslib "^1.9.0"
 
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"

@@ -18,11 +18,12 @@ import DisplayGig from '../Gig/DisplayGig';
 import ProfilePageSecure from '../Profile/ProfilePageSecure';
 import StompClientContext from '../../contexts/StompClientContext';
 import MessengerPage from 'components/Messenger/MessengerPage/MessengerPage';
+import StompRXClientContext from 'contexts/StompRXClientContext';
 const app = () => {
 	return (
 		<div className="ui container">
 			<AuthProvider>
-				<StompClientContext>
+				<StompRXClientContext>
 					<BrowserRouter>
 						<div>
 							<Header />
@@ -45,7 +46,7 @@ const app = () => {
 							</Switch>
 						</div>
 					</BrowserRouter>
-				</StompClientContext>
+				</StompRXClientContext>
 			</AuthProvider>
 		</div>
 	);

@@ -7,37 +7,39 @@ import { List } from 'semantic-ui-react';
 import ContactAvatar from '../ContactAvatar/ContactAvatar';
 import MessageInput from '../MessageInput/MessageInput';
 import { findMessagesFor121Chat, updateChatMessages } from 'redux/actions/messagesAction';
-import { StompClientContext } from 'contexts/StompClientContext';
+import { StompRXClientContext } from 'contexts/StompRXClientContext';
+import { map } from 'rxjs/Operator';
 const ChatMessenger = ({ activeContact }) => {
 	const { giguser } = useSelector((state) => state.giguser);
 
-	console.log('Active COntact :::: ', activeContact);
 	const messages = use121ChatMessages(giguser.id, activeContact.contactId);
-	const { getStompClient } = useContext(StompClientContext);
+	const { getStompClient } = useContext(StompRXClientContext);
 	const sendChatMessage = useRef(null);
 	const dispatch = useDispatch();
 	useEffect(() => {
 		const stompClient = getStompClient();
-		console.log('Got Stomp Client', stompClient);
 		sendChatMessage.current = (message) => {
 			stompClient.publish({ destination: '/msg/chat', body: JSON.stringify(message) });
 			dispatch(updateChatMessages(message));
 		};
 
 		const onMessageRecieved = (msg) => {
+			console.log(msg);
 			//TODO: get the contact and user from getState() and make this a custom hook or context
-			console.log('++++++RECIEVED MSG++++++', msg);
 			const notification = JSON.parse(msg.body);
 			if (activeContact.contactId === notification.senderId) {
 				dispatch(findMessagesFor121Chat(giguser.id, notification.senderId));
 			}
 		};
 		console.log('Gigety SubScribing .......');
-		const { id } = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
+		const rxSubsciption = stompClient
+			.watch(`/user/${giguser.id}/queue/messages`)
+			//.pipe(map((msg) => JSON.parse(msg.body)))
+			.subscribe((payload) => onMessageRecieved(payload));
 		return () => {
 			if (stompClient) {
 				console.log('UNSUBSCRIBING ...');
-				stompClient.unsubscribe(id);
+				rxSubsciption.unsubscribe();
 			}
 		};
 	}, [giguser, dispatch, activeContact.contactId, getStompClient]);

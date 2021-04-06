@@ -11,15 +11,16 @@ import { use121ChatMessages } from 'redux/hooks/useMessages';
 import { mapProfileToContact } from 'utils/objectMapper';
 import { findMessagesFor121Chat, updateChatMessages } from 'redux/actions/messagesAction';
 import MessageInput from '../MessageInput/MessageInput';
-import { StompClientContext } from 'contexts/StompClientContext';
-
+import { StompRXClientContext } from 'contexts/StompRXClientContext';
+import { useMessenger } from '../../../redux/hooks/useMessages';
+import { map } from 'rxjs/operators';
 const ChatModal = ({ profile }) => {
 	const { giguser } = useSelector((state) => state.giguser);
 	const messages = use121ChatMessages(giguser.id, profile.userId);
 	const contact = mapProfileToContact(profile, giguser);
-	//useMessenger(giguser, contact);
-	const { getStompClient } = useContext(StompClientContext);
+	const { getStompClient } = useContext(StompRXClientContext);
 	const sendChatMessage = useRef(null);
+	//	useMessenger(giguser, contact, sendChatMessage);
 	const dispatch = useDispatch();
 	useEffect(() => {
 		const stompClient = getStompClient();
@@ -36,11 +37,14 @@ const ChatModal = ({ profile }) => {
 			}
 		};
 		console.log('Gigety SubScribing .......');
-		const { id } = stompClient.subscribe(`/user/${giguser.id}/queue/messages`, onMessageRecieved);
+		const rxSubsciption = stompClient
+			.watch(`/user/${giguser.id}/queue/messages`)
+			//.pipe(map((msg) => console.log(msg)))
+			.subscribe((payload) => onMessageRecieved(payload));
 		return () => {
 			if (stompClient) {
 				console.log('UNSUBSCRIBING ...');
-				stompClient.unsubscribe(id);
+				rxSubsciption.unsubscribe();
 			}
 		};
 	}, [giguser, dispatch, contact.contactId, getStompClient]);
