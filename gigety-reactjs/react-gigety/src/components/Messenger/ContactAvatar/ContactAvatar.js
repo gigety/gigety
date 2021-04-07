@@ -3,6 +3,8 @@ import { Image, Icon } from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 
 const ContactAvatar = ({ contact, size }) => {
+	console.log('COntact');
+	console.log(contact);
 	const imageIcon =
 		contact && contact.contactImageUrl ? (
 			<Image avatar src={contact.contactImageUrl} size={size} rounded />

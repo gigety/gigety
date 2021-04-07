@@ -14,6 +14,8 @@ import MessageInput from '../MessageInput/MessageInput';
 import { StompRXClientContext } from 'contexts/StompRXClientContext';
 import { useMessenger } from '../../../redux/hooks/useMessages';
 import { map } from 'rxjs/operators';
+import UserAvatar from '../UserAvatar/UserAvatar';
+import ContactAvatar from '../ContactAvatar/ContactAvatar';
 const ChatModal = ({ profile }) => {
 	const { giguser } = useSelector((state) => state.giguser);
 	const messages = use121ChatMessages(giguser.id, profile.userId);
@@ -39,7 +41,6 @@ const ChatModal = ({ profile }) => {
 		console.log('Gigety SubScribing .......');
 		const rxSubsciption = stompClient
 			.watch(`/user/${giguser.id}/queue/messages`)
-			//.pipe(map((msg) => console.log(msg)))
 			.subscribe((payload) => onMessageRecieved(payload));
 		return () => {
 			if (stompClient) {
@@ -66,15 +67,25 @@ const ChatModal = ({ profile }) => {
 						<ScrollToBottom className="messages">
 							<List>
 								{messages
-									? messages.map((msg) => (
-											<List.Item key={msg.id}>
-												<ProfileUserImage size="mini" profile={profile} />
-												<List.Content>
-													<List.Header as="a">{profile.profileName}</List.Header>
-													<List.Description>{msg.content}</List.Description>
-												</List.Content>
-											</List.Item>
-									  ))
+									? messages.map((msg) => {
+											const ret =
+												msg.senderId.toString() === giguser.id.toString() ? (
+													<List.Item key={msg.id}>
+														<UserAvatar size="mini" user={giguser} />
+														<List.Content>
+															<List.Description>{msg.content}</List.Description>
+														</List.Content>
+													</List.Item>
+												) : (
+													<List.Item key={msg.id}>
+														<ContactAvatar size="mini" contact={contact} />
+														<List.Content>
+															<List.Description>{msg.content}</List.Description>
+														</List.Content>
+													</List.Item>
+												);
+											return ret;
+									  })
 									: ''}
 							</List>
 						</ScrollToBottom>

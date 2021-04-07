@@ -24,8 +24,10 @@ public class UserAccount {
 	@Indexed(background = true)
 	private String email;
 	private String userName;
+	private String imageUrl;
 	private UserProfile activeProfile;
 	private Contact activeContact;
+	
 
 	// @Transient
 	private List<UserProfile> allProfiles;

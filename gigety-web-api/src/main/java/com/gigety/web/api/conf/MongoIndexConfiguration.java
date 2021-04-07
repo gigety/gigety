@@ -61,8 +61,8 @@ public class MongoIndexConfiguration {
 		});
 		
 		IndexOperations uniqueContactsIndexOpS = mongoTemplate.indexOps(Contact.class);
-		IndexResolver uniqueContactReolver = new MongoPersistentEntityIndexResolver(mongoMappingContext);
-		resolver.resolveIndexFor(Contact.class).forEach(contact -> {
+		IndexResolver uniqueContactResolver = new MongoPersistentEntityIndexResolver(mongoMappingContext);
+		uniqueContactResolver.resolveIndexFor(Contact.class).forEach(contact -> {
 			uniqueContactsIndexOpS.ensureIndex(new CompoundIndexDefinition(new Document().append("userId", 1 ).append("contactId",1 )).unique());
 		});
 		

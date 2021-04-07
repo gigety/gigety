@@ -43,6 +43,8 @@ public class ContactsController {
 	
 	@PostMapping("/setActive")
 	public UserAccount setActive(@CurrentUser UserPrincipal principal, @RequestBody Contact contact) {
+		String imageUrl = userService.findUserImagerUrlById(Long.valueOf(contact.getContactId()));
+		contact.setContactImageUrl(imageUrl);
 		UserAccount ua = userAccountService.setActiveContact(String.valueOf(principal.getId()), contact);
 		return ua;
 	}

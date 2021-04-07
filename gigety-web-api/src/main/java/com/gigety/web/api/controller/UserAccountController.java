@@ -14,6 +14,7 @@ import com.gigety.web.api.exception.ResourceNotFoundException;
 import com.gigety.web.api.security.CurrentUser;
 import com.gigety.web.api.security.UserPrincipal;
 import com.gigety.web.api.service.UserAccountService;
+import com.gigety.web.api.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class UserAccountController {
 
 	private final UserAccountService userAccountService;
-	
+	private final UserService userService;
 	/**
 	 * Currently this method is not used, however i the future we may want user to create an account manually.
 	 * Currently They are created dynamically in getUserAccount
@@ -57,6 +58,8 @@ public class UserAccountController {
 			userAccount.setMysqlUserId(String.valueOf(userPrincipal.getId()));
 			userAccount.setEmail(userPrincipal.getEmail());
 			userAccount.setUserName(userPrincipal.getName());
+			String imageUrl = userService.findUserImagerUrlById(userPrincipal.getId());
+			userAccount.setImageUrl(imageUrl);
 			ua = userAccountService.createUserAccount(userAccount);
 			log.debug("Created UserAccount {}", userAccount);
 			return ua;

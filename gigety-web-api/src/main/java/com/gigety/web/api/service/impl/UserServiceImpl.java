@@ -27,9 +27,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public String findUserImagerUrlById(Long id) {
 		
-		User user = userRepository.findUserImagerUrlById(id);
-		log.debug("Image URL Found {}",user.getImageUrl());
-		return user.getImageUrl();
+		String imageUrl = userRepository.findImageUrlById(id);
+		log.debug("Image URL Found {}",imageUrl);
+		return imageUrl;
 	}
 
 }
