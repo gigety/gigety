@@ -10,9 +10,7 @@ import { useAllNewUserMessages } from 'redux/hooks/useMessages';
 const NotificationsScrollable = ({ giguser }) => {
 	const allNewUserMessages = useAllNewUserMessages(giguser.id);
 	//const messages = useAllNewUserMessages(giguser.id);
-	console.log('ALL Messages ', allNewUserMessages);
 	const messageNotifications = _.uniqBy(allNewUserMessages, (message) => 'senderName');
-	console.log(' Message Notifications ', messageNotifications);
 	const dispatch = useDispatch();
 	const getConversationMessages = ({ senderName, senderId }, event) => {
 		event.preventDefault();

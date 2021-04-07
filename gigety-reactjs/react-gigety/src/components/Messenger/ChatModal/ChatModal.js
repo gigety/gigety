@@ -22,8 +22,6 @@ const ChatModal = ({ profile }) => {
 	const sendChatMessage = useRef(null);
 	//	useMessenger(giguser, contact, sendChatMessage);
 	const dispatch = useDispatch();
-	const userAvatar = useMemo(() => <UserAvatar size="mini" user={giguser} />, [giguser]);
-	const contactAvatar = useMemo(() => <ContactAvatar size="mini" contact={contact} />, [contact]);
 	useEffect(() => {
 		const stompClient = getStompClient();
 		sendChatMessage.current = (message) => {
@@ -49,6 +47,9 @@ const ChatModal = ({ profile }) => {
 			}
 		};
 	}, [giguser, dispatch, contact.contactId, getStompClient]);
+
+	const userAvatar = useMemo(() => <UserAvatar size="mini" user={giguser} />, [giguser]);
+	const contactAvatar = useMemo(() => <ContactAvatar size="mini" contact={contact} />, [contact]);
 
 	return (
 		<Popup

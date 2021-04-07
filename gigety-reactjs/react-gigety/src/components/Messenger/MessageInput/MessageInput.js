@@ -20,7 +20,17 @@ const MessageInput = ({ activeContact, giguser, sendChatMessage }) => {
 	};
 	return (
 		<Input placeholder="Enter Message" action fluid>
-			<input value={text} onChange={(e) => setText(e.target.value)} />
+			<input
+				value={text}
+				onChange={(e) => setText(e.target.value)}
+				onKeyPress={(e) => {
+					console.log(e.code);
+					if (e.code === 'Enter') {
+						sendTheMessage(text);
+						setText('');
+					}
+				}}
+			/>
 			<Button
 				onClick={() => {
 					sendTheMessage(text);

@@ -8,7 +8,6 @@ import ContactAvatar from '../ContactAvatar/ContactAvatar';
 import MessageInput from '../MessageInput/MessageInput';
 import { findMessagesFor121Chat, updateChatMessages } from 'redux/actions/messagesAction';
 import { StompRXClientContext } from 'contexts/StompRXClientContext';
-import { map } from 'rxjs/Operator';
 import UserAvatar from '../UserAvatar/UserAvatar';
 const ChatMessenger = ({ activeContact }) => {
 	const { giguser } = useSelector((state) => state.giguser);
@@ -46,7 +45,6 @@ const ChatMessenger = ({ activeContact }) => {
 	}, [giguser, dispatch, activeContact.contactId, getStompClient]);
 	const userAvatar = useMemo(() => <UserAvatar size="mini" user={giguser} />, [giguser]);
 	const contactAvatar = useMemo(() => <ContactAvatar size="mini" contact={activeContact} />, [activeContact]);
-	console.log(userAvatar);
 	return (
 		<>
 			<ScrollToBottom className="messages">
