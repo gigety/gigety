@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useMemo, useRef } from 'react';
 import { PropTypes } from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import ScrollToBottom from 'react-scroll-to-bottom';
@@ -44,29 +44,25 @@ const ChatMessenger = ({ activeContact }) => {
 			}
 		};
 	}, [giguser, dispatch, activeContact.contactId, getStompClient]);
+	const userAvatar = useMemo(() => <UserAvatar size="mini" user={giguser} />, [giguser]);
+	const contactAvatar = useMemo(() => <ContactAvatar size="mini" contact={activeContact} />, [activeContact]);
+	console.log(userAvatar);
 	return (
 		<>
 			<ScrollToBottom className="messages">
 				<List>
 					{messages
 						? messages.map((msg) => {
-								const ret =
-									msg.senderId.toString() === giguser.id.toString() ? (
-										<List.Item key={msg.id}>
-											<UserAvatar size="mini" user={giguser} />
-											<List.Content>
-												<List.Description>{msg.content}</List.Description>
-											</List.Content>
-										</List.Item>
-									) : (
-										<List.Item key={msg.id}>
-											<ContactAvatar size="mini" contact={activeContact} />
-											<List.Content>
-												<List.Description>{msg.content}</List.Description>
-											</List.Content>
-										</List.Item>
-									);
-								return ret;
+								const avatar =
+									msg.senderId.toString() === giguser.id.toString() ? userAvatar : contactAvatar;
+								return (
+									<List.Item key={msg.id}>
+										{avatar}
+										<List.Content>
+											<List.Description>{msg.content}</List.Description>
+										</List.Content>
+									</List.Item>
+								);
 						  })
 						: ''}
 				</List>

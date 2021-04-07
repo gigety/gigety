@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Popup from 'reactjs-popup';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import { Button, List } from 'semantic-ui-react';
 import 'reactjs-popup/dist/index.css';
 import UserLabel from '../../User/UserLabel';
-import ProfileUserImage from '../../Profile/ProfileUserImage';
 import './ChatModal.css';
 import { use121ChatMessages } from 'redux/hooks/useMessages';
 import { mapProfileToContact } from 'utils/objectMapper';
@@ -13,17 +12,18 @@ import { findMessagesFor121Chat, updateChatMessages } from 'redux/actions/messag
 import MessageInput from '../MessageInput/MessageInput';
 import { StompRXClientContext } from 'contexts/StompRXClientContext';
 import { useMessenger } from '../../../redux/hooks/useMessages';
-import { map } from 'rxjs/operators';
 import UserAvatar from '../UserAvatar/UserAvatar';
 import ContactAvatar from '../ContactAvatar/ContactAvatar';
 const ChatModal = ({ profile }) => {
 	const { giguser } = useSelector((state) => state.giguser);
 	const messages = use121ChatMessages(giguser.id, profile.userId);
-	const contact = mapProfileToContact(profile, giguser);
+	const contact = useMemo(() => mapProfileToContact(profile, giguser), [profile, giguser]);
 	const { getStompClient } = useContext(StompRXClientContext);
 	const sendChatMessage = useRef(null);
 	//	useMessenger(giguser, contact, sendChatMessage);
 	const dispatch = useDispatch();
+	const userAvatar = useMemo(() => <UserAvatar size="mini" user={giguser} />, [giguser]);
+	const contactAvatar = useMemo(() => <ContactAvatar size="mini" contact={contact} />, [contact]);
 	useEffect(() => {
 		const stompClient = getStompClient();
 		sendChatMessage.current = (message) => {
@@ -68,23 +68,18 @@ const ChatModal = ({ profile }) => {
 							<List>
 								{messages
 									? messages.map((msg) => {
-											const ret =
-												msg.senderId.toString() === giguser.id.toString() ? (
-													<List.Item key={msg.id}>
-														<UserAvatar size="mini" user={giguser} />
-														<List.Content>
-															<List.Description>{msg.content}</List.Description>
-														</List.Content>
-													</List.Item>
-												) : (
-													<List.Item key={msg.id}>
-														<ContactAvatar size="mini" contact={contact} />
-														<List.Content>
-															<List.Description>{msg.content}</List.Description>
-														</List.Content>
-													</List.Item>
-												);
-											return ret;
+											const avatar =
+												msg.senderId.toString() === giguser.id.toString()
+													? userAvatar
+													: contactAvatar;
+											return (
+												<List.Item key={msg.id}>
+													{avatar}
+													<List.Content>
+														<List.Description>{msg.content}</List.Description>
+													</List.Content>
+												</List.Item>
+											);
 									  })
 									: ''}
 							</List>
@@ -97,7 +92,7 @@ const ChatModal = ({ profile }) => {
 					</div>
 					<div className="actions">
 						<Button className="button"> Go to Messages </Button>
-						<Button className="button" onClick={() => close()}>
+						<Button className="button" onClick={close}>
 							Close
 						</Button>
 					</div>
