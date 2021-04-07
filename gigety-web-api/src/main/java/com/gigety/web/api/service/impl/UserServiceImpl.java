@@ -7,11 +7,11 @@ import com.gigety.web.api.db.sql.repo.UserRepository;
 import com.gigety.web.api.exception.ResourceNotFoundException;
 import com.gigety.web.api.service.UserService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService {
 
