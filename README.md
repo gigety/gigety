@@ -26,6 +26,8 @@ Documentation will be updated as development of new features continue.
 
 
 ### Up and coming features
+* Spring Cloud Gateway
+* Keycloak
 * Reactive API using webflux
 * React Native
 * Jenkins
