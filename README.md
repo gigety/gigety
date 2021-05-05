@@ -33,7 +33,7 @@ Documentation will be updated as development of new features continue.
 * Load Balancing
 * Tracing 
 * Circuit Breaker
-* Configurationp
+* Configuration
 * Reactive API using webflux
 * Mobile / React Native
 * Jenkins
