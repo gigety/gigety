@@ -29,6 +29,7 @@ Documentation will be updated as development of new features continue.
 * Spring Cloud Gateway
 * Keycloak
 * Reactive API using webflux
-* React Native
+* Mobile / React Native
 * Jenkins
+* IOT
 
