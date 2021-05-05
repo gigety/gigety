@@ -34,7 +34,7 @@ Documentation will be updated as development of new features continue.
 * Tracing 
 * Circuit Breaker
 * Configuration
-* Reactive API using webflux
+* Reactive API 
 * Mobile / React Native
 * Jenkins
 * IOT
