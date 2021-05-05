@@ -1,5 +1,5 @@
 # 💥 🍄 🐸 Gigety 🐸 🌍 👀
-Gigety is a personal POC sandbox to practice and prove scalable solutions for a variety of requirements. Gigety will forever be growing in ideas / solutions / features. It will demonstrate old and new ways for futures legacy sake.
+Gigety is a personal POC project to practice and prove scalable solutions for a variety of requirements. Gigety will forever be growing in ideas / solutions / features. It will demonstrate old and new ways for futures legacy sake.
 
 End product is a place for users to share information in a secure fashion.  
 The "user generated" information is searchable with geolocation properties available if desired.  
