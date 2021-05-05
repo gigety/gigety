@@ -1,5 +1,5 @@
 # 🐸 🐸 🐸 Gigety 🐸 🐸 🐸
-Gigety is a personal POC project. Forever growing.
+Gigety is a personal POC project. Forever evoluting.
 
 End product is a place for users to share information in a secure fashion.  
 The "user generated" information is searchable with geolocation properties available if desired.  
