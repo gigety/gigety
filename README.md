@@ -29,6 +29,11 @@ Documentation will be updated as development of new features continue.
 * Spring Security 5.4
 * Spring Cloud Gateway
 * Keycloak
+* Service Discovery
+* Load Balancing
+* Tracing 
+* Circuit Breaker
+* Configurationp
 * Reactive API using webflux
 * Mobile / React Native
 * Jenkins
