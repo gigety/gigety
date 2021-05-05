@@ -1,8 +1,8 @@
 # 💥 🍄 🐸 Gigety 🐸 🌍 👀
 Gigety is a personal project / sandbox to practice and prove scalable solutions for a variety of requirements.  
-It will forever be growing in ideas / solutions / features. It will demonstrate old and new ways for legacy sake.
+It will forever be growing in ideas / solutions / features. It will demonstrate old and new (Spring security 5.4 + gateway) ways for legacy sake.
 
-Currently the end product is a place for users to share information in a secure fashion.  
+End product is a place for users to share information in a secure fashion.  
 The "user generated" information is searchable with geolocation properties available if desired.  
 
 Gigety is currently in development mode - The web browser application in dev mode is available @ [https://gigety.com](https://gigety.com)
