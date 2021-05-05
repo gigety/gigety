@@ -9,7 +9,7 @@ Gigety is in development - The web browser application in dev mode is available 
 Documentation will be updated as development of new features continue.  
 [Wiki for Detailed Documentation](https://github.com/gigety/gigety/wiki).  
 
-### Technologies
+### Technologies 
 * Docker / Docker Swarm
 * Traefik / Lets Encrypt / Digital Ocean
 * Nginx (used in local environment in place of Traefik for reference purposes)
@@ -25,7 +25,7 @@ Documentation will be updated as development of new features continue.
 * ActiveMQ Message Broker. 
 * Web Sockets / STOMP
 
-### Up and coming features
+### Up and coming Tech Stack / Features
 * Spring Security 5.4
 * Spring Cloud Gateway
 * Keycloak
