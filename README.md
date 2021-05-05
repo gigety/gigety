@@ -22,7 +22,8 @@ Documentation will be updated as development of new features continue.
 * MySQL
 * Redis Cache Server
 * ReactJS
-
+* ActiveMQ Message Broker. 
+* Web Sockets / STOMP
 
 ### Up and coming features
 * Spring Security 5.4
