@@ -4,7 +4,7 @@ Gigety is a personal POC sandbox to practice and prove scalable solutions for a 
 End product is a place for users to share information in a secure fashion.  
 The "user generated" information is searchable with geolocation properties available if desired.  
 
-Gigety is still in development - The web browser application in dev mode is available @ [https://gigety.com](https://gigety.com)
+Gigety is in development - The web browser application in dev mode is available @ [https://gigety.com](https://gigety.com)
 
 Documentation will be updated as development of new features continue.  
 [Wiki for Detailed Documentation](https://github.com/gigety/gigety/wiki).  
