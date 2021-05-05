@@ -1,5 +1,5 @@
 # 💥 🍄 🐸 Gigety 🐸 🌍 👀
-Gigety is a personal project / sandbox to practice and prove scalable solutions for a variety of requirements. Gigety will forever be growing in ideas / solutions / features. It will demonstrate old and new (Spring security 5.4 + gateway) ways for the futures legacy sake.
+Gigety is a personal project / sandbox to practice and prove scalable solutions for a variety of requirements. Gigety will forever be growing in ideas / solutions / features. It will demonstrate old and new ways for futures legacy sake.
 
 End product is a place for users to share information in a secure fashion.  
 The "user generated" information is searchable with geolocation properties available if desired.  
@@ -25,7 +25,7 @@ Documentation will be updated as development of new features continue.
 
 
 ### Up and coming features
-* Spring Security 5.2
+* Spring Security 5.4
 * Spring Cloud Gateway
 * Keycloak
 * Reactive API using webflux
