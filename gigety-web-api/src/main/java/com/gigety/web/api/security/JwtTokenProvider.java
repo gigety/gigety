@@ -58,6 +58,7 @@ public class JwtTokenProvider {
 	public boolean validateToken(String token) {
 
 			try {
+				//Validate token is from user? Should we PKCE?
 				Claims claims  = Jwts.parser().setSigningKey(gigAuthProperties.getAuth().getTokenSecret()).parseClaimsJws(token).getBody();
 				return claims.getExpiration().after(new Date());
 			} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException
