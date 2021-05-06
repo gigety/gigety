@@ -36,8 +36,10 @@ Includes social login, oauth2, geolocation, messaging over web sockets, react fr
 * Jenkins
 * IOT
 
+#
+
 Deployed in dev mode @ https://gigety.com 
 * Please note this is just a "Proof of Concept" project to demonstrate a variety of solutions for common requirements.  
-
+* [Wiki Overview & Documentation](https://github.com/gigety/gigety/wiki)
 
 
