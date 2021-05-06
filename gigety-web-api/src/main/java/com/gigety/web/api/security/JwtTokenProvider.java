@@ -58,8 +58,8 @@ public class JwtTokenProvider {
 	public boolean validateToken(String token) {
 
 			try {
-				Jwts.parser().setSigningKey(gigAuthProperties.getAuth().getTokenSecret()).parseClaimsJws(token);
-				return true;
+				Claims claims  = Jwts.parser().setSigningKey(gigAuthProperties.getAuth().getTokenSecret()).parseClaimsJws(token).getBody();
+				return claims.getExpiration().after(new Date());
 			} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException
 					| IllegalArgumentException e) {
 				log.error("Error validating token: {}", e.getMessage());
