@@ -25,6 +25,7 @@ Includes social login, oauth2, geolocation, messaging over web sockets, react fr
 * Spring Cloud Gateway
 * Keycloak
 * OpenID COnnect
+* Authorization Code With PKCE grant type
 * Service Discovery
 * Load Balancing
 * Tracing 
