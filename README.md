@@ -1,7 +1,31 @@
 
-# 🐸 Gigety - POC Full stack sample application.
+# 🐸 Gigety - An all for fun POC full stack sample application.
 
-Gigety is a project for self learning many technologies. It does have a [domain deployment](https://gigety.com), however do notice it stays in dev experimental mode as it is for learning puposes only.  
+Gigety is a project for self learning many technologies.  
+It does have a [domain deployment](https://gigety.com), none the less, it stays in dev / experimental mode as it is for learning puposes only.  
+
+The first milestone has been branched off to https://github.com/gigety/gigety/tree/gigety-non-reactive.  
+
+Gigety milestone 2 will be full of migrations and new feautures:  
+This is in hope to ease development of new features.  
+Also to improve testing and simplify deployment phase.  
+We hope to include new options for scalability as well.  
+
+* Spring Cloud Gateway 
+* Spring 5 Oauth2
+* OpenID Connect
+* Offload Authorization Server to Keycloak
+* microservices: 
+  * Service Discovery
+  * Load Balancing
+  * Tracing 
+  * Circuit Breaker
+  * Configuration
+* Reactive API's
+* Adding a Vue client to compare with React. Both JS and Native.
+* RSocket for messaging
+* Improved Dev Ops / Testing including CD/CI
+
 Some current features include:  
 * social login
 * oauth2 
@@ -34,11 +58,7 @@ Some current features include:
 * Spring Cloud Gateway
 * Keycloak
 * OpenID COnnect
-* Service Discovery
-* Load Balancing
-* Tracing 
-* Circuit Breaker
-* Configuration
+
 * Reactive API 
 * Mobile / React Native
 * RxJS
