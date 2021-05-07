@@ -28,6 +28,7 @@ Some current features include:
 * Google Geolocation API
 
 ### Up and coming Tech Stack / Features 
+* Reactive Programming / Spring WebFlux
 * Spring Security 5.4
 * Spring Cloud Gateway
 * Keycloak
