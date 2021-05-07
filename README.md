@@ -29,6 +29,7 @@ Some current features include:
 
 ### Up and coming Tech Stack / Features 
 * Reactive Programming / Spring WebFlux
+* RSocket
 * Spring Security 5.4
 * Spring Cloud Gateway
 * Keycloak
