@@ -41,7 +41,8 @@ Some current features include:
 * Mobile / React Native
 * RxJS
 * CI/CD
-* More testing including Load
+* Improved focus on testing 
+* Load testing
 
 #
 
