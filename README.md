@@ -40,8 +40,8 @@ Some current features include:
 * Reactive API 
 * Mobile / React Native
 * RxJS
-* Jenkins
-* IOT
+* CI/CD
+* More testing including Load
 
 #
 
