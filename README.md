@@ -2,7 +2,8 @@
 # 🐸 Gigety - An all for fun POC full stack sample application.
 
 Gigety is a project for self learning many technologies.  
-It does have a [domain deployment](https://gigety.com), none the less, it stays in dev / experimental mode as it is for learning puposes only.  
+It does have a [domain deployment](https://gigety.com).
+Dually Noting: Gigety stays in dev / experimental mode as it is for learning puposes only.  
 
 The first milestone has been branched off to https://github.com/gigety/gigety/tree/gigety-non-reactive.  
 
@@ -24,7 +25,7 @@ We hope to include new options for scalability as well.
 * Reactive API's
 * Adding a Vue client to compare with React. Both JS and Native.
 * RSocket for messaging
-* Improved Dev Ops / Testing including CD/CI
+* Improved Dev / Ops & Quality Assurance
 
 Some current features include:  
 * social login
@@ -62,7 +63,7 @@ Some current features include:
 * Reactive API 
 * Mobile / React Native
 * RxJS
-* CI/CD
+* Jenkins CI/CD
 * Improved focus on testing 
 * Load testing
 * Vue
