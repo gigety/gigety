@@ -2,7 +2,13 @@
 # 🐸 Gigety - POC Full stack sample application.
 
 Gigety is a project for self learning many technologies. It does have a [domain deployment](https://gigety.com), however do notice it stays in dev experimental mode as it is for learning puposes only.  
-Some current features include social login, oauth2, geolocation, messaging over web sockets, react front end, docker swarm deployment and orchestration.  
+Some current features include:  
+* social login
+* oauth2 
+* geolocation 
+* messaging over web sockets
+* SPA
+* container orchestration.  
 
 ### Current Technologies 
 * Docker / Docker Swarm
