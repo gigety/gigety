@@ -45,7 +45,8 @@ Some current features include:
 * CI/CD
 * Improved focus on testing 
 * Load testing
-
+* Vue
+* Vue Native
 #
 
 Deployed in dev mode @ https://gigety.com 
