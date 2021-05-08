@@ -8,10 +8,12 @@ It does have a [domain deployment](https://gigety.com).
 The first milestone has been branched off to https://github.com/gigety/gigety/tree/gigety-non-reactive.  
 
 Gigety milestone 2 will be full of migrations and new feautures:  
-This is in hope to ease development of new features.  
-Also to improve testing and enhance the control of deployments.  
-We hope to include new options for scalability as well.  
 
+* eased development / testing and deployment of new features.  
+* improved testing all around
+* new options for scalability
+* application monitoring
+* enhanced deployment options
 
 * Spring Cloud Gateway 
 * Spring 5 Oauth2
@@ -53,22 +55,6 @@ Some current features include:
 * Web Sockets / STOMP
 * Google Geolocation API
 
-### Up and coming Tech Stack / Features 
-* Reactive Programming / Spring WebFlux
-* RSocket
-* Spring Security 5.4
-* Spring Cloud Gateway
-* Keycloak
-* OpenID COnnect
-
-* Reactive API 
-* Mobile / React Native
-* RxJS
-* Jenkins CI/CD
-* Improved focus on testing 
-* Load testing
-* Vue
-* Vue Native
 #
 
 Deployed in dev mode @ https://gigety.com 
