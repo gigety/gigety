@@ -9,7 +9,7 @@ The first milestone has been branched off to https://github.com/gigety/gigety/tr
 
 Gigety milestone 2 will be full of migrations and new feautures:  
 This is in hope to ease development of new features.  
-Also to improve testing and simplify deployment phase.  
+Also to improve testing and enhance the control of deployments. 
 We hope to include new options for scalability as well.  
 
 * Spring Cloud Gateway 
