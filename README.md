@@ -22,6 +22,7 @@ The first milestone has been branched off to https://github.com/gigety/gigety/tr
 * Spring 5 Oauth2
 * OpenID Connect
 * Offload Authorization Server to Keycloak
+* Reactive Streams with backpressure for scalability
 * microservices: Spring Cloud Native
   * Service Discovery
   * Load Balancing
