@@ -24,11 +24,11 @@ The first milestone has been branched off to https://github.com/gigety/gigety/tr
 * Offload Authorization Server to Keycloak
 * Reactive Streams with backpressure for scalability
 * microservices: Spring Cloud Native
-  * Service Discovery
-  * Load Balancing
+  * Service Discovery (maybe)
+  * Load Balancing (maybe)
   * Tracing 
-  * Circuit Breaker
-  * Configuration
+  * Circuit Breaker (maybe)
+  * Configuration (maybe)
 * Reactive API's
 * Adding a Vue client to compare with React. Both JS and Native.
 * RSocket for messaging
