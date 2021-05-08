@@ -2,8 +2,8 @@
 # 🐸 Gigety - An all for fun POC full stack sample application.
 
 Gigety is a project for self learning many technologies.  
-It does have a [domain deployment](https://gigety.com).
-Dually Noting: Gigety stays in dev / experimental mode as it is for learning puposes only.  
+It does have a [domain deployment](https://gigety.com).  
+Dual Note: Gigety stays in dev / experimental mode as it is for learning puposes only.  
 
 The first milestone has been branched off to https://github.com/gigety/gigety/tree/gigety-non-reactive.  
 
