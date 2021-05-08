@@ -9,11 +9,11 @@ The first milestone has been branched off to https://github.com/gigety/gigety/tr
 
 Gigety milestone 2 will be full of migrations and new feautures:  
 
-* eased development / testing and deployment of new features.  
-* improved testing all around
-* new options for scalability
-* application monitoring
-* enhanced deployment options
+* eased development / testing and deployment of new features    
+* improved testing all around  
+* new options for scalability  
+* application monitoring  
+* enhanced deployment options 
 
 * Spring Cloud Gateway 
 * Spring 5 Oauth2
