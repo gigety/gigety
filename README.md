@@ -3,14 +3,15 @@
 
 Gigety is a project for self learning many technologies.  
 It does have a [domain deployment](https://gigety.com).  
-Dual Note: Gigety stays in dev / experimental mode as it is for learning puposes only.  
+**Dual Note**: Gigety stays in dev / experimental mode as it is for learning puposes only.  
 
 The first milestone has been branched off to https://github.com/gigety/gigety/tree/gigety-non-reactive.  
 
 Gigety milestone 2 will be full of migrations and new feautures:  
 This is in hope to ease development of new features.  
-Also to improve testing and enhance the control of deployments. 
+Also to improve testing and enhance the control of deployments.  
 We hope to include new options for scalability as well.  
+
 
 * Spring Cloud Gateway 
 * Spring 5 Oauth2
