@@ -3,22 +3,26 @@
 
 Gigety is a project for self learning many technologies.  
 It does have a [domain deployment](https://gigety.com).  
-**Dual Note**: Gigety stays in dev / experimental mode as it is for learning puposes only.  
+**Dual Note**: Gigety is for learning puposes only.  
 
 The first milestone has been branched off to https://github.com/gigety/gigety/tree/gigety-non-reactive.  
 
-Gigety milestone 2 will be full of migrations and new feautures:  
+#### Milestone 2 Goals: 
 * eased development / testing and deployment of new features
 * improved testing all around 
 * new options for scalability
-* application monitoring 
+* application monitoring
 * enhanced deployment options
+* imporioved tracing
+* mobile application  
 
+
+#### MileStone 2 Tools 
 * Spring Cloud Gateway 
 * Spring 5 Oauth2
 * OpenID Connect
 * Offload Authorization Server to Keycloak
-* microservices: 
+* microservices: Spring Cloud Native
   * Service Discovery
   * Load Balancing
   * Tracing 
@@ -27,7 +31,7 @@ Gigety milestone 2 will be full of migrations and new feautures:
 * Reactive API's
 * Adding a Vue client to compare with React. Both JS and Native.
 * RSocket for messaging
-* Improved Dev / Ops & Quality Assurance
+* Jenkins
 
 Some current features include:  
 * social login
