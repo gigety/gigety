@@ -13,7 +13,7 @@ The first milestone has been branched off to https://github.com/gigety/gigety/tr
 * new options for scalability
 * application monitoring
 * enhanced deployment options
-* imporioved tracing
+* improved tracing
 * mobile application  
 
 
