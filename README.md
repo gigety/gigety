@@ -17,7 +17,7 @@ The first milestone has been branched off to https://github.com/gigety/gigety/tr
 * mobile application  
 
 
-#### MileStone 2 Tools: 
+#### Milestone 2 Tools: 
 * Spring Cloud Gateway 
 * Spring 5 Oauth2
 * OpenID Connect
