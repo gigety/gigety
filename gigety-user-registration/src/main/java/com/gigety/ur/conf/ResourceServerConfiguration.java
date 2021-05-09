@@ -12,7 +12,6 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -31,7 +30,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 		config.tokenServices(tokenServices);
 		config.tokenStore(tokenStore);
 		config.authenticationManager(authenticationManagerBean());
-		config.resourceId("samo");
+		config.resourceId(signingId);
 	}
 
 	private AuthenticationManager authenticationManagerBean() {
