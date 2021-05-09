@@ -1,0 +1,35 @@
+From openjdk:8-jdk-alpine
+copy ./build/libs/gigety-web-api-0.0.1-SNAPSHOT.jar gigety-web-api-0.0.1-SNAPSHOT.jar
+EXPOSE 8080
+EXPOSE 8000
+ENTRYPOINT ["sh","-c","java -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n -jar gigety-web-api-0.0.1-SNAPSHOT.jar"]
+CMD ["java","-jar","gigety-web-api-0.0.1-SNAPSHOT.jar"]
+
+
+#FROM gradle:6.5.0-jdk8 as build
+#WORKDIR /workspace/app
+
+#COPY build.gradle .
+#COPY settings.gradle .
+#COPY src src
+
+#RUN gradle build -x test
+#RUN mkdir -p build/dependency && (cd build/dependency; jar -xf ../libs/*.jar)
+
+#FROM openjdk:8-jdk-alpine
+#VOLUME /tmp
+#ARG DEPENDENCY=/workspace/app/build/dependency
+#COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
+#COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
+#COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
+#ENTRYPOINT ["java", "-Xdebug", "-Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n","-cp","app:app/lib/*","com.gigety.web.api.GigetyWebApiApplication"]
+
+
+
+#FROM gradle:6.5.0-jdk8
+#WORKDIR /app
+#COPY . /app
+#RUN gradle clean build -x test
+#EXPOSE 8080
+#EXPOSE 8000
+#CMD ["sh", "start.sh"]

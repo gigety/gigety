@@ -1,0 +1,27 @@
+version: '3.7'
+
+services:
+    gigety-mysql:
+        image: mysql:8.0.21
+        container_name: gigety-mysql
+
+    gigety-web-api-mongo:
+        image: mongo:4.2.7-bionic
+        container_name: gigety-web-api-mongo
+
+    gigety-redis:
+        image: redis:alpine3.11
+        container_name: gigety-redis
+
+    gigety-user-registration:
+        container_name: gigety-user-registration
+        depends_on:
+            - gigety-mysql
+
+    gigety-web-api:
+        container_name: gigety-web-api
+        depends_on:
+            - gigety-mysql
+
+    gigety-reactjs:
+        container_name: gigety-reactjs

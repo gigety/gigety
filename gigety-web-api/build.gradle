@@ -1,0 +1,67 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.0'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'java'
+}
+
+group = 'com.gigety.web.api'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+  
+
+
+//bootRun {
+	//jvmArgs=["-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:8000"]
+//}
+//bootJar {
+//	classpath configurations.developmentOnly
+//}
+
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+}
+
+
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.security:spring-security-oauth2-client'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.5.1'
+	implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	
+	
+	//compile group: 'org.springframework.data', name: 'spring-data-releasetrain', version: 'Neumann-SR1', ext: 'pom'
+	
+	implementation 'org.projectlombok:lombok'
+	
+	//NOTE: enabling dev-tools may cause deserialization issues with redis cache
+	//which in turn makes application unausable as class cast exceptions are thrown
+	//enable with caution - you may want to comment out cacheables or have a dev build 
+	//that doesn not cache and does include devtools
+	//developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'mysql:mysql-connector-java'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
+	testImplementation 'org.springframework.security:spring-security-test'
+}
+test {
+	useJUnitPlatform()
+}

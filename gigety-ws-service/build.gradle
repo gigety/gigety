@@ -1,0 +1,44 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.0'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'java'
+}
+
+group = 'com.gigety.ws'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile group: 'io.projectreactor.netty', name: 'reactor-netty', version: '1.0.3'
+	compile group: 'io.projectreactor', name: 'reactor-net', version: '2.0.8.RELEASE'
+	compile group: 'io.projectreactor', name: 'reactor-core', version: '3.4.2'
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+	implementation 'org.springframework.boot:spring-boot-starter-activemq'
+	//compile 'org.springframework.amqp:spring-rabbit:2.3.5'	
+
+	implementation group: 'org.projectreactor', name: 'reactor-core', version: '1.1.6.RELEASE'
+	implementation group: 'org.projectreactor', name: 'reactor-tcp', version: '1.0.1.RELEASE'
+
+
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	compileOnly 'org.projectlombok:lombok'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+	useJUnitPlatform()
+}

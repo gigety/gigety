@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<link type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css"
+	rel="stylesheet" />
+	<script type="text/javascript" th:src="@{/js/jquery-1.7.2.js}"></script>
+	<script type="text/javascript" th:src="@{/js/pwstrength.js}"></script>
+	<title th:text="#{reset.password}">Reset Password</title>
+</head>
+<body>
+	<div class="container">
+		<h1 th:text="#{reset.password}">Resets Password</h1>
+		<br />
+		<form th:action="@{/reg/savepw}" action="#" method="post"
+			class="form-horizontal" th:object="${gigUser}">
+			<input type="hidden" th:field="*{id}"/>
+			<div th:if="${#fields.hasErrors('global')}" th:errors="*{global}"
+				class="alert alert-danger" th:text="#{incorrect.pw.conf}">Incorrect
+				password confirmation</div>
+			<div class="form-group">
+				<label class="control-label col-xs-2" for="question"
+					th:text="#{sec.question}">Security Question:</label>
+				<div class="col-xs-10">
+					<span th:text="${userQuestion.question.question}">User
+						Question</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-xs-2" for="answer"
+					th:text="#{answer}">Answer</label>
+				<div class="col-xs-2">
+					<input type="text" th:field="*{givenAnswer}"/>
+					<span
+						th:if="${#fields.hasErrors('givenAnswer')}" th:errors="*{givenAnswer}"
+						class="text-danger">Answer wrong Error</span>
+				</div>
+			</div>
+
+			<div th:if="${errorMessage}" th:text="${errorMessage}"
+				class="alert alert-danger">Message</div>
+			<div class="form-group">
+				<label class="control-label col-xs-2" for="password"
+					th:text="#{password}">Password</label>
+				<div class="col-xs-2">
+					<input id="password" type="password" title="password"
+						th:field="*{password}" style="width:100%"/> <span
+						th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+						class="text-danger">Password Error</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-xs-2" for="passwordConfirmation"
+					th:text="#{password.confirmation}">Password Confirmation</label>
+				<div class="col-xs-2">
+					<input id="passwordConfirmation" type="password"
+						title="passwordConfirmation" th:field="*{passwordConfirmation}" 
+						style="width:100%"/>
+					<span th:if="${#fields.hasErrors('passwordConfirmation')}"
+						th:errors="*{passwordConfirmation}" class="text-danger">Password
+						Confirmation Error</span>
+				</div>
+			</div>
+			<input id="token" type="hidden" name="token" th:value="${token}" />
+			<div class="form-actions col-xs-offset-2 col-xs-10">
+				<input type="submit" class="btn btn-primary" value="Reset Password" />
+			</div>
+		</form>
+
+		<br /> <a class="btn btn-primary" th:href="@{/login}"
+			th:text="#{signin}">Sign In</a> <a class="btn btn-default"
+			th:href="@{/signup}" th:text="#{signup}">Sign Up</a>
+	</div>
+		<script type="text/javascript">
+		//Passwrod strength jquery bootstrap plugin
+		$(document).ready(function() {
+			options = {
+				common : {
+					min : 8
+				},
+				ui : {
+					showVerdictsInsideProgressBar : true,
+					showErrors : true,
+					errorMessages : {
+	                    wordLength: 'Your password is too short',
+	                    wordNotEmail: 'Do not use your email as your password',
+	                    wordSequences: 'Your password contains sequences',
+	                    wordLowercase: 'Use lower case characters',
+	                    wordUppercase: 'Use upper case characters',
+	                    wordOneNumber: 'Use numbers',
+	                    wordOneSpecialChar: 'Use special characters: [~!@#$%^&amp;*,_?]'
+					}
+				}
+			}
+			$('#password').pwstrength(options);
+		})
+	</script>
+</body>
+</html>
