@@ -20,8 +20,7 @@ The first milestone has been branched off to https://github.com/gigety/gigety/tr
 #### Milestone 2 Tools: 
 * Spring Cloud Gateway 
 * Spring 5 Oauth2
-* OpenID Connect
-* PKCE - It's really you. We've got the hash, its exclusive 🍬
+* OpenID Connect Flow (Authorization code + PKCE)
 * Offload Authorization Server to Keycloak
 * Reactive Streams with Back pressureability
 * microservices: Spring Cloud Native
@@ -34,7 +33,6 @@ The first milestone has been branched off to https://github.com/gigety/gigety/tr
 * Adding a Vue client to compare with React. Both JS and Native.
 * RSocket for messaging
 * Jenkins
-* Why so funnY
 
 Some current features include:  
 * social login
