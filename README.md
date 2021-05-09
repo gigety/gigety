@@ -21,7 +21,7 @@ The first milestone has been branched off to https://github.com/gigety/gigety/tr
 * Spring Cloud Gateway 
 * Spring 5 Oauth2
 * OpenID Connect
-* PKce - It's really you
+* PKCE - It's really you. Hash me now for later
 * Offload Authorization Server to Keycloak
 * Reactive Streams with backpressure for scalability
 * microservices: Spring Cloud Native
