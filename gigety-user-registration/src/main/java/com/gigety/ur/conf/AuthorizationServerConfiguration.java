@@ -47,13 +47,13 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Autowired
     private CustomAccessTokenConverter customAccessTokenConverter;
 	
-	@Value("${gigety-signing-key:samo}")
+	@Value("${gigety.signing-key:samo}")
 	private String signingKey;
 	
-	@Value("${gigety-signing-secret:samo}")
+	@Value("${gigety.signing-secret:samo}")
 	private String signingSecret;
 	
-	@Value("${gigety-signing-id")
+	@Value("${gigety.signing-id:samo}")
 	private String signingId;
 	
 

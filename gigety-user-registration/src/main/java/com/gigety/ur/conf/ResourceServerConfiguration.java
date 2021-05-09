@@ -13,16 +13,17 @@ import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableResourceServer
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
 	private final TokenStore tokenStore;
 	private final DefaultTokenServices tokenServices;
 
-	@Value("${gigety-signing-id}")
+	@Value("${gigety.signing-id:samo}")
 	private String signingId;
 	
 	@Override
@@ -30,7 +31,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 		config.tokenServices(tokenServices);
 		config.tokenStore(tokenStore);
 		config.authenticationManager(authenticationManagerBean());
-		config.resourceId(signingId);
+		config.resourceId("samo");
 	}
 
 	private AuthenticationManager authenticationManagerBean() {
