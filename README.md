@@ -23,7 +23,7 @@ The first milestone has been branched off to https://github.com/gigety/gigety/tr
 * OpenID Connect
 * PKCE - It's really you. We've got the hash, its exclusive 🍬
 * Offload Authorization Server to Keycloak
-* Reactive Streams with backpressure for scalability
+* Reactive Streams with Back pressureability
 * microservices: Spring Cloud Native
   * Service Discovery (maybe)
   * Load Balancing (maybe)
@@ -34,6 +34,7 @@ The first milestone has been branched off to https://github.com/gigety/gigety/tr
 * Adding a Vue client to compare with React. Both JS and Native.
 * RSocket for messaging
 * Jenkins
+* Why so funnY
 
 Some current features include:  
 * social login
