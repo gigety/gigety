@@ -3,7 +3,7 @@
 
 Gigety is a project for self learning many technologies.  
 It does have a [domain deployment](https://gigety.com).  
-**Dually Noted**: Gigety is for not sure why puposes only.  
+**Dually Noted**: Gigety is boring for not sure why puposes only.  
 
 The first milestone has been branched off to https://github.com/gigety/gigety/tree/gigety-non-reactive.  
 
