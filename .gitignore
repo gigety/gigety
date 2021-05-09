@@ -7,6 +7,7 @@
 prod.yml
 dev.yml
 
+
 # TODO: init-mongo shell script appears to require hardcoded user password.
 # Not sure yet. For some reasopn the web application does not connect if
 # if the user was created via environment variable. Hardcoded however works
