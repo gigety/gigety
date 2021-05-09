@@ -3,7 +3,7 @@
 
 Gigety is a project for self learning many technologies.  
 It does have a [domain deployment](https://gigety.com).  
-**Demonstrations**: https://gigety.com
+
 
 The first milestone has been branched off to https://github.com/gigety/gigety/tree/gigety-non-reactive.  
 
@@ -17,12 +17,12 @@ The first milestone has been branched off to https://github.com/gigety/gigety/tr
 * mobile application  
 
 
-#### Milestone 2 Tools: 
+#### Milestone 2 Technologies: 
 * Spring Cloud Gateway 
 * Spring 5 Oauth2
 * OpenID Connect Flow (Authorization code + PKCE)
 * Offload Authorization Server to Keycloak
-* Reactive Streams with Back pressureability
+* Reactive Streams with Back pressure ability
 * microservices: Spring Cloud Native
   * Service Discovery (maybe)
   * Load Balancing (maybe)
