@@ -33,11 +33,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository
 	public void saveAuthorizationRequest(OAuth2AuthorizationRequest authorizationRequest, HttpServletRequest request,
 			HttpServletResponse response) {
 		log.debug("Saving auth REQUEST");
-		System.out.println("########################");
-		System.out.println("########################");
-		System.out.println("HUGH HUH");
-		System.out.println("say wha?");
-		System.out.println("oh well");
+		
 		if (authorizationRequest == null) {
 			log.debug("Authorization is null :: Removing Cookies {} and {}", OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME,
 					REDIRECT_URI_PARAM_COOKIE_NAME);
