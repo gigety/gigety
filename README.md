@@ -1,5 +1,5 @@
 
-# 🐸 Gigety - An all for fun POC full stack sample application.
+# 🐸 Gigety - POC full stack sample application.
 
 Gigety is a project for self learning many technologies.  
 
